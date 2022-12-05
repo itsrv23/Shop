@@ -6,9 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import ru.got.shop.dto.Role;
+import ru.got.shop.openapi.dto.RegReq;
 import ru.got.shop.service.AuthService;
-import ru.got.shop.dto.RegisterReq;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -34,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegisterReq registerReq, Role role) {
+    public boolean register(RegReq registerReq, RegReq.RoleEnum role) {
         if (manager.userExists(registerReq.getUsername())) {
             return false;
         }
