@@ -1,10 +1,12 @@
 package ru.got.shop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.got.shop.openapi.controller.AdsApi;
 import ru.got.shop.openapi.dto.*;
 
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 public class AdsController implements AdsApi {
     @Override

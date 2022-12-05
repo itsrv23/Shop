@@ -5,12 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.dto.LoginReq;
-import ru.got.shop.dto.RegisterReq;
-import ru.got.shop.dto.Role;
 import ru.got.shop.openapi.controller.AuthApi;
 import ru.got.shop.openapi.dto.RegReq;
 import ru.got.shop.service.AuthService;
@@ -32,21 +27,13 @@ public class AuthController implements AuthApi {
         }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterReq req) {
-        Role role = req.getRole() == null ? Role.USER : req.getRole();
+    @Override
+    public ResponseEntity<Object> registerUsingPOST(RegReq req) {
+        RegReq.RoleEnum role = req.getRole() == null ? RegReq.RoleEnum.USER : req.getRole();
         if (authService.register(req, role)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-    }
-
-
-
-    @Override
-    public ResponseEntity<Object> registerUsingPOST(RegReq req) {
-        //TODO
-        return null;
     }
 }
