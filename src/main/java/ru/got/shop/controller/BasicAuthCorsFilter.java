@@ -1,6 +1,6 @@
 package ru.got.shop.controller;
 
-
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,10 +14,9 @@ import java.io.IOException;
 public class BasicAuthCorsFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,
+    protected void doFilterInternal(@NotNull HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+                                    FilterChain filterChain) throws ServletException, IOException {
         httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

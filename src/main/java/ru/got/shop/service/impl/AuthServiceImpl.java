@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
         }
         UserDetails userDetails = manager.loadUserByUsername(userName);
         String encryptedPassword = userDetails.getPassword();
-        String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
+        String encryptedPasswordWithoutEncryptionType = encryptedPassword;
         return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
     }
 
