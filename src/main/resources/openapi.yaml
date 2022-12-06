@@ -733,18 +733,23 @@ components:
     RegReq:
       example:
         password: password
-        role: ADMIN
+        role: USER
         username: username
       properties:
         password:
           type: string
+          minLength: 8
         role:
           enum:
           - ADMIN
           - USER
           type: string
+          example: USER
         username:
           type: string
+          minLength: 4
+          pattern: '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+          example: test@mail.ru
       title: RegReq
       type: object
     ResponseWrapperAdsComment:
