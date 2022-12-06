@@ -1,19 +1,20 @@
 package ru.got.shop.service.impl;
 
+import org.springframework.stereotype.Service;
 import ru.got.shop.openapi.dto.*;
 import ru.got.shop.service.AdsService;
-import ru.got.shop.service.AdsUtil;
-
+import ru.got.shop.constant.AdsFactory;
+@Service
 public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsComment addAdsComments(String adPk, AdsComment comment) {
-        return AdsUtil.getAdsComment();
+        return AdsFactory.getAdsComment();
     }
 
     @Override
     public Ads addAds(CreateAds createAds) {
-        return AdsUtil.getAds();
+        return AdsFactory.getAds();
     }
 
     @Override
@@ -22,17 +23,17 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public ResponseWrapperAds getALLAds() {
-        return AdsUtil.getResponseWrapperAds();
+        return AdsFactory.getResponseWrapperAds();
     }
 
     @Override
     public AdsComment getAdsComment(String adPk, Integer id) {
-        return AdsUtil.getAdsComment();
+        return AdsFactory.getAdsComment();
     }
 
     @Override
     public ResponseWrapperAdsComment getAdsComments(String adPk) {
-        return AdsUtil.getResponseWrapperAdsComment();
+        return AdsFactory.getResponseWrapperAdsComment();
     }
 
     @Override
@@ -41,12 +42,12 @@ public class AdsServiceImpl implements AdsService {
                                        Object credentials,
                                        Object details,
                                        Object principal) {
-        return AdsUtil.getResponseWrapperAds();
+        return AdsFactory.getResponseWrapperAds();
     }
 
     @Override
     public FullAds getAds(Integer id) {
-        return AdsUtil.getFullAds();
+        return AdsFactory.getFullAds();
     }
 
     @Override
@@ -55,11 +56,11 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsComment updateAdsComment(String adPk, Integer id, AdsComment comment) {
-        return AdsUtil.getAdsComment();
+        return AdsFactory.getAdsComment();
     }
 
     @Override
     public Ads updateAds(Integer id, Ads ads) {
-        return AdsUtil.getAds();
+        return AdsFactory.getAds();
     }
 }

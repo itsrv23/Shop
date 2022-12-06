@@ -1,4 +1,4 @@
-package ru.got.shop.dto;
+package ru.got.shop.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

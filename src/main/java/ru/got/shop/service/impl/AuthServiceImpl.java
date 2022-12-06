@@ -27,9 +27,7 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
         UserDetails userDetails = manager.loadUserByUsername(userName);
-        String encryptedPassword = userDetails.getPassword();
-        String encryptedPasswordWithoutEncryptionType = encryptedPassword;
-        return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
+        return encoder.matches(password, userDetails.getPassword());
     }
 
     @Override
@@ -37,13 +35,11 @@ public class AuthServiceImpl implements AuthService {
         if (manager.userExists(registerReq.getUsername())) {
             return false;
         }
-        manager.createUser(
-                User.withDefaultPasswordEncoder()
-                        .password(registerReq.getPassword())
-                        .username(registerReq.getUsername())
-                        .roles(role.name())
-                        .build()
-        );
+        manager.createUser(User.withDefaultPasswordEncoder()//TODO заменить на не устаревший
+                .password(registerReq.getPassword())
+                .username(registerReq.getUsername())
+                .roles(role.name())
+                .build());
         return true;
     }
 }

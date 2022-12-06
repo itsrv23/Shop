@@ -1,18 +1,18 @@
-package ru.got.shop.service;
+package ru.got.shop.constant;
 
 import ru.got.shop.openapi.dto.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
-public final class AdsUtil {
+public final class AdsFactory {
     private static final String IMAGE = "/path/to/image.jpg";
     private static final String PHONE = "+79223344554";
     private static final String VALUE = "someStringValue";
     private static final String MAIL = "someEmail@mail.com";
     private static final Integer PRICE = 1500;
 
-    private AdsUtil() {
+    private AdsFactory() {
     }
 
     public static ResponseWrapperAdsComment getResponseWrapperAdsComment() {
