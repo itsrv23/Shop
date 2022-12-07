@@ -4,7 +4,7 @@
 
 CREATE TABLE users_account
 (
-    id         BIGSERIAL,
+    id         SERIAL,
     first_name text,
     last_name  text,
     email      text,

@@ -6,5 +6,6 @@ import ru.got.shop.model.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findById(Integer id);
     Optional<User> findFirstByEmail(String email);
 }

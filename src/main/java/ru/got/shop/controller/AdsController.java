@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.got.shop.openapi.controller.AdsApi;
 import ru.got.shop.openapi.dto.*;
+import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.AdsService;
 
 @CrossOrigin(value = "http://localhost:3000")

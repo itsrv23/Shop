@@ -7,6 +7,7 @@ import ru.got.shop.openapi.controller.UsersApi;
 import ru.got.shop.openapi.dto.NewPassword;
 import ru.got.shop.openapi.dto.ResponseWrapperUser;
 import ru.got.shop.openapi.dto.User;
+import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.impl.UserServiceImpl;
 
 @CrossOrigin(value = "http://localhost:3000")

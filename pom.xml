@@ -20,6 +20,7 @@
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
         <org.liquibase.version>4.17.2</org.liquibase.version>
+        <org.aspectj>1.9.9.1</org.aspectj>
     </properties>
 
     <dependencies>
@@ -41,6 +42,14 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!-- End Spring-->
+
+        <!-- AOP-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${org.aspectj}</version>
+        </dependency>
+        <!-- End AOP-->
 
         <!-- OpenApi-->
         <dependency>

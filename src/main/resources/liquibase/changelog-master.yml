@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: liquibase/sql/1_user_account.sql
+  - include:
+      file: liquibase/sql/10_ads.sql

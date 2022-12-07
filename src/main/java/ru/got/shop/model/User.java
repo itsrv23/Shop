@@ -8,6 +8,7 @@ import lombok.ToString;
 import ru.got.shop.openapi.dto.RegReq;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private Integer id;
     @Column(name = "first_name")
     private String firstName;
 
@@ -44,4 +45,9 @@ public class User {
     @Column(name = "avatar_id")
     private Long avatarId;
     //todo create entity avatar
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+    @ToString.Exclude
+    private List<Ads> ads;
 }
