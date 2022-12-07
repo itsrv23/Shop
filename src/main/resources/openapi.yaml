@@ -378,7 +378,7 @@ paths:
       responses:
         "200":
           content:
-            application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/Ads'
           description: OK
