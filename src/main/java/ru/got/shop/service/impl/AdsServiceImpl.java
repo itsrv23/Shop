@@ -3,17 +3,16 @@ package ru.got.shop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.got.shop.exception.UserNotFoundException;
-import ru.got.shop.mapper.AdsMapper;
-import ru.got.shop.mapper.ResponseWrapperAdsMapper;
-import ru.got.shop.mapper.UserMapper;
+import ru.got.shop.mapper.*;
 import ru.got.shop.openapi.dto.*;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.AdsService;
 import ru.got.shop.constant.AdsFactory;
+import ru.got.shop.exception.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,8 +22,12 @@ public class AdsServiceImpl implements AdsService {
     private final UserRepository userRepository;
     private final AdsRepository adsRepository;
     private final ResponseWrapperAdsMapper responseWrapperAdsMapper;
+
+    private final ResponseWrapperAdsCommentMapper responseWrapperAdsCommentMapper;
     private final UserMapper userMapper;
-    private final  AdsMapper adsMapper;
+    private final AdsMapper adsMapper;
+
+    private final AdsCommentMapper adsCommentMapper;
 
     @Override
     public AdsComment addAdsComments(String adPk, AdsComment comment) {
@@ -48,19 +51,41 @@ public class AdsServiceImpl implements AdsService {
 
         ResponseWrapperAds responseWrapperAds = responseWrapperAdsMapper.toDto(ads.size(), adsMapper.toDtos(ads));
         log.info(responseWrapperAds.toString());
-        log.info(AdsFactory.getResponseWrapperAds().toString());
+//        log.info(AdsFactory.getResponseWrapperAds().toString());
 //        return AdsFactory.getResponseWrapperAds();
         return responseWrapperAds;
     }
 
     @Override
     public AdsComment getAdsComment(String adPk, Integer id) {
-        return AdsFactory.getAdsComment();
+
+        ru.got.shop.model.Ads ads = adsRepository.findById(Integer.getInteger(adPk)).orElseThrow();
+        //orElseThrow(ExceptionHandler::new);
+        List<ru.got.shop.model.AdsComment> adsComments = ads.getAdsComment();
+
+        ru.got.shop.model.AdsComment foundComment = adsComments
+                 .stream()
+                 .filter(adsCom -> (Objects.equals(adsCom.getPk(), id)))
+                 .findFirst()
+                 .orElseThrow();
+        //orElseThrow(ExceptionHandler::new);
+
+        AdsComment adsComment = adsCommentMapper.toDto(foundComment);
+        log.info(adsComment.toString());
+        return adsComment;
     }
 
     @Override
     public ResponseWrapperAdsComment getAdsComments(String adPk) {
-        return AdsFactory.getResponseWrapperAdsComment();
+
+        ru.got.shop.model.Ads ads = adsRepository.findById(Integer.getInteger(adPk)).orElseThrow();
+                //orElseThrow(ExceptionHandler::new);
+        List<ru.got.shop.model.AdsComment> adsComments = ads.getAdsComment();
+
+        ResponseWrapperAdsComment responseWrapperAdsComment = responseWrapperAdsCommentMapper.toDto(adsComments.size(), adsCommentMapper.toDtos(adsComments));
+        log.info(responseWrapperAdsComment.toString());
+
+        return responseWrapperAdsComment;
     }
 
     @Override

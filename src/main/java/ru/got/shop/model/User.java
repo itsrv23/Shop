@@ -50,4 +50,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
     @ToString.Exclude
     private List<Ads> ads;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+    @ToString.Exclude
+    private List<AdsComment> adsComment;
 }
