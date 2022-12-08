@@ -9,14 +9,14 @@ info:
   title: Api Documentation
   version: "1.0"
 servers:
-- url: //localhost:8080/
+  - url: //localhost:8080/
 tags:
-- description: Auth Controller
-  name: Auth
-- description: Ads Controller
-  name: Ads
-- description: user Controller
-  name: Users
+  - description: Auth Controller
+    name: Auth
+  - description: Ads Controller
+    name: Ads
+  - description: user Controller
+    name: Users
 paths:
   /ads:
     get:
@@ -39,7 +39,7 @@ paths:
           description: Not Found
       summary: getALLAds
       tags:
-      - Ads
+        - Ads
       x-accepts: '*/*'
     post:
       description: Добавить ads
@@ -72,7 +72,7 @@ paths:
           description: Not Found
       summary: addAds
       tags:
-      - Ads
+        - Ads
       x-codegen-request-body-name: createAds
       x-contentType: application/json
       x-accepts: '*/*'
@@ -80,26 +80,26 @@ paths:
     get:
       operationId: getAdsMeUsingGET
       parameters:
-      - in: query
-        name: authenticated
-        schema:
-          type: boolean
-      - in: query
-        name: authorities[0].authority
-        schema:
-          type: string
-      - in: query
-        name: credentials
-        schema:
-          type: object
-      - in: query
-        name: details
-        schema:
-          type: object
-      - in: query
-        name: principal
-        schema:
-          type: object
+        - in: query
+          name: authenticated
+          schema:
+            type: boolean
+        - in: query
+          name: authorities[0].authority
+          schema:
+            type: string
+        - in: query
+          name: credentials
+          schema:
+            type: object
+        - in: query
+          name: details
+          schema:
+            type: object
+        - in: query
+          name: principal
+          schema:
+            type: object
       responses:
         "200":
           content:
@@ -118,18 +118,18 @@ paths:
           description: Not Found
       summary: getAdsMe
       tags:
-      - Ads
+        - Ads
       x-accepts: '*/*'
   /ads/{ad_pk}/comment:
     get:
       operationId: getAdsCommentsUsingGET
       parameters:
-      - description: ad_pk
-        in: path
-        name: ad_pk
-        required: true
-        schema:
-          type: string
+        - description: ad_pk
+          in: path
+          name: ad_pk
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -148,17 +148,17 @@ paths:
           description: Not Found
       summary: getAdsComments
       tags:
-      - Ads
+        - Ads
       x-accepts: '*/*'
     post:
       operationId: addAdsCommentsUsingPOST
       parameters:
-      - description: ad_pk
-        in: path
-        name: ad_pk
-        required: true
-        schema:
-          type: string
+        - description: ad_pk
+          in: path
+          name: ad_pk
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -187,7 +187,7 @@ paths:
           description: Not Found
       summary: addAdsComments
       tags:
-      - Ads
+        - Ads
       x-codegen-request-body-name: comment
       x-contentType: application/json
       x-accepts: '*/*'
@@ -195,19 +195,19 @@ paths:
     delete:
       operationId: deleteAdsCommentUsingDELETE
       parameters:
-      - description: ad_pk
-        in: path
-        name: ad_pk
-        required: true
-        schema:
-          type: string
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: ad_pk
+          in: path
+          name: ad_pk
+          required: true
+          schema:
+            type: string
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       responses:
         "204":
           content: {}
@@ -220,24 +220,24 @@ paths:
           description: Forbidden
       summary: deleteAdsComment
       tags:
-      - Ads
+        - Ads
       x-accepts: application/json
     get:
       operationId: getAdsCommentUsingGET
       parameters:
-      - description: ad_pk
-        in: path
-        name: ad_pk
-        required: true
-        schema:
-          type: string
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: ad_pk
+          in: path
+          name: ad_pk
+          required: true
+          schema:
+            type: string
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       responses:
         "200":
           content:
@@ -256,24 +256,24 @@ paths:
           description: Not Found
       summary: getAdsComment
       tags:
-      - Ads
+        - Ads
       x-accepts: '*/*'
     patch:
       operationId: updateAdsCommentUsingPATCH
       parameters:
-      - description: ad_pk
-        in: path
-        name: ad_pk
-        required: true
-        schema:
-          type: string
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: ad_pk
+          in: path
+          name: ad_pk
+          required: true
+          schema:
+            type: string
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       requestBody:
         content:
           application/json:
@@ -299,7 +299,7 @@ paths:
           description: Forbidden
       summary: updateAdsComment
       tags:
-      - Ads
+        - Ads
       x-codegen-request-body-name: comment
       x-contentType: application/json
       x-accepts: '*/*'
@@ -307,13 +307,13 @@ paths:
     delete:
       operationId: removeAdsUsingDELETE
       parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       responses:
         "204":
           content: {}
@@ -326,18 +326,18 @@ paths:
           description: Forbidden
       summary: removeAds
       tags:
-      - Ads
+        - Ads
       x-accepts: application/json
     get:
       operationId: getAdsUsingGET
       parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       responses:
         "200":
           content:
@@ -356,18 +356,18 @@ paths:
           description: Not Found
       summary: getAds
       tags:
-      - Ads
+        - Ads
       x-accepts: '*/*'
     patch:
       operationId: updateAdsUsingPATCH
       parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       requestBody:
         content:
           application/json:
@@ -393,7 +393,7 @@ paths:
           description: Forbidden
       summary: updateAds
       tags:
-      - Ads
+        - Ads
       x-codegen-request-body-name: ads
       x-contentType: application/json
       x-accepts: '*/*'
@@ -428,7 +428,7 @@ paths:
           description: Not Found
       summary: login
       tags:
-      - Auth
+        - Auth
       x-codegen-request-body-name: req
       x-contentType: application/json
       x-accepts: '*/*'
@@ -463,7 +463,7 @@ paths:
           description: Not Found
       summary: register
       tags:
-      - Auth
+        - Auth
       x-codegen-request-body-name: req
       x-contentType: application/json
       x-accepts: '*/*'
@@ -488,7 +488,7 @@ paths:
           description: Not Found
       summary: getUsers
       tags:
-      - Users
+        - Users
       x-accepts: '*/*'
     patch:
       operationId: updateUserUsingPATCH
@@ -517,7 +517,7 @@ paths:
           description: Forbidden
       summary: updateUser
       tags:
-      - Users
+        - Users
       x-codegen-request-body-name: user
       x-contentType: application/json
       x-accepts: '*/*'
@@ -552,7 +552,7 @@ paths:
           description: Not Found
       summary: setPassword
       tags:
-      - Users
+        - Users
       x-codegen-request-body-name: newPassword
       x-contentType: application/json
       x-accepts: '*/*'
@@ -560,13 +560,13 @@ paths:
     get:
       operationId: getUserUsingGET
       parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        schema:
-          format: int32
-          type: integer
+        - description: id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
       responses:
         "200":
           content:
@@ -585,72 +585,72 @@ paths:
           description: Not Found
       summary: getUser
       tags:
-      - Users
+        - Users
       x-accepts: '*/*'
 components:
   schemas:
     Ads:
       example:
-        image: image
-        author: 6
-        price: 5
         pk: 1
+        author: 6
         title: title
+        price: 5
+        image: image
       properties:
-        author:
-          format: int32
-          type: integer
-        image:
-          type: string
         pk:
           format: int32
           type: integer
-        price:
+        author:
           format: int32
           type: integer
         title:
+          type: string
+        price:
+          format: int32
+          type: integer
+        image:
           type: string
       title: Ads
       type: object
     AdsComment:
       example:
-        createdAt: 2000-01-23T04:56:07.000+00:00
-        author: 6
         pk: 1
+        author: 6
+        createdAt: 2000-01-23T04:56:07.000+00:00
         text: text
       properties:
+        pk:
+          format: int32
+          type: integer
         author:
           format: int32
           type: integer
         createdAt:
           format: date-time
           type: string
-        pk:
-          format: int32
-          type: integer
         text:
           type: string
       title: AdsComment
       type: object
     CreateAds:
       example:
-        image: image
-        price: 6
-        description: description
         pk: 0
         title: title
+        description: description
+        price: 6
+        image: image
       properties:
-        description:
-          type: string
-        image:
-          type: string
         pk:
           format: int32
           type: integer
+        title:
+          type: string
+        description:
+          type: string
         price:
           format: int32
           type: integer
-        title:
+        image:
           type: string
       title: CreateAds
       type: object
@@ -662,8 +662,6 @@ components:
         phone: phone
         email: email
       properties:
-        email:
-          type: string
         firstName:
           type: string
         lastName:
@@ -672,57 +670,59 @@ components:
           type: string
         phone:
           type: string
+        email:
+          type: string
       title: CreateUser
       type: object
     FullAds:
       example:
-        image: image
+        pk: 0
         authorLastName: authorLastName
         authorFirstName: authorFirstName
         phone: phone
+        email: email
+        title: title
         price: 6
         description: description
-        pk: 0
-        title: title
-        email: email
+        image: image
       properties:
+        pk:
+          format: int32
+          type: integer
         authorFirstName:
           type: string
         authorLastName:
           type: string
-        description:
+        phone:
           type: string
         email:
           type: string
-        image:
+        title:
           type: string
-        phone:
-          type: string
-        pk:
-          format: int32
-          type: integer
         price:
           format: int32
           type: integer
-        title:
+        description:
+          type: string
+        image:
           type: string
       title: FullAds
       type: object
     LoginReq:
       example:
-        password: password
         username: username
+        password: password
       properties:
-        password:
-          type: string
         username:
+          type: string
+        password:
           type: string
       title: LoginReq
       type: object
     NewPassword:
       example:
-        newPassword: newPassword
         currentPassword: currentPassword
+        newPassword: newPassword
       properties:
         currentPassword:
           type: string
@@ -732,38 +732,38 @@ components:
       type: object
     RegReq:
       example:
+        username: username
         password: password
         role: USER
-        username: username
       properties:
-        password:
-          type: string
-          minLength: 8
-        role:
-          enum:
-          - ADMIN
-          - USER
-          type: string
-          example: USER
         username:
           type: string
           minLength: 4
           pattern: '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
           example: test@mail.ru
+        password:
+          type: string
+          minLength: 8
+        role:
+          enum:
+            - ADMIN
+            - USER
+          type: string
+          example: USER
       title: RegReq
       type: object
     ResponseWrapperAdsComment:
       example:
         count: 0
         results:
-        - createdAt: 2000-01-23T04:56:07.000+00:00
-          author: 6
-          pk: 1
-          text: text
-        - createdAt: 2000-01-23T04:56:07.000+00:00
-          author: 6
-          pk: 1
-          text: text
+          - pk: 1
+            author: 6
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            text: text
+          - pk: 1
+            author: 6
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            text: text
       properties:
         count:
           format: int32
@@ -778,16 +778,16 @@ components:
       example:
         count: 0
         results:
-        - image: image
-          author: 6
-          price: 5
-          pk: 1
-          title: title
-        - image: image
-          author: 6
-          price: 5
-          pk: 1
-          title: title
+          - pk: 1
+            author: 6
+            title: title
+            price: 5
+            image: image
+          - pk: 1
+            author: 6
+            title: title
+            price: 5
+            image: image
       properties:
         count:
           format: int32
@@ -802,16 +802,16 @@ components:
       example:
         count: 0
         results:
-        - firstName: firstName
-          lastName: lastName
-          phone: phone
-          id: 6
-          email: email
-        - firstName: firstName
-          lastName: lastName
-          phone: phone
-          id: 6
-          email: email
+          - id: 6
+            firstName: firstName
+            lastName: lastName
+            phone: phone
+            email: email
+          - id: 6
+            firstName: firstName
+            lastName: lastName
+            phone: phone
+            email: email
       properties:
         count:
           format: int32
@@ -824,24 +824,23 @@ components:
       type: object
     User:
       example:
+        id: 6
         firstName: firstName
         lastName: lastName
         phone: phone
-        id: 6
         email: email
       properties:
-        email:
-          type: string
-        firstName:
-          type: string
         id:
           format: int32
           type: integer
+        firstName:
+          type: string
         lastName:
           type: string
         phone:
           type: string
+        email:
+          type: string
       title: User
       type: object
 x-original-swagger-version: "2.0"
-

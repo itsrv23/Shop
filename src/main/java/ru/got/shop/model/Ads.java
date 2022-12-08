@@ -1,11 +1,13 @@
 package ru.got.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,5 +38,8 @@ public class Ads {
     @Column(name = "title")
     private String title;
 
-
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "adsId")
+    @ToString.Exclude
+    private List<AdsComment> adsComment;
 }
