@@ -21,9 +21,7 @@ import java.util.List;
 public class AdsServiceImpl implements AdsService {
 
     private final UserRepository userRepository;
-    private final AdsRepository adsRepository;
     private final ResponseWrapperAdsMapper responseWrapperAdsMapper;
-    private final UserMapper userMapper;
     private final  AdsMapper adsMapper;
 
     @Override

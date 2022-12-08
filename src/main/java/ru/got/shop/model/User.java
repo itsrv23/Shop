@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.got.shop.openapi.dto.RegReq;
+import ru.got.shop.security.Role;
 
 import javax.persistence.*;
 import java.util.List;
@@ -40,7 +41,7 @@ public class User {
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private RegReq.RoleEnum roleGroup;
+    private Role roleGroup;
 
     @Column(name = "avatar_id")
     private Long avatarId;
