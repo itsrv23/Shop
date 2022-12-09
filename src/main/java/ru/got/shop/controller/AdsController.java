@@ -10,6 +10,7 @@ import ru.got.shop.openapi.controller.AdsApi;
 import ru.got.shop.openapi.dto.*;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.repository.UserRepository;
+import ru.got.shop.service.AdsCommentService;
 import ru.got.shop.service.AdsService;
 
 @CrossOrigin(value = "http://localhost:3000")
@@ -18,10 +19,11 @@ import ru.got.shop.service.AdsService;
 public class AdsController implements AdsApi {
 
     private final AdsService adsService;
+    private final AdsCommentService adsCommentService;
 
     @Override
     public ResponseEntity<AdsComment> addAdsCommentsUsingPOST(String adPk, AdsComment comment) {
-        return ResponseEntity.ok(adsService.addAdsComments(adPk, comment));
+        return ResponseEntity.ok(adsCommentService.addAdsComments(adPk, comment));
     }
 
     @Override
@@ -32,7 +34,7 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<Void> deleteAdsCommentUsingDELETE(String adPk, Integer id) {
-        adsService.deleteAdsComment(adPk, id);
+        adsCommentService.deleteAdsComment(adPk, id);
         return ResponseEntity.ok()
                 .build();
     }
@@ -44,12 +46,12 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdsComment> getAdsCommentUsingGET(String adPk, Integer id) {
-        return ResponseEntity.ok(adsService.getAdsComment(adPk, id));
+        return ResponseEntity.ok(adsCommentService.getAdsComment(adPk, id));
     }
 
     @Override
     public ResponseEntity<ResponseWrapperAdsComment> getAdsCommentsUsingGET(String adPk) {
-        return ResponseEntity.ok(adsService.getAdsComments(adPk));
+        return ResponseEntity.ok(adsCommentService.getAdsComments(adPk));
     }
 
     @Override
@@ -81,7 +83,7 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdsComment> updateAdsCommentUsingPATCH(String adPk, Integer id, AdsComment comment) {
-        return ResponseEntity.ok(adsService.updateAdsComment(adPk, id, comment));
+        return ResponseEntity.ok(adsCommentService.updateAdsComment(adPk, id, comment));
     }
 
     @Override
