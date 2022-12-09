@@ -20,28 +20,14 @@ import java.util.Objects;
 public class AdsServiceImpl implements AdsService {
 
     private final UserRepository userRepository;
-    private final AdsRepository adsRepository;
     private final ResponseWrapperAdsMapper responseWrapperAdsMapper;
-
-    private final ResponseWrapperAdsCommentMapper responseWrapperAdsCommentMapper;
     private final UserMapper userMapper;
     private final AdsMapper adsMapper;
-
-    private final AdsCommentMapper adsCommentMapper;
-
-    @Override
-    public AdsComment addAdsComments(String adPk, AdsComment comment) {
-        return AdsFactory.getAdsComment();
-    }
 
     @Override
     public Ads addAds(CreateAds createAds) {
         System.out.println("createAds = " + createAds);
         return AdsFactory.getAds();
-    }
-
-    @Override
-    public void deleteAdsComment(String adPk, Integer id) {
     }
 
     @Override
@@ -54,38 +40,6 @@ public class AdsServiceImpl implements AdsService {
 //        log.info(AdsFactory.getResponseWrapperAds().toString());
 //        return AdsFactory.getResponseWrapperAds();
         return responseWrapperAds;
-    }
-
-    @Override
-    public AdsComment getAdsComment(String adPk, Integer id) {
-
-        ru.got.shop.model.Ads ads = adsRepository.findById(Integer.getInteger(adPk)).orElseThrow();
-        //orElseThrow(ExceptionHandler::new);
-        List<ru.got.shop.model.AdsComment> adsComments = ads.getAdsComment();
-
-        ru.got.shop.model.AdsComment foundComment = adsComments
-                 .stream()
-                 .filter(adsCom -> (Objects.equals(adsCom.getPk(), id)))
-                 .findFirst()
-                 .orElseThrow();
-        //orElseThrow(ExceptionHandler::new);
-
-        AdsComment adsComment = adsCommentMapper.toDto(foundComment);
-        log.info(adsComment.toString());
-        return adsComment;
-    }
-
-    @Override
-    public ResponseWrapperAdsComment getAdsComments(String adPk) {
-
-        ru.got.shop.model.Ads ads = adsRepository.findById(Integer.getInteger(adPk)).orElseThrow();
-                //orElseThrow(ExceptionHandler::new);
-        List<ru.got.shop.model.AdsComment> adsComments = ads.getAdsComment();
-
-        ResponseWrapperAdsComment responseWrapperAdsComment = responseWrapperAdsCommentMapper.toDto(adsComments.size(), adsCommentMapper.toDtos(adsComments));
-        log.info(responseWrapperAdsComment.toString());
-
-        return responseWrapperAdsComment;
     }
 
     @Override
@@ -104,11 +58,6 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void removeAdsUsingDELETE(Integer id) {
-    }
-
-    @Override
-    public AdsComment updateAdsComment(String adPk, Integer id, AdsComment comment) {
-        return AdsFactory.getAdsComment();
     }
 
     @Override
