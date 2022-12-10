@@ -31,22 +31,38 @@ public final class UserFactory {
     private static final String OLDPASSWORD = "СтарыйПароль";
     private static final String NEWPASSWORD = "НовыйПароль";
 
+    private static final User USER = User.builder()
+            .firstName(FIRSTNAME)
+            .lastName(LASTNAME)
+            .email(EMAIL)
+            .phone(PHONE)
+            .id(ID)
+            .build();
+
+    private static final User USER1 = User.builder()
+            .firstName(FIRSTNAME1)
+            .lastName(LASTNAME1)
+            .email(EMAIL1)
+            .phone(PHONE1)
+            .id(ID1)
+            .build();
+
+    private static final User USER2 = User.builder()
+            .firstName(FIRSTNAME2)
+            .lastName(LASTNAME2)
+            .email(EMAIL2)
+            .phone(PHONE2)
+            .id(ID2)
+            .build();
+
     public static User getUser() {
-        return User.builder()
-                .firstName(FIRSTNAME)
-                .lastName(LASTNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .id(ID)
-                .build();
+        return USER;
     }
 
     public static ResponseWrapperUser getResponseWrapperUser() {
         return ResponseWrapperUser.builder()
                 .count(3)
-                .results(List.of(new User(EMAIL1, FIRSTNAME1, ID1, LASTNAME1, PHONE1),
-                        new User(EMAIL2, FIRSTNAME2, ID2, LASTNAME2, PHONE2),
-                        getUser()))
+                .results(List.of(USER, USER1, USER2))
                 .build();
     }
 
