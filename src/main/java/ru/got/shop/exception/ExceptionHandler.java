@@ -1,6 +1,7 @@
 package ru.got.shop.exception;
 
-import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,11 +12,11 @@ import javax.persistence.EntityNotFoundException;
 import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
-@Slf4j
 public class ExceptionHandler {
     // Делал Серега)) с прошлого проекта
+
     /**
-     * Обработка NOT_FOUND исключений и проброс текста
+     * Обработка EntityNotFoundException исключений и проброс текста
      * ошибки в контроллер
      *
      * @param e Exception
@@ -23,13 +24,15 @@ public class ExceptionHandler {
      */
     @org.springframework.web.bind.annotation.ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(NOT_FOUND)
-    public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException e) {
-        log.error("Not found exception occurred, message: {}", e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), NOT_FOUND);
+    public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException e) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode JSONObject = mapper.createObjectNode();
+        JSONObject.put(e.getMessage(), e.getMessage());
+        return new ResponseEntity<>(JSONObject.get(e.getMessage()), NOT_FOUND);
     }
 
     /**
-     * Обработка FORBIDDEN исключений и проброс текста
+     * Обработка EntityExistsException исключений и проброс текста
      * ошибки в контроллер
      *
      * @param e Exception
@@ -37,13 +40,15 @@ public class ExceptionHandler {
      */
     @ResponseStatus(FORBIDDEN)
     @org.springframework.web.bind.annotation.ExceptionHandler(EntityExistsException.class)
-    public ResponseEntity<String> handleEntityExist(EntityExistsException e) {
-        log.error("EntityExistsException occurred, message: {}", e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), FORBIDDEN);
+    public ResponseEntity<Object> handleEntityExist(EntityExistsException e) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode JSONObject = mapper.createObjectNode();
+        JSONObject.put(e.getMessage(), e.getMessage());
+        return new ResponseEntity<>(JSONObject.get(e.getMessage()), FORBIDDEN);
     }
 
     /**
-     * Обработка NOT_ACCEPTABLE исключений и проброс текста
+     * Обработка IllegalArgumentException исключений и проброс текста
      * ошибки в контроллер
      *
      * @param e Exception
@@ -51,8 +56,26 @@ public class ExceptionHandler {
      */
     @ResponseStatus(NOT_ACCEPTABLE)
     @org.springframework.web.bind.annotation.ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArg(IllegalArgumentException e) {
-        log.error("IllegalArgumentException occurred, message: {}", e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), NOT_ACCEPTABLE);
+    public ResponseEntity<Object> handleIllegalArg(IllegalArgumentException e) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode JSONObject = mapper.createObjectNode();
+        JSONObject.put(e.getMessage(), e.getMessage());
+        return new ResponseEntity<>(JSONObject.get(e.getMessage()), NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Обработка RuntimeException исключений и проброс текста
+     * ошибки в контроллер
+     *
+     * @param e Exception
+     * @return ResponseEntity
+     */
+    @ResponseStatus(BAD_REQUEST)
+    @org.springframework.web.bind.annotation.ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleIllegalArg(RuntimeException e) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode JSONObject = mapper.createObjectNode();
+        JSONObject.put(e.getMessage(), e.getMessage());
+        return new ResponseEntity<>(JSONObject.get(e.getMessage()), BAD_REQUEST);
     }
 }
