@@ -21,9 +21,10 @@ ALTER TABLE ads
         ON UPDATE NO ACTION
         NOT DEFERRABLE;
 
-INSERT INTO public.users_account ("first_name", "last_name", "email", "password", "phone", "role", "avatar_id")
+INSERT INTO public.users_account ("email", "password", "role")
 VALUES
-    (NULL, NULL, E'test@mail.ru', E'a5f726cd35b69e3b46ec92868cf944d2', NULL, E'USER', NULL);
+    (E'user@gmail.com', E'$2a$10$z4L2CvJCdVe2Lfjc1tS5W.WAJ6LECIExfcj.LRhfZy8q.XmaVgorG', E'USER'),
+    (E'admin@gmail.com', E'$2a$10$myymLHEXGSe9LigC8WgleOiEbn2LToNzeP17rzm788PMfz9siMGjS', E'ADMIN');
 
 INSERT INTO public.ads ("user_id", "description", "image", "price", "title")
 VALUES
