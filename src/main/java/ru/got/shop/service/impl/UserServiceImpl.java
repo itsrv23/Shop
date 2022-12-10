@@ -1,20 +1,17 @@
 package ru.got.shop.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.got.shop.exception.UserNotFoundException;
+import ru.got.shop.constant.UserFactory;
 import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.openapi.dto.NewPassword;
 import ru.got.shop.openapi.dto.ResponseWrapperUser;
 import ru.got.shop.openapi.dto.User;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.UserService;
-import ru.got.shop.constant.UserFactory;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,15 +19,17 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-
     private final UserRepository userRepository;
-    private final  UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public final static String NOT_EXIST = "User doesn't exist!!!";
+
     @Override
     public User getUserUsingGET(Integer id) {
-        ru.got.shop.model.User user = userRepository.findById(1).orElseThrow(UserNotFoundException::new);
+        ru.got.shop.model.User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST));
         System.out.println("user getAds = " + user.getAds());
         System.out.println("user = " + user);
-//        return UserFactory.getUser();
         return userMapper.toDto(user);
     }
 
@@ -38,9 +37,10 @@ public class UserServiceImpl implements UserService {
     public ResponseWrapperUser getUsersUsingGET() {
         // Какое кривое называние для такого метода. Дергается http://localhost:8080/users/me
         //TODO найти способ брать юзера из сессии или из хедеров
-        User user = userRepository.findById(1).map(userMapper::toDto).orElseThrow(UserNotFoundException::new);
-        ResponseWrapperUser responseWrapperUser = new ResponseWrapperUser(1, List.of(user));
-        return responseWrapperUser;
+        User user = userRepository.findById(1)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_EXIST));
+        return new ResponseWrapperUser(1, List.of(user));
     }
 
     @Override
