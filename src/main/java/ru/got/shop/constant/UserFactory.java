@@ -10,21 +10,21 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserFactory {
-    private static final String FIRSTNAME = "Андрей";
-    private static final String LASTNAME = "Миронов";
-    private static final String EMAIL = "andrew@mironov.com";
+    private static final String FIRSTNAME = "Игорь";
+    private static final String LASTNAME = "Шапранский";
+    private static final String EMAIL = "is@srub.com";
     private static final String PHONE = "+7(777)777-77-77";
     private static final Integer ID = 777;
 
     private static final String FIRSTNAME1 = "Алексей";
     private static final String LASTNAME1 = "Виноградов";
-    private static final String EMAIL1 = "av@mironov.com";
+    private static final String EMAIL1 = "av@srub.com";
     private static final String PHONE1 = "+7(777)111-11-11";
     private static final Integer ID1 = 111;
 
     private static final String FIRSTNAME2 = "Александра";
     private static final String LASTNAME2 = "Пивоварова";
-    private static final String EMAIL2 = "ap@mironov.com";
+    private static final String EMAIL2 = "ap@srub.com";
     private static final String PHONE2 = "+7(222)222-22-22";
     private static final Integer ID2 = 222;
 
