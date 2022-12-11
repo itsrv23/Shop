@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.got.shop.openapi.dto.RegReq;
 import ru.got.shop.security.Role;
 
 import javax.persistence.*;

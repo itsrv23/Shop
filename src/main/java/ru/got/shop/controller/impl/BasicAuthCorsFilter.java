@@ -1,4 +1,4 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;

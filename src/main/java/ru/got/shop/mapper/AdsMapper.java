@@ -10,10 +10,10 @@ import java.util.List;
 public interface AdsMapper {
 
     @Mapping(source = "author", target ="userId.id")
-    Ads toEntity(ru.got.shop.openapi.dto.Ads ads);
+    Ads toEntity(ru.got.shop.model.dto.Ads ads);
 
     @Mapping(source = "userId.id", target ="author")
-    ru.got.shop.openapi.dto.Ads toDto(Ads ads);
+    ru.got.shop.model.dto.Ads toDto(Ads ads);
 
-    List<ru.got.shop.openapi.dto.Ads> toDtos(List<Ads> adsList);
+    List<ru.got.shop.model.dto.Ads> toDtos(List<Ads> adsList);
 }

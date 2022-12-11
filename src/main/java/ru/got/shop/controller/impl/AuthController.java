@@ -1,4 +1,4 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.openapi.controller.AuthApi;
-import ru.got.shop.openapi.dto.RegReq;
+import ru.got.shop.controller.AuthApi;
+import ru.got.shop.model.dto.LoginReq;
+import ru.got.shop.model.dto.RegReq;
 import ru.got.shop.service.AuthService;
 
 @Slf4j
@@ -19,7 +20,7 @@ public class AuthController implements AuthApi {
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<Object> loginUsingPOST(ru.got.shop.openapi.dto.LoginReq req) {
+    public ResponseEntity<Object> loginUsingPOST(LoginReq req) {
         if (authService.login(req.getUsername(), req.getPassword())) {
             return ResponseEntity.ok().build();
         } else {

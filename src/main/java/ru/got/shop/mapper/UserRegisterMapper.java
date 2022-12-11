@@ -3,7 +3,7 @@ package ru.got.shop.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.User;
-import ru.got.shop.openapi.dto.RegReq;
+import ru.got.shop.model.dto.RegReq;
 
 @Mapper(componentModel = "spring")
 public interface UserRegisterMapper {

@@ -2,7 +2,7 @@ package ru.got.shop.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.got.shop.openapi.dto.*;
+import ru.got.shop.model.dto.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -15,8 +15,8 @@ public final class AdsFactory {
     private static final String MAIL = "someEmail@mail.com";
     private static final Integer PRICE = 1500;
 
-    public static ResponseWrapperAdsComment getResponseWrapperAdsComment() {
-        return ResponseWrapperAdsComment.builder()
+    public static ResponseWrapperAdsCommentDto getResponseWrapperAdsComment() {
+        return ResponseWrapperAdsCommentDto.builder()
                 .count(2)
                 .results(List.of(getAdsComment(), getAdsComment()))
                 .build();
@@ -53,8 +53,8 @@ public final class AdsFactory {
                 .build();
     }
 
-    public static AdsComment getAdsComment() {
-        return AdsComment.builder()
+    public static AdsCommentDto getAdsComment() {
+        return AdsCommentDto.builder()
                 .author(1)
                 .createdAt(OffsetDateTime.now())
                 .pk(1)

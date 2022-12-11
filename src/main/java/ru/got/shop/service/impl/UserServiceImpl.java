@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.got.shop.constant.UserFactory;
 import ru.got.shop.mapper.UserMapper;
-import ru.got.shop.openapi.dto.NewPassword;
-import ru.got.shop.openapi.dto.ResponseWrapperUser;
-import ru.got.shop.openapi.dto.User;
+import ru.got.shop.model.dto.NewPassword;
+import ru.got.shop.model.dto.ResponseWrapperUser;
+import ru.got.shop.model.dto.User;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.UserService;
 

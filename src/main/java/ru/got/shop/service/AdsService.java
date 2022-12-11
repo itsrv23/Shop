@@ -1,6 +1,9 @@
 package ru.got.shop.service;
 
-import ru.got.shop.openapi.dto.*;
+import ru.got.shop.model.dto.Ads;
+import ru.got.shop.model.dto.CreateAds;
+import ru.got.shop.model.dto.FullAds;
+import ru.got.shop.model.dto.ResponseWrapperAds;
 
 public interface AdsService {
     Ads addAds(CreateAds createAds);

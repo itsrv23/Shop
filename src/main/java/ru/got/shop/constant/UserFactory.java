@@ -2,9 +2,9 @@ package ru.got.shop.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.got.shop.openapi.dto.NewPassword;
-import ru.got.shop.openapi.dto.ResponseWrapperUser;
-import ru.got.shop.openapi.dto.User;
+import ru.got.shop.model.dto.NewPassword;
+import ru.got.shop.model.dto.ResponseWrapperUser;
+import ru.got.shop.model.dto.User;
 
 import java.util.List;
 

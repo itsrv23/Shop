@@ -1,4 +1,4 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.openapi.controller.AdsApi;
-import ru.got.shop.openapi.dto.*;
-import ru.got.shop.repository.AdsRepository;
-import ru.got.shop.repository.UserRepository;
-import ru.got.shop.service.AdsCommentService;
+import ru.got.shop.controller.AdsApi;
+import ru.got.shop.model.dto.Ads;
+import ru.got.shop.model.dto.CreateAds;
+import ru.got.shop.model.dto.FullAds;
+import ru.got.shop.model.dto.ResponseWrapperAds;
 import ru.got.shop.service.AdsService;
 
 @CrossOrigin(value = "http://localhost:3000")
@@ -19,12 +19,6 @@ import ru.got.shop.service.AdsService;
 public class AdsController implements AdsApi {
 
     private final AdsService adsService;
-    private final AdsCommentService adsCommentService;
-
-    @Override
-    public ResponseEntity<AdsComment> addAdsCommentsUsingPOST(String adPk, AdsComment comment) {
-        return ResponseEntity.ok(adsCommentService.addAdsComments(adPk, comment));
-    }
 
     @Override
     public ResponseEntity<Ads> addAdsUsingPOST(CreateAds createAds) {
@@ -33,25 +27,8 @@ public class AdsController implements AdsApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteAdsCommentUsingDELETE(String adPk, Integer id) {
-        adsCommentService.deleteAdsComment(adPk, id);
-        return ResponseEntity.ok()
-                .build();
-    }
-
-    @Override
     public ResponseEntity<ResponseWrapperAds> getALLAdsUsingGET() {
         return ResponseEntity.ok(adsService.getALLAds());
-    }
-
-    @Override
-    public ResponseEntity<AdsComment> getAdsCommentUsingGET(String adPk, Integer id) {
-        return ResponseEntity.ok(adsCommentService.getAdsComment(adPk, id));
-    }
-
-    @Override
-    public ResponseEntity<ResponseWrapperAdsComment> getAdsCommentsUsingGET(String adPk) {
-        return ResponseEntity.ok(adsCommentService.getAdsComments(adPk));
     }
 
     @Override
@@ -79,11 +56,6 @@ public class AdsController implements AdsApi {
         adsService.removeAdsUsingDELETE(id);
         return ResponseEntity.ok()
                 .build();
-    }
-
-    @Override
-    public ResponseEntity<AdsComment> updateAdsCommentUsingPATCH(String adPk, Integer id, AdsComment comment) {
-        return ResponseEntity.ok(adsCommentService.updateAdsComment(adPk, id, comment));
     }
 
     @Override
