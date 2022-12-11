@@ -1,13 +1,13 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import ru.got.shop.openapi.controller.UsersApi;
-import ru.got.shop.openapi.dto.NewPassword;
-import ru.got.shop.openapi.dto.ResponseWrapperUser;
-import ru.got.shop.openapi.dto.User;
+import ru.got.shop.controller.UsersApi;
+import ru.got.shop.model.dto.NewPassword;
+import ru.got.shop.model.dto.ResponseWrapperUser;
+import ru.got.shop.model.dto.User;
 import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.service.impl.UserServiceImpl;
 

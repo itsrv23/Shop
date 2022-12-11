@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
-import ru.got.shop.openapi.dto.AdsComment;
-import ru.got.shop.openapi.dto.ResponseWrapperAdsComment;
+import ru.got.shop.model.dto.AdsCommentDto;
+import ru.got.shop.model.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.repository.AdsCommentRepository;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.service.AdsCommentService;
@@ -25,81 +25,86 @@ public class AdsCommentServiceImpl implements AdsCommentService {
     private final AdsRepository adsRepository;
 
     @Override
-    public AdsComment addAdsComments(String adPk, AdsComment comment) {
+    public AdsCommentDto addAdsComments(Integer adId, AdsCommentDto comment) {
         ru.got.shop.model.AdsComment newComment = adsCommentMapper.toEntity(comment);
-        newComment.setAdsId(adsRepository.findById(Integer.parseInt(adPk))
+        newComment.setAdsId(adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist")));
-        log.info("adding successfull " + newComment);
-        return adsCommentMapper.toDto(adsCommentRepository.save(newComment));
+        AdsCommentDto addedComment =  adsCommentMapper.toDto(adsCommentRepository.save(newComment));
+
+        log.info("adding successfull " + addedComment);
+        return addedComment;
     }
 
     @Override
-    public void deleteAdsComment(String adPk, Integer id) {
-        if (! adsContainsAdsComment(adPk, id)) {
+    public AdsCommentDto deleteAdsComment(Integer adId, Integer id) {
+        if (! adsContainsAdsComment(adId, id)) {
             throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
         }
+
+        AdsCommentDto deletedComment = adsCommentMapper.toDto(adsCommentRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("AdsCommentNotFound or does not exist")));
         adsCommentRepository.deleteById(id);
-        log.info("remowal successfull with adsId " + adPk + " and id " + id);
+
+        log.info("remowal successfull " + deletedComment);
+        return deletedComment;
     }
 
     @Override
-    public AdsComment getAdsComment(String adPk, Integer id) {
-        if (! adsContainsAdsComment(adPk, id)) {
+    public AdsCommentDto getAdsComment(Integer adId, Integer id) {
+        if (! adsContainsAdsComment(adId, id)) {
             throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
         }
 
-        ru.got.shop.model.Ads ads = adsRepository
-                .findById(Integer.parseInt(adPk))
+        ru.got.shop.model.Ads adsByAdId = adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-        List<ru.got.shop.model.AdsComment> adsComments = ads.getAdsComment();
-
-        ru.got.shop.model.AdsComment foundComment = adsComments
+        List<ru.got.shop.model.AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
+        ru.got.shop.model.AdsComment neededCommentWithId = allAdsCommentsByAdId
                 .stream()
                 .filter(adsCom -> (adsCom.getPk().equals(id)))
                 .findFirst()
                 .orElseThrow(()-> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
+        AdsCommentDto foundComment = adsCommentMapper.toDto(neededCommentWithId);
 
-        AdsComment adsComment = adsCommentMapper.toDto(foundComment);
-
-        log.info("getting successfull " + adsComment.toString());
-        return adsComment;
+        log.info("getting successfull " + foundComment);
+        return foundComment;
     }
 
     @Override
-    public ResponseWrapperAdsComment getAdsComments(String adPk) {
-        ru.got.shop.model.Ads ads = adsRepository.findById(Integer.parseInt(adPk))
+    public ResponseWrapperAdsCommentDto getAdsComments(Integer adId) {
+        ru.got.shop.model.Ads adsByAdId = adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-        List<ru.got.shop.model.AdsComment> adsComments = ads.getAdsComment();
-        ResponseWrapperAdsComment responseWrapperAdsComment = responseWrapperAdsCommentMapper.toDto(adsComments.size(),
-                adsCommentMapper.toDtos(adsComments));
+        List<ru.got.shop.model.AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
+        ResponseWrapperAdsCommentDto foundComments = responseWrapperAdsCommentMapper.toDto(allAdsCommentsByAdId.size(),
+                adsCommentMapper.toDtos(allAdsCommentsByAdId));
 
-        log.info("getting successfull " + responseWrapperAdsComment.toString());
-        return responseWrapperAdsComment;
+        log.info("getting successfull " + foundComments);
+        return foundComments;
     }
 
     @Override
-    public AdsComment updateAdsComment(String adPk, Integer id, AdsComment comment) {
-        if (! adsContainsAdsComment(adPk, id)) {
+    public AdsCommentDto updateAdsComment(Integer adId, Integer id, AdsCommentDto comment) {
+        if (! adsContainsAdsComment(adId, id)) {
             throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
         }
 
         ru.got.shop.model.AdsComment updateComment = adsCommentMapper.toEntity(comment);
         updateComment.setPk(id);
-        updateComment.setAdsId(adsRepository.findById(Integer.parseInt(adPk))
+        updateComment.setAdsId(adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist")));
         updateComment = adsCommentRepository.save(updateComment);
+        AdsCommentDto updatedComment = adsCommentMapper.toDto(updateComment);
 
-        log.info("updating successfull " + updateComment);
-        return adsCommentMapper.toDto(updateComment);
+        log.info("updating successfull " + updatedComment);
+        return updatedComment;
     }
 
-    private boolean adsContainsAdsComment (String adPk, Integer id) {
+    private boolean adsContainsAdsComment (Integer adId, Integer id) {
         try {
-            ru.got.shop.model.Ads ads = adsRepository.findById(Integer.parseInt(adPk))
+            ru.got.shop.model.Ads adsByAdId = adsRepository.findById(adId)
                     .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-            ru.got.shop.model.AdsComment comment = adsCommentRepository.findById(id)
+            ru.got.shop.model.AdsComment commentById = adsCommentRepository.findById(id)
                      .orElseThrow(()-> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
-            return ads.getAdsComment().contains(comment);
+            return adsByAdId.getAdsComment().contains(commentById);
         } catch (EntityNotFoundException e) { return false; }
     }
 }

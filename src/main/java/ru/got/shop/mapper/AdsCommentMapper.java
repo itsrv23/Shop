@@ -10,10 +10,10 @@ import java.util.List;
 public interface AdsCommentMapper {
 
     @Mapping(source = "author", target ="userId.id")
-    AdsComment toEntity(ru.got.shop.openapi.dto.AdsComment adsComment);
+    AdsComment toEntity(ru.got.shop.model.dto.AdsCommentDto adsComment);
 
     @Mapping(source = "userId.id", target ="author")
-    ru.got.shop.openapi.dto.AdsComment toDto(AdsComment adsComment);
+    ru.got.shop.model.dto.AdsCommentDto toDto(AdsComment adsComment);
 
-    List<ru.got.shop.openapi.dto.AdsComment> toDtos(List<AdsComment> adsCommentList);
+    List<ru.got.shop.model.dto.AdsCommentDto> toDtos(List<AdsComment> adsCommentList);
 }

@@ -2,7 +2,7 @@ package ru.got.shop.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.got.shop.openapi.dto.User;
+import ru.got.shop.model.dto.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

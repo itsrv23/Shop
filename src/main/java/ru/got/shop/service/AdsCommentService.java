@@ -1,16 +1,16 @@
 package ru.got.shop.service;
 
-import ru.got.shop.openapi.dto.AdsComment;
-import ru.got.shop.openapi.dto.ResponseWrapperAdsComment;
+import ru.got.shop.model.dto.AdsCommentDto;
+import ru.got.shop.model.dto.ResponseWrapperAdsCommentDto;
 
 public interface AdsCommentService {
-    AdsComment addAdsComments(String adPk, AdsComment comment);
+    AdsCommentDto addAdsComments(Integer adId, AdsCommentDto comment);
 
-    void deleteAdsComment(String adPk, Integer id);
+    AdsCommentDto deleteAdsComment(Integer adId, Integer id);
 
-    AdsComment getAdsComment(String adPk, Integer id);
+    AdsCommentDto getAdsComment(Integer adId, Integer id);
 
-    ResponseWrapperAdsComment getAdsComments(String adPk);
+    ResponseWrapperAdsCommentDto getAdsComments(Integer adId);
 
-    AdsComment updateAdsComment(String adPk, Integer id, AdsComment comment);
+    AdsCommentDto updateAdsComment(Integer adId, Integer id, AdsCommentDto comment);
 }

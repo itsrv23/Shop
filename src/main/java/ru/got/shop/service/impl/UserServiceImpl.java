@@ -1,16 +1,13 @@
 package ru.got.shop.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.got.shop.exception.UserNotFoundException;
 import ru.got.shop.mapper.UserMapper;
-import ru.got.shop.openapi.dto.NewPassword;
-import ru.got.shop.openapi.dto.ResponseWrapperUser;
-import ru.got.shop.openapi.dto.User;
+import ru.got.shop.model.dto.NewPassword;
+import ru.got.shop.model.dto.ResponseWrapperUser;
+import ru.got.shop.model.dto.User;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.UserService;
 import ru.got.shop.constant.UserFactory;

@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.got.shop.mapper.*;
-import ru.got.shop.openapi.dto.*;
-import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.model.dto.Ads;
+import ru.got.shop.model.dto.CreateAds;
+import ru.got.shop.model.dto.FullAds;
+import ru.got.shop.model.dto.ResponseWrapperAds;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.AdsService;
 import ru.got.shop.constant.AdsFactory;
 import ru.got.shop.exception.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor

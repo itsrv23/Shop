@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.got.shop.exception.UserEmailNotUniqException;
 import ru.got.shop.mapper.UserRegisterMapper;
 import ru.got.shop.model.User;
-import ru.got.shop.openapi.dto.RegReq;
+import ru.got.shop.model.dto.RegReq;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.Role;
 import ru.got.shop.service.AuthService;
