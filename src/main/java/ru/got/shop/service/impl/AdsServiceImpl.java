@@ -10,9 +10,8 @@ import ru.got.shop.model.dto.FullAds;
 import ru.got.shop.model.dto.ResponseWrapperAds;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.AdsService;
-import ru.got.shop.constant.AdsFactory;
-import ru.got.shop.exception.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -22,8 +21,9 @@ public class AdsServiceImpl implements AdsService {
 
     private final UserRepository userRepository;
     private final ResponseWrapperAdsMapper responseWrapperAdsMapper;
-    private final UserMapper userMapper;
     private final AdsMapper adsMapper;
+    private final FullAdsMapper fullAdsMapper;
+    private final AdsRepository adsRepository;
 
     @Override
     public Ads addAds(CreateAds createAds) {
@@ -33,13 +33,11 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public ResponseWrapperAds getALLAds() {
-        ru.got.shop.model.User user = userRepository.findById(1).orElseThrow(UserNotFoundException::new);
+        ru.got.shop.model.User user = userRepository.findById(1)
+                .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST));
         List<ru.got.shop.model.Ads> ads = user.getAds();
-
         ResponseWrapperAds responseWrapperAds = responseWrapperAdsMapper.toDto(ads.size(), adsMapper.toDtos(ads));
         log.info(responseWrapperAds.toString());
-//        log.info(AdsFactory.getResponseWrapperAds().toString());
-//        return AdsFactory.getResponseWrapperAds();
         return responseWrapperAds;
     }
 
@@ -53,8 +51,10 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public FullAds getAds(Integer id) {
-        return AdsFactory.getFullAds();
+    public ru.got.shop.openapi.dto.FullAds getAds(Integer id) {
+        FullAds fullAdsDto = adsRepository.getFullAds(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ads doesn't exist!!!"));
+        return fullAdsMapper.toDto(fullAdsDto);
     }
 
     @Override
