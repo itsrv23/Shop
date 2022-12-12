@@ -1,14 +1,9 @@
 package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.controller.AdsApi;
-import ru.got.shop.model.dto.Ads;
-import ru.got.shop.model.dto.CreateAds;
 import ru.got.shop.model.dto.FullAds;
 import ru.got.shop.model.dto.ResponseWrapperAds;
 import ru.got.shop.service.AdsService;
@@ -21,14 +16,28 @@ public class AdsController implements AdsApi {
     private final AdsService adsService;
 
     @Override
-    public ResponseEntity<Ads> addAdsUsingPOST(CreateAds createAds) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(adsService.addAds(createAds));
+    public ResponseEntity<ResponseWrapperAds> getAllAds() {
+        return ResponseEntity.ok(adsService.getAllAds());
     }
 
     @Override
-    public ResponseEntity<ResponseWrapperAds> getALLAdsUsingGET() {
-        return ResponseEntity.ok(adsService.getALLAds());
+    public ResponseEntity<AdDto> addAd(AdDto adDto) {
+        return ResponseEntity.ok(adsService.addAd(adDto));
+    }
+
+    @Override
+    public ResponseEntity<ResponseWrapperAds> getMyAds(Integer authorId) {
+        return ResponseEntity.ok(adsService.getMyAds(authorId));
+    }
+
+    @Override
+    public ResponseEntity<AdsComment> getAdsCommentUsingGET(String adPk, Integer id) {
+        return ResponseEntity.ok(adsCommentService.getAdsComment(adPk, id));
+    }
+
+    @Override
+    public ResponseEntity<ResponseWrapperAdsComment> getAdsCommentsUsingGET(String adPk) {
+        return ResponseEntity.ok(adsCommentService.getAdsComments(adPk));
     }
 
     @Override
@@ -47,19 +56,13 @@ public class AdsController implements AdsApi {
     @PreAuthorize("hasAuthority( 'users.read')")
     @Override
     public ResponseEntity<FullAds> getAdsUsingGET(Integer id) {
-        return ResponseEntity.ok(adsService.getAds(id));
+        @Override public ResponseEntity<FullAd> getFullAd (Integer id){
+            return ResponseEntity.ok(adsService.getAds(id));
+        }
+        @Override public ResponseEntity<AdDto> removeAd (Integer id){
+            return ResponseEntity.ok(adsService.removeAd(id));
+        }
+        @Override public ResponseEntity<AdDto> updateAd (Integer id, AdDto adDto){
+            return ResponseEntity.ok(adsService.updateAd(id, adDto));
+        }
     }
-
-    @PreAuthorize("hasAuthority('users.read:write')")
-    @Override
-    public ResponseEntity<Void> removeAdsUsingDELETE(Integer id) {
-        adsService.removeAdsUsingDELETE(id);
-        return ResponseEntity.ok()
-                .build();
-    }
-
-    @Override
-    public ResponseEntity<Ads> updateAdsUsingPATCH(Integer id, Ads ads) {
-        return ResponseEntity.ok(adsService.updateAds(id, ads));
-    }
-}

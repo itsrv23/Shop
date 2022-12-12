@@ -54,13 +54,13 @@ public class ExceptionHandler {
      * @param e Exception
      * @return ResponseEntity
      */
-    @ResponseStatus(NOT_ACCEPTABLE)
+    @ResponseStatus(BAD_REQUEST)
     @org.springframework.web.bind.annotation.ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArg(IllegalArgumentException e) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode JSONObject = mapper.createObjectNode();
         JSONObject.put(e.getMessage(), e.getMessage());
-        return new ResponseEntity<>(JSONObject.get(e.getMessage()), NOT_ACCEPTABLE);
+        return new ResponseEntity<>(JSONObject.get(e.getMessage()),BAD_REQUEST);
     }
 
     /**
