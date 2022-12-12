@@ -5,5 +5,5 @@ import ru.got.shop.model.FullAds;
 
 @Mapper(componentModel = "spring")
 public interface FullAdsMapper {
-    ru.got.shop.openapi.dto.FullAds toDto(FullAds adsDto);
+    ru.got.shop.model.dto.FullAds toDto(FullAds adsDto);
 }
