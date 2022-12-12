@@ -29,7 +29,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public Ads addAds(CreateAds createAds) {
-        System.out.println("createAds = " + createAds);
+        //System.out.println("createAds = " + createAds);
         return AdsFactory.getAds();
     }
 
