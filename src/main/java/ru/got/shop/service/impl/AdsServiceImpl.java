@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.got.shop.constant.AdsFactory;
-import ru.got.shop.mapper.AdsMapper;
-import ru.got.shop.mapper.FullAdsMapper;
-import ru.got.shop.mapper.ResponseWrapperAdsMapper;
-import ru.got.shop.model.FullAds;
-import ru.got.shop.openapi.dto.Ads;
-import ru.got.shop.openapi.dto.CreateAds;
-import ru.got.shop.openapi.dto.ResponseWrapperAds;
+import ru.got.shop.mapper.*;
+import ru.got.shop.model.dto.Ads;
+import ru.got.shop.model.dto.CreateAds;
+import ru.got.shop.model.dto.FullAds;
+import ru.got.shop.model.dto.ResponseWrapperAds;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.AdsService;
@@ -55,8 +53,8 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public ru.got.shop.openapi.dto.FullAds getAds(Integer id) {
-        FullAds fullAdsDto = adsRepository.getFullAds(id)
+    public FullAds getAds(Integer id) {
+        ru.got.shop.model.FullAds fullAdsDto = adsRepository.getFullAds(id)
                 .orElseThrow(() -> new EntityNotFoundException("Ads doesn't exist!!!"));
         return fullAdsMapper.toDto(fullAdsDto);
     }
