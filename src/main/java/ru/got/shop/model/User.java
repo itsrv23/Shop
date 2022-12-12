@@ -42,9 +42,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role roleGroup;
 
-    @Column(name = "avatar_id")
-    private Long avatarId;
-    //todo create entity avatar
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar_id")
+    private UserAvatar avatarId;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")

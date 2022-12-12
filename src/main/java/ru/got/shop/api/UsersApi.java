@@ -11,18 +11,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.model.dto.NewPasswordDto;
 import ru.got.shop.model.dto.ResponseWrapperUserDto;
 import ru.got.shop.model.dto.UserDto;
 
 import javax.annotation.Generated;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
@@ -167,11 +167,14 @@ public interface UsersApi {
     );
 
 
-//    @RequestMapping(
-//            method = RequestMethod.PATCH,
-//            value = "/users/me/avatar",
-//            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-//    )
-//    ResponseEntity<UserDto> updateUserAvatar(@RequestParam MultipartFile image);
+    @RequestMapping(
+            method = RequestMethod.PATCH,
+            value = "/users/me/image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    ResponseEntity<String> updateUserAvatar(@RequestParam MultipartFile image);
+
+    @GetMapping(value = "/images/{id}/", produces = {MediaType.IMAGE_PNG_VALUE})
+    public byte[] getImage(@PathVariable("id") UUID uuid);
 
 }

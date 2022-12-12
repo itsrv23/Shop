@@ -35,5 +35,6 @@ public class UserDto implements Serializable {
   @JsonProperty("email")
   private String email;
 
+  private String image;
 }
 
