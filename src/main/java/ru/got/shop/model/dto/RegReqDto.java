@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 /**
@@ -26,7 +26,7 @@ public class RegReqDto implements Serializable {
   @JsonProperty("username")
   private String username;
 
-  @Min(8)
+  @Length(min = 8)
   @JsonProperty("password")
   private String password;
 
