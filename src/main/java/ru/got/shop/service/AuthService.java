@@ -1,8 +1,8 @@
 package ru.got.shop.service;
 
-import ru.got.shop.model.dto.RegReq;
+import ru.got.shop.model.dto.RegReqDto;
 
 public interface AuthService {
     boolean login(String userName, String password);
-    boolean register(RegReq registerReq, RegReq.RoleEnum role);
+    boolean register(RegReqDto registerReq, RegReqDto.RoleEnum role);
 }

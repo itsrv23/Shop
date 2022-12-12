@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.got.shop.mapper.UserRegisterMapper;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.RegReq;
+import ru.got.shop.model.dto.RegReqDto;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.Role;
 import ru.got.shop.service.AuthService;
@@ -36,8 +36,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegReq registerReq, RegReq.RoleEnum role) {
-        Optional<ru.got.shop.model.User> firstByEmail = userRepository.findFirstByEmail(registerReq.getUsername());
+    public boolean register(RegReqDto registerReq, RegReqDto.RoleEnum role) {
+        Optional<User> firstByEmail = userRepository.findFirstByEmail(registerReq.getUsername());
         if (firstByEmail.isPresent()) {
             throw new RuntimeException("This email is already in use another account!!!");
         }

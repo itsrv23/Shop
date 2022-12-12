@@ -1,4 +1,12 @@
-###
+### 200
+GET http://localhost:8080/users/1
+Authorization: Basic user@gmail.com userpass
+
+### 403
+GET http://localhost:8080/users/2
+Authorization: Basic user@gmail.com userpass
+
+### 200
 GET http://localhost:8080/users/1
 Content-Type: application/json
-Authorization: Basic user@gmail.com userpass
+Authorization: admin@gmail.com adminpass

@@ -3,12 +3,12 @@ package ru.got.shop.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.RegReq;
+import ru.got.shop.model.dto.RegReqDto;
 
 @Mapper(componentModel = "spring")
 public interface UserRegisterMapper {
 
     @Mapping(source = "username", target = "email")
     @Mapping(source = "password", target = "password")
-    User toEntity(RegReq req);
+    User toEntity(RegReqDto req);
 }

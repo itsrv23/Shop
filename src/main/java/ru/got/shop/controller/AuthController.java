@@ -1,37 +1,39 @@
-package ru.got.shop.controller.impl;
+package ru.got.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.controller.AuthApi;
-import ru.got.shop.model.dto.LoginReq;
-import ru.got.shop.model.dto.RegReq;
+import ru.got.shop.api.AuthApi;
+import ru.got.shop.model.dto.LoginReqDto;
+import ru.got.shop.model.dto.RegReqDto;
+import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.service.AuthService;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-public class AuthController implements AuthApi {
+public class AuthController implements AuthApi, AuthenticationFacade {
 
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<Object> loginUsingPOST(LoginReq req) {
+    public ResponseEntity<Authentication> loginUsingPOST(LoginReqDto req) {
         if (authService.login(req.getUsername(), req.getPassword())) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(getAuthentication());
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
     @Override
-    public ResponseEntity<Object> registerUsingPOST(RegReq req) {
+    public ResponseEntity<Object> registerUsingPOST(RegReqDto req) {
         //TODO  не передаются все данные о пользователе при регистрации. Уточнить
-        boolean register = authService.register(req, RegReq.RoleEnum.USER);
+        boolean register = authService.register(req, RegReqDto.RoleEnum.USER);
         if (register) {
             return ResponseEntity.ok().build();
         } else {

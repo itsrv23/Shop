@@ -2,9 +2,9 @@ package ru.got.shop.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.got.shop.model.dto.NewPassword;
-import ru.got.shop.model.dto.ResponseWrapperUser;
-import ru.got.shop.model.dto.User;
+import ru.got.shop.model.dto.NewPasswordDto;
+import ru.got.shop.model.dto.ResponseWrapperUserDto;
+import ru.got.shop.model.dto.UserDto;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public final class UserFactory {
     private static final String OLDPASSWORD = "СтарыйПароль";
     private static final String NEWPASSWORD = "НовыйПароль";
 
-    private static final User USER1 = User.builder()
+    private static final UserDto USER_DTO_1 = UserDto.builder()
             .firstName(FIRSTNAME1)
             .lastName(LASTNAME1)
             .email(EMAIL1)
@@ -39,7 +39,7 @@ public final class UserFactory {
             .id(ID1)
             .build();
 
-    private static final User USER2 = User.builder()
+    private static final UserDto USER_DTO_2 = UserDto.builder()
             .firstName(FIRSTNAME1)
             .lastName(LASTNAME1)
             .email(EMAIL1)
@@ -47,7 +47,7 @@ public final class UserFactory {
             .id(ID1)
             .build();
 
-    private static final User USER3 = User.builder()
+    private static final UserDto USER_DTO_3 = UserDto.builder()
             .firstName(FIRSTNAME2)
             .lastName(LASTNAME2)
             .email(EMAIL2)
@@ -55,19 +55,19 @@ public final class UserFactory {
             .id(ID2)
             .build();
 
-    public static User getUser() {
-        return USER1;
+    public static UserDto getUser() {
+        return USER_DTO_1;
     }
 
-    public static ResponseWrapperUser getResponseWrapperUser() {
-        return ResponseWrapperUser.builder()
+    public static ResponseWrapperUserDto getResponseWrapperUser() {
+        return ResponseWrapperUserDto.builder()
                 .count(3)
-                .results(List.of(USER1, USER2, USER3))
+                .results(List.of(USER_DTO_1, USER_DTO_2, USER_DTO_3))
                 .build();
     }
 
-    public static NewPassword getNewPassword() {
-        return NewPassword.builder()
+    public static NewPasswordDto getNewPassword() {
+        return NewPasswordDto.builder()
                 .currentPassword(OLDPASSWORD)
                 .newPassword(NEWPASSWORD)
                 .build();
