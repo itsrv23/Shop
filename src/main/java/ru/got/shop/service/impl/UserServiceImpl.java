@@ -49,10 +49,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public NewPasswordDto setPassword(NewPasswordDto newPasswordDto, String login) {
-        if (!newPasswordDto.getCurrentPassword().equals(newPasswordDto.getNewPassword())) {
+        User user = findUserByLogin(login);
+        if (!passwordEncoder.matches(newPasswordDto.getCurrentPassword(), user.getPassword())) {
             throw new ForbiddenException("Не верный старый пароль");
         }
-        User user = findUserByLogin(login);
         user.setPassword(passwordEncoder.encode(newPasswordDto.getNewPassword()));
         userRepository.save(user);
         return newPasswordDto;

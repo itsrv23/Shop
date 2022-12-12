@@ -3,8 +3,8 @@ package ru.got.shop.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 /**
@@ -19,7 +19,7 @@ public class NewPasswordDto implements Serializable {
   @JsonProperty("currentPassword")
   private String currentPassword;
 
-  @Min(8)
+  @Length(min = 8)
   @JsonProperty("newPassword")
   private String newPassword;
 }
