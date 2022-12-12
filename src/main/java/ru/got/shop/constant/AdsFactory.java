@@ -15,16 +15,19 @@ public final class AdsFactory {
     private static final String MAIL = "someEmail@mail.com";
     private static final Integer PRICE = 1500;
 
-    public static ResponseWrapperAdsComment getResponseWrapperAdsComment() {
-        return ResponseWrapperAdsComment.builder().count(2).results(List.of(getAdsComment(), getAdsComment())).build();
+    public static ResponseWrapperAdsCommentDto getResponseWrapperAdsComment() {
+        return ResponseWrapperAdsCommentDto.builder()
+                .count(2)
+                .results(List.of(getAdsComment(), getAdsComment()))
+                .build();
     }
 
-    public static ResponseWrapperAds getResponseWrapperAds() {
-        return ResponseWrapperAds.builder().count(2).results(List.of(getAds(), getAds())).build();
+    public static ResponseWrapperAdsDto getResponseWrapperAds() {
+        return ResponseWrapperAdsDto.builder().count(2).results(List.of(getAds(), getAds())).build();
     }
 
-    public static FullAd getFullAds() {
-        return FullAd.builder()
+    public static FullAdDto getFullAds() {
+        return FullAdDto.builder()
                 .authorFirstName(VALUE)
                 .authorLastName(VALUE)
                 .description(VALUE)
@@ -40,8 +43,8 @@ public final class AdsFactory {
         return AdDto.builder().author(1).pk(1).price(PRICE).title(VALUE).build();
     }
 
-    public static AdsComment getAdsComment() {
-        return AdsComment.builder().author(1).createdAt(OffsetDateTime.now()).pk(1).text(VALUE).build();
+    public static AdsCommentDto getAdsComment() {
+        return AdsCommentDto.builder().author(1).createdAt(OffsetDateTime.now()).pk(1).text(VALUE).build();
     }
 //    public static CreateAds getCreateAds() {
 //        return CreateAds.builder()

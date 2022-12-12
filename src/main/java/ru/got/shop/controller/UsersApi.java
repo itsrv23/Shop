@@ -3,7 +3,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-package ru.got.shop.api;
+package ru.got.shop.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,11 +1,11 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.api.UsersApi;
+import ru.got.shop.controller.UsersApi;
 import ru.got.shop.model.dto.NewPasswordDto;
 import ru.got.shop.model.dto.ResponseWrapperUserDto;
 import ru.got.shop.model.dto.UserDto;

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.FullAdsMapper;
 import ru.got.shop.model.Ads;
-import ru.got.shop.model.FullAds;
 import ru.got.shop.model.dto.AdDto;
 import ru.got.shop.model.dto.FullAd;
-import ru.got.shop.model.dto.ResponseWrapperAds;
+import ru.got.shop.model.dto.FullAdDto;
+import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.service.AdsService;
 
@@ -39,23 +39,28 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public ResponseWrapperAds getAllAds() {
+    public ResponseWrapperAdsDto getAllAds() {
         List<Ads> ads = adsRepository.findAll();
         List<AdDto> adDtoList = adsMapper.toDtos(ads);
-        return new ResponseWrapperAds(adDtoList.size(), adDtoList);
+        return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
 
     @Override
-    public ResponseWrapperAds getMyAds(Integer authorId) {
+    public ResponseWrapperAdsDto getMyAds(Integer authorId) {
         List<Ads> adsList = adsRepository.findAllAdsByAuthorId(authorId);
         List<AdDto> adDtoList = adsMapper.toDtos(adsList);
-        return new ResponseWrapperAds(adDtoList.size(), adDtoList);
+        return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
 
     @Override
-    public FullAd getAds(Integer id) {
-        FullAds fullAdsDto = adsRepository.getFullAds(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-        return fullAdsMapper.toDto(fullAdsDto);
+    public FullAdDto getAds(Integer id) {
+        int d = 12;
+        FullAd fullAd = adsRepository.getFullAds(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+//        log.info(f.toString());
+        FullAdDto ad = fullAdsMapper.toDto(fullAd);
+        log.info(ad.toString());
+//        return fullAdsMapper.toDto(fullAdsDto);
+        return ad;
     }
 
     @Override

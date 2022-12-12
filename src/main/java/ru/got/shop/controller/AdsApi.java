@@ -11,10 +11,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.got.shop.model.dto.*;
+import ru.got.shop.model.dto.AdDto;
+import ru.got.shop.model.dto.FullAdDto;
+import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 
 import javax.annotation.Generated;
 import javax.validation.Valid;
@@ -32,20 +35,9 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getAllAds",
-            summary = "geting all ads wrapped into ResponseWrapperAds",
-            tags = { "Ads" },
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "OK",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResponseWrapperAds.class))),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
-            })
+    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = { "application/json" })
-    ResponseEntity<ResponseWrapperAds> getAllAds();
+    ResponseEntity<ResponseWrapperAdsDto> getAllAds();
 
     /**
      * POST /ads : addAds
@@ -58,7 +50,13 @@ public interface AdsApi {
      * or Bad Request (status code 400)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "addAd", summary = "adding an advertisment", tags = { "Ads" })
+    @Operation(operationId = "addAd",
+            summary = "adding an advertisment",
+            tags = { "Ads" },
+            responses = @ApiResponse(responseCode = "201",
+                    description = "Created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseWrapperAdsDto.class))))
     @RequestMapping(method = RequestMethod.POST,
             value = "/ads",
             produces = { "application/json" },
@@ -67,117 +65,16 @@ public interface AdsApi {
             description = "Ads creation",
             required = true,
             schema = @Schema(description = "")) @Valid @RequestBody AdDto adDto);
-//    /**
-//     * DELETE /ads/{ad_pk}/comment/{id} : deleteAdsComment
-//     *
-//     * @param adPk ad_pk (required)
-//     * @param id   id (required)
-//     * @return No Content (status code 204)
-//     * or Unauthorized (status code 401)
-//     * or Forbidden (status code 403)
-//     */
-//    @Operation(operationId = "deleteAdsCommentUsingDELETE",
-//            summary = "deleteAdsComment",
-//            tags = { "Ads" },
-//            responses = {
-//                    @ApiResponse(responseCode = "204", description = "No Content"),
-//                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-//                    @ApiResponse(responseCode = "403", description = "Forbidden")
-//            })
-//    @RequestMapping(method = RequestMethod.DELETE, value = "/ads/{ad_pk}/comment/{id}")
-//    ResponseEntity<Void> deleteAdsCommentUsingDELETE(
-//            @Parameter(name = "ad_pk", description = "ad_pk", required = true, schema = @Schema(description = ""))
-//            @PathVariable("ad_pk") String adPk,
-//            @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
-//            @PathVariable("id") Integer id);
-//
-//    /**
-//     * GET /ads/{ad_pk}/comment/{id} : getAdsComment
-//     *
-//     * @param adPk ad_pk (required)
-//     * @param id   id (required)
-//     * @return OK (status code 200)
-//     * or Unauthorized (status code 401)
-//     * or Forbidden (status code 403)
-//     * or Not Found (status code 404)
-//     */
-//    @Operation(operationId = "getAdsCommentUsingGET", summary = "getAdsComment", tags = { "Ads" }, responses = {
-//            @ApiResponse(responseCode = "200",
-//                    description = "OK",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = AdsComment.class))),
-//            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-//            @ApiResponse(responseCode = "403", description = "Forbidden"),
-//            @ApiResponse(responseCode = "404", description = "Not Found")
-//    })
-//    @RequestMapping(method = RequestMethod.GET, value = "/ads/{ad_pk}/comment/{id}", produces = { "application/json" })
-//    ResponseEntity<AdsComment> getAdsCommentUsingGET(
-//            @Parameter(name = "ad_pk", description = "ad_pk", required = true, schema = @Schema(description = ""))
-//            @PathVariable("ad_pk") String adPk,
-//            @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
-//            @PathVariable("id") Integer id);
-//
-//    /**
-//     * POST /ads/{ad_pk}/comment : addAdsComments
-//     *
-//     * @param adPk    ad_pk (required)
-//     * @param comment comment (required)
-//     * @return OK (status code 200)
-//     * or Created (status code 201)
-//     * or Unauthorized (status code 401)
-//     * or Forbidden (status code 403)
-//     * or Not Found (status code 404)
-//     */
-//    @Operation(operationId = "addAdsCommentsUsingPOST", summary = "addAdsComments", tags = { "Ads" }, responses = {
-//            @ApiResponse(responseCode = "200",
-//                    description = "OK",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = AdsComment.class))),
-//            @ApiResponse(responseCode = "201", description = "Created"),
-//            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-//            @ApiResponse(responseCode = "403", description = "Forbidden"),
-//            @ApiResponse(responseCode = "404", description = "Not Found")
-//    })
-//    @RequestMapping(method = RequestMethod.POST,
-//            value = "/ads/{ad_pk}/comment",
-//            produces = { "application/json" },
-//            consumes = { "application/json" })
-//    ResponseEntity<AdsComment> addAdsCommentsUsingPOST(
-//            @Parameter(name = "ad_pk", description = "ad_pk", required = true, schema = @Schema(description = ""))
-//            @PathVariable("ad_pk") String adPk,
-//            @Parameter(name = "comment", description = "comment", required = true, schema = @Schema(description = ""))
-//            @Valid @RequestBody AdsComment comment);
-//
-//    /**
-//     * GET /ads/{ad_pk}/comment : getAdsComments
-//     *
-//     * @param adPk ad_pk (required)
-//     * @return OK (status code 200)
-//     * or Unauthorized (status code 401)
-//     * or Forbidden (status code 403)
-//     * or Not Found (status code 404)
-//     */
-//    @Operation(operationId = "getAdsCommentsUsingGET", summary = "getAdsComments", tags = { "Ads" }, responses = {
-//            @ApiResponse(responseCode = "200",
-//                    description = "OK",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = ResponseWrapperAdsComment.class))),
-//            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-//            @ApiResponse(responseCode = "403", description = "Forbidden"),
-//            @ApiResponse(responseCode = "404", description = "Not Found")
-//    })
-//    @RequestMapping(method = RequestMethod.GET, value = "/ads/{ad_pk}/comment", produces = { "application/json" })
-//    ResponseEntity<ResponseWrapperAdsComment> getAdsCommentsUsingGET(
-//            @Parameter(name = "ad_pk", description = "ad_pk", required = true, schema = @Schema(description = ""))
-//            @PathVariable("ad_pk") String adPk);
 
     /**
+     * GET /ads/me : Ads
+     *
      * @param authorId Author id
      * @return ResponseEntity<ResponseWrapperAds>
      */
     @Operation(operationId = "getMyAds", summary = "get all ads of me", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = { "application/json" })
-    ResponseEntity<ResponseWrapperAds> getMyAds(
+    ResponseEntity<ResponseWrapperAdsDto> getMyAds(
             @Parameter(name = "authorId", description = "", schema = @Schema(description = "")) @Valid
             @RequestParam(value = "authorId", required = false) Integer authorId);
 
@@ -191,8 +88,8 @@ public interface AdsApi {
      * or Not Found (status code 404)
      */
     @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.GET, value = "/ads/{id}", produces = { "application/json" })
-    ResponseEntity<FullAd> getFullAd(
+    @RequestMapping(method = RequestMethod.GET, value = "/ads/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<FullAdDto> getFullAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id);
 
@@ -204,8 +101,7 @@ public interface AdsApi {
      * or Unauthorized (status code 401)
      * or Forbidden (status code 403)
      */
-    @Operation(operationId = "removeAd", summary = "remove an advertisment", tags = { "Ads" }, responses = {
-    })
+    @Operation(operationId = "removeAd", summary = "remove an advertisment", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.DELETE,
             value = "/ads/{id}",
             produces = { "application/json" },
@@ -213,37 +109,6 @@ public interface AdsApi {
     ResponseEntity<AdDto> removeAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id);
-//    /**
-//     * PATCH /ads/{ad_pk}/comment/{id} : updateAdsComment
-//     *
-//     * @param adPk    ad_pk (required)
-//     * @param id      id (required)
-//     * @param comment comment (required)
-//     * @return OK (status code 200)
-//     * or No Content (status code 204)
-//     * or Unauthorized (status code 401)
-//     * or Forbidden (status code 403)
-//     */
-//    @Operation(operationId = "updateAdsCommentUsingPATCH", summary = "updateAdsComment", tags = { "Ads" }, responses = {
-//            @ApiResponse(responseCode = "200",
-//                    description = "OK",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = AdsComment.class))),
-//            @ApiResponse(responseCode = "204", description = "No Content"),
-//            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-//            @ApiResponse(responseCode = "403", description = "Forbidden")
-//    })
-//    @RequestMapping(method = RequestMethod.PATCH,
-//            value = "/ads/{ad_pk}/comment/{id}",
-//            produces = { "application/json" },
-//            consumes = { "application/json" })
-//    ResponseEntity<AdsComment> updateAdsCommentUsingPATCH(
-//            @Parameter(name = "ad_pk", description = "ad_pk", required = true, schema = @Schema(description = ""))
-//            @PathVariable("ad_pk") String adPk,
-//            @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
-//            @PathVariable("id") Integer id,
-//            @Parameter(name = "comment", description = "comment", required = true, schema = @Schema(description = ""))
-//            @Valid @RequestBody AdsComment comment);
 
     /**
      * PATCH /ads/{id} : updateAds

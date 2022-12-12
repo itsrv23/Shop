@@ -1,4 +1,4 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import ru.got.shop.api.AuthApi;
+import ru.got.shop.controller.AuthApi;
 import ru.got.shop.model.dto.LoginReqDto;
 import ru.got.shop.model.dto.RegReqDto;
 import ru.got.shop.security.AuthenticationFacade;

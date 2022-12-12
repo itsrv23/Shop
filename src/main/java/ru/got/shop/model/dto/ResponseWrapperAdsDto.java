@@ -17,7 +17,7 @@ import java.util.Objects;
 @lombok.Builder
 @lombok.NoArgsConstructor
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
-public class ResponseWrapperAds implements Serializable {
+public class ResponseWrapperAdsDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class ResponseWrapperAds implements Serializable {
     @Valid
     private List<AdDto> results = null;
 
-    public ResponseWrapperAds count(Integer count) {
+    public ResponseWrapperAdsDto count(Integer count) {
         this.count = count;
         return this;
     }
@@ -48,12 +48,12 @@ public class ResponseWrapperAds implements Serializable {
         this.count = count;
     }
 
-    public ResponseWrapperAds results(List<AdDto> results) {
+    public ResponseWrapperAdsDto results(List<AdDto> results) {
         this.results = results;
         return this;
     }
 
-    public ResponseWrapperAds addResultsItem(AdDto resultsItem) {
+    public ResponseWrapperAdsDto addResultsItem(AdDto resultsItem) {
         if (this.results == null) {
             this.results = new ArrayList<>();
         }
@@ -84,9 +84,9 @@ public class ResponseWrapperAds implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ResponseWrapperAds responseWrapperAds = (ResponseWrapperAds) o;
-        return Objects.equals(this.count, responseWrapperAds.count) &&
-                Objects.equals(this.results, responseWrapperAds.results);
+        ResponseWrapperAdsDto responseWrapperAdsDto = (ResponseWrapperAdsDto) o;
+        return Objects.equals(this.count, responseWrapperAdsDto.count) &&
+                Objects.equals(this.results, responseWrapperAdsDto.results);
     }
 
     @Override

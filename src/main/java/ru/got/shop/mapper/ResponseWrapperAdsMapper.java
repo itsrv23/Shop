@@ -4,7 +4,7 @@ package ru.got.shop.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.dto.AdDto;
-import ru.got.shop.model.dto.ResponseWrapperAds;
+import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface ResponseWrapperAdsMapper {
 
     @Mapping(source = "count", target ="count")
     @Mapping(source = "ads", target ="results")
-    ResponseWrapperAds toDto(Integer count, List<AdDto> ads);
+    ResponseWrapperAdsDto toDto(Integer count, List<AdDto> ads);
 }

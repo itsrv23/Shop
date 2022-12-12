@@ -1,10 +1,11 @@
 package ru.got.shop.mapper;
 
 import org.mapstruct.Mapper;
-import ru.got.shop.model.FullAds;
 import ru.got.shop.model.dto.FullAd;
+import ru.got.shop.model.dto.FullAdDto;
 
 @Mapper(componentModel = "spring")
 public interface FullAdsMapper {
-    FullAd toDto(FullAds adsDto);
+
+    FullAdDto toDto(FullAd adsDto);
 }

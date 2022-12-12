@@ -39,8 +39,8 @@ public class ExceptionHandler {
      * @return ResponseEntity
      */
     @ResponseStatus(FORBIDDEN)
-    @org.springframework.web.bind.annotation.ExceptionHandler(EntityExistsException.class)
-    public ResponseEntity<Object> handleEntityExist(EntityExistsException e) {
+    @org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleEntityExist(ForbiddenException e) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode JSONObject = mapper.createObjectNode();
         JSONObject.put(e.getMessage(), e.getMessage());
