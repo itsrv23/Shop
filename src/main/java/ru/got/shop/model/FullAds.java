@@ -16,6 +16,4 @@ public interface FullAds {
     Integer getPrice();
 
     String getDescription();
-
-    String getImage();
 }
