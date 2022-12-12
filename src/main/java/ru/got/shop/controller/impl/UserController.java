@@ -1,4 +1,4 @@
-package ru.got.shop.controller;
+package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import ru.got.shop.api.UsersApi;
+import ru.got.shop.controller.UsersApi;
 import ru.got.shop.model.dto.NewPasswordDto;
 import ru.got.shop.model.dto.ResponseWrapperUserDto;
 import ru.got.shop.model.dto.UserDto;
@@ -15,7 +15,6 @@ import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.security.PermissionService;
 import ru.got.shop.service.UserAvatarService;
 import ru.got.shop.service.UserService;
-import ru.got.shop.service.impl.UserServiceImpl;
 
 import java.util.UUID;
 
@@ -54,7 +53,9 @@ public class UserController implements UsersApi, AuthenticationFacade {
 
     @Override
     public ResponseEntity<UserDto> updateUserUsingPATCH(UserDto userDto) {
-        if (userDto.getEmail() == null){userDto.setEmail(getLogin());} // c фронта может прилетать null
+        if (userDto.getEmail() == null) {
+            userDto.setEmail(getLogin());
+        } // c фронта может прилетать null
         permissionService.checkPermissionForUserController(getLogin(), userDto);
         UserDto user = userService.findUser(getLogin()); //Берем логин из авторизации
         userDto.setEmail(user.getEmail());
