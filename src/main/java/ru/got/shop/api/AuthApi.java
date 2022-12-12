@@ -3,10 +3,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-package ru.got.shop.controller;
+package ru.got.shop.api;
 
-import ru.got.shop.model.dto.LoginReq;
-import ru.got.shop.model.dto.RegReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,11 +12,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import ru.got.shop.model.dto.LoginReqDto;
+import ru.got.shop.model.dto.RegReqDto;
 
-import javax.validation.Valid;
 import javax.annotation.Generated;
+import javax.validation.Valid;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
@@ -40,8 +43,7 @@ public interface AuthApi {
         summary = "login",
         tags = { "Auth" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  Object.class))),
-            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  Authentication.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not Found")
@@ -53,8 +55,8 @@ public interface AuthApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<Object> loginUsingPOST(
-        @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody LoginReq req
+    ResponseEntity<Authentication> loginUsingPOST(
+        @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody LoginReqDto req
     );
 
 
@@ -87,7 +89,7 @@ public interface AuthApi {
         consumes = { "application/json" }
     )
     ResponseEntity<Object> registerUsingPOST(
-        @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody RegReq req
+        @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody RegReqDto req
     );
 
 }
