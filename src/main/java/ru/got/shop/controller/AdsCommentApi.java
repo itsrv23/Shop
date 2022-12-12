@@ -17,7 +17,7 @@ import javax.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
-@Tag(name = "Ads", description = "the Ads API")
+@Tag(name = "Comments", description = "the Ads API")
 public interface AdsCommentApi {
     /**
      * POST /ads/{ad_id}/comment : addAdsComments
@@ -33,7 +33,7 @@ public interface AdsCommentApi {
     @Operation(
             operationId = "addAdsComments",
             summary = "addAdsComments",
-            tags = { "Ads" },
+            tags = { "Comments" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  AdsCommentDto.class))),
                     @ApiResponse(responseCode = "201", description = "Created"),
@@ -67,7 +67,7 @@ public interface AdsCommentApi {
     @Operation(
             operationId = "deleteAdsComment",
             summary = "deleteAdsComment",
-            tags = { "Ads" },
+            tags = { "Comments" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  AdsCommentDto.class))),
                     @ApiResponse(responseCode = "204", description = "No Content"),
@@ -98,7 +98,7 @@ public interface AdsCommentApi {
     @Operation(
             operationId = "getAdsComment",
             summary = "getAdsComment",
-            tags = { "Ads" },
+            tags = { "Comments" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  AdsCommentDto.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -129,7 +129,7 @@ public interface AdsCommentApi {
     @Operation(
             operationId = "getAdsComments",
             summary = "getAdsComments",
-            tags = { "Ads" },
+            tags = { "Comments" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  ResponseWrapperAdsCommentDto.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -161,7 +161,7 @@ public interface AdsCommentApi {
     @Operation(
             operationId = "updateAdsComment",
             summary = "updateAdsComment",
-            tags = { "Ads" },
+            tags = { "Comments" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  AdsCommentDto.class))),
                     @ApiResponse(responseCode = "204", description = "No Content"),

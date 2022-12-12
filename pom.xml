@@ -134,43 +134,43 @@
                 </configuration>
             </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>org.openapitools</groupId>-->
-<!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
-<!--                <version>${openapi-generator-maven-plugin.version}</version>-->
-<!--                <executions>-->
-<!--                    &lt;!&ndash; App &ndash;&gt;-->
-<!--                    <execution>-->
-<!--                        <phase>generate-resources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>-->
-<!--                            <generateApis>true</generateApis>-->
-<!--                            <generateModels>true</generateModels>-->
-<!--                            <generatorName>spring</generatorName>-->
-<!--                            <apiPackage>ru.got.shop.openapi.controller</apiPackage>-->
-<!--                            <modelPackage>ru.got.shop.openapi.dto</modelPackage>-->
-<!--                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>-->
-<!--                            <configOptions>-->
-<!--                                <useTags>true</useTags>-->
-<!--                                <java8>false</java8>-->
-<!--                                <dateLibrary>java8</dateLibrary>-->
-<!--                                <interfaceOnly>true</interfaceOnly>-->
-<!--                                <hideGenerationTimestamp>true</hideGenerationTimestamp>-->
-<!--                                <serializableModel>true</serializableModel>-->
-<!--                                <additionalModelTypeAnnotations>-->
-<!--                                    @lombok.AllArgsConstructor-->
-<!--                                    @lombok.Builder-->
-<!--                                    @lombok.NoArgsConstructor-->
-<!--                                </additionalModelTypeAnnotations>-->
-<!--                                <booleanGetterPrefix>is</booleanGetterPrefix>-->
-<!--                            </configOptions>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <!-- App -->
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>ru.got.shop.openapi.controller</apiPackage>
+                            <modelPackage>ru.got.shop.openapi.dto</modelPackage>
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+                            <configOptions>
+                                <useTags>true</useTags>
+                                <java8>false</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                                <serializableModel>true</serializableModel>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.AllArgsConstructor
+                                    @lombok.Builder
+                                    @lombok.NoArgsConstructor
+                                </additionalModelTypeAnnotations>
+                                <booleanGetterPrefix>is</booleanGetterPrefix>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
