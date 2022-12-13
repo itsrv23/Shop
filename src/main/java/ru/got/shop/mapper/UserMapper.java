@@ -9,7 +9,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper extends GenerateLink{
-//    @Mapping(target = "image", expression = "java(\"http://127.0.0.1:8080/images/\" + ((user.getAvatarId()==null)?UUID.randomUUID():user.getAvatarId().getUuid()) + \"/\")")
     @Mapping(target = "image", expression = "java(generateLink(user))")
     UserDto toDto(User user);
 
