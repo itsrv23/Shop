@@ -61,7 +61,7 @@ public interface AdsApi {
             value = "/ads",
             produces = { "application/json" },
             consumes = { "application/json" })
-    ResponseEntity<AdDto> addAd(@Parameter(name = "createAds",
+    ResponseEntity<AdDto> addAd(@Parameter(name = "AdDto",
             description = "Ads creation",
             required = true,
             schema = @Schema(description = "")) @Valid @RequestBody AdDto adDto);
@@ -102,10 +102,7 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      */
     @Operation(operationId = "removeAd", summary = "remove an advertisment", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.DELETE,
-            value = "/ads/{id}",
-            produces = { "application/json" },
-            consumes = { "application/json" })
+    @RequestMapping(method = RequestMethod.DELETE, value = "/ads/{id}", produces = { "application/json" })
     ResponseEntity<AdDto> removeAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id);
