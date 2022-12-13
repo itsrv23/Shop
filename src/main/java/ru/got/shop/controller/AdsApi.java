@@ -61,7 +61,7 @@ public interface AdsApi {
             value = "/ads",
             produces = { "application/json" },
             consumes = { "application/json" })
-    ResponseEntity<AdDto> addAd(@Parameter(name = "createAds",
+    ResponseEntity<AdDto> addAd(@Parameter(name = "AdDto",
             description = "Ads creation",
             required = true,
             schema = @Schema(description = "")) @Valid @RequestBody AdDto adDto);

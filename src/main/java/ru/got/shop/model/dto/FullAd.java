@@ -4,42 +4,42 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public interface FullAd {
 
-    @Schema(name = "pk", required = false)
+    @Schema(name = "pk")
     Integer getPk();
 
     void setPk(Integer pk);
 
-    @Schema(name = "authorFirstName", required = false)
+    @Schema(name = "authorFirstName")
     String getAuthorFirstName();
 
     void setAuthorFirstName(String authorFirstName);
 
-    @Schema(name = "authorLastName", required = false)
+    @Schema(name = "authorLastName")
     String getAuthorLastName();
 
     void setAuthorLastName(String authorLastName);
 
-    @Schema(name = "phone", required = false)
+    @Schema(name = "phone")
     String getPhone();
 
     void setPhone(String phone);
 
-    @Schema(name = "email", required = false)
+    @Schema(name = "email")
     String getEmail();
 
     void setEmail(String email);
 
-    @Schema(name = "title", required = false)
+    @Schema(name = "title")
     String getTitle();
 
     void setTitle(String title);
 
-    @Schema(name = "price", required = false)
+    @Schema(name = "price")
     Integer getPrice();
 
     void setPrice(Integer price);
 
-    @Schema(name = "description", required = false)
+    @Schema(name = "description")
     String getDescription();
 
     void setDescription(String description);
