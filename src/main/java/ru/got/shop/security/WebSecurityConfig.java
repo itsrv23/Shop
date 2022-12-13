@@ -27,6 +27,7 @@ public class WebSecurityConfig {
             "/webjars/**",
             "/login",
             "/ads", "/ads/me", "/users/me", "/users/me/image", "/path/t*/*",
+            "/images/**",
             "/register"
     };
 
@@ -47,7 +48,7 @@ public class WebSecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-//                .cors().disable()
+                .cors().disable()
                 .httpBasic(withDefaults());
         return http.build();
     }

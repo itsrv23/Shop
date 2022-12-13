@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(info = @Info(title = "Api-First-Approach Online-Shop-Application",
         description = "Разработка по методу API FIRST командой \"GOT\"",
-        contact = @Contact(name = "Gir repo", url = "https://github.com/itsrv23/Shop"),
+        contact = @Contact(name = "Git repo", url = "https://github.com/itsrv23/Shop"),
         license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0")),
-        servers = @Server(url = "http://localhost:8080"),
+//        servers = @Server(url = "http://localhost:8080"),
         tags = @Tag(name = "Auth"))
 @Configuration
 public class SwaggerConfig {
