@@ -7,14 +7,13 @@ package ru.got.shop.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.model.dto.AdDto;
 import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
@@ -50,21 +49,30 @@ public interface AdsApi {
      * or Bad Request (status code 400)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "addAd",
-            summary = "adding an advertisment",
-            tags = { "Ads" },
-            responses = @ApiResponse(responseCode = "201",
-                    description = "Created",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ResponseWrapperAdsDto.class))))
-    @RequestMapping(method = RequestMethod.POST,
-            value = "/ads",
-            produces = { "application/json" },
-            consumes = { "application/json" })
-    ResponseEntity<AdDto> addAd(@Parameter(name = "AdDto",
-            description = "Ads creation",
-            required = true,
-            schema = @Schema(description = "")) @Valid @RequestBody AdDto adDto);
+//    @Operation(operationId = "addAd",
+//            summary = "adding an advertisment",
+//            tags = { "Ads" },
+//            responses = @ApiResponse(responseCode = "201",
+//                    description = "Created",
+//                    content = @Content(mediaType = "application/json",
+//                            schema = @Schema(implementation = ResponseWrapperAdsDto.class))))
+//    @RequestMapping(method = RequestMethod.POST,
+//            value = "/ads",
+//            produces = { "application/json" },
+//            consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
+//    ResponseEntity<AdDto> addAd(@Parameter(name = "AdDto",
+//            description = "Ads creation",
+//            required = true,
+//            schema = @Schema(description = "")) @Valid @RequestBody AdDto adDto,
+//                                @Parameter(name = "Picture file",
+//                                        description = "Picture adding",
+//                                        required = true,
+//                                        schema = @Schema(description = ""))
+//                                @RequestParam MultipartFile file);
+    @PostMapping(value = "/ads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<AdDto> addAd(@Valid @RequestPart("properties")
+                                @Parameter(schema = @Schema(type = "string", format = "binary")) AdDto adDto,
+                                @RequestParam("image") MultipartFile file);
 
     /**
      * GET /ads/me : Ads
@@ -74,9 +82,7 @@ public interface AdsApi {
      */
     @Operation(operationId = "getMyAds", summary = "get all ads of me", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = { "application/json" })
-    ResponseEntity<ResponseWrapperAdsDto> getMyAds(
-            @Parameter(name = "authorId", description = "", schema = @Schema(description = "")) @Valid
-            @RequestParam(value = "authorId", required = false) Integer authorId);
+    ResponseEntity<ResponseWrapperAdsDto> getMyAds();
 
     /**
      * GET /ads/{id} : getAds
@@ -124,6 +130,6 @@ public interface AdsApi {
     ResponseEntity<AdDto> updateAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id,
-            @Parameter(name = "ads", description = "ads", required = true, schema = @Schema(description = "")) @Valid
+            @Parameter(name = "ads", description = "ads", required = true, schema = @Schema(description = ""))
             @RequestBody AdDto adDto);
 }
