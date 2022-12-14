@@ -20,7 +20,7 @@ public class UserControllerFactory {
         User user =  new User();
         user.setId(1);
         user.setPhone("+799912345566");
-        user.setEmail("admin@gmail.com");
+        user.setEmail("user@gmail.com");
         user.setFirstName("firstname");
         user.setLastName("lastname");
         user.setRoleGroup(Role.USER);

@@ -24,9 +24,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.got.shop.controller.impl.UserControllerFactory.*;
 
 
@@ -53,15 +53,15 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = "admin@gmail.com", password = "adminpass", roles = "USER")
+    @WithMockUser(username = "admin@gmail.com", password = "adminpass", roles = "ADMIN")
     void getUserUsingGET() throws Exception {
-        String path =  "/users/" + getUserEntity().getId();
-        String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
+        String path =  "/users/" + getAdminEntity().getId();
+        String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getAdminEntity()));
 
-        Mockito.when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(getUserEntity()));
-        Mockito.when(userRepository.findFirstByEmail(any(String.class))).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(getAdminEntity()));
+        Mockito.when(userRepository.findFirstByEmail(any(String.class))).thenReturn(Optional.of(getAdminEntity()));
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(path);
+        MockHttpServletRequestBuilder requestBuilder = get(path);
 
         mockMvc.perform(requestBuilder)
                 .andDo(print())
@@ -69,6 +69,54 @@ class UserControllerTest {
                 .andExpect(content().json(jsonResult));
 
     }
+
+    @Test
+    @WithMockUser(username = "user@gmail.com", password = "userpass", roles = "USER")
+    void getUserUsingGET_200() throws Exception {
+        String PATH =  "/users/" + getUserEntity().getId();
+        String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
+
+        Mockito.when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findFirstByEmail(any(String.class))).thenReturn(Optional.of(getUserEntity()));
+
+        mockMvc.perform(get(PATH))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonResult));
+
+    }
+    @Test
+    @WithMockUser(username = "admin@gmail.com", password = "adminpass", roles = "ADMIN")
+    void getUserUsingGET_200_admin() throws Exception {
+        String path =  "/users/1"; // админ запрашивает акк юзера
+        String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
+        Mockito.when(userRepository.findFirstByEmail("admin@gmail.com")).thenReturn(Optional.of(getAdminEntity()));
+
+        mockMvc.perform(get(path))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonResult));
+
+    }
+
+    @Test
+    @WithMockUser(username = "user@gmail.com", password = "userpass", roles = "USER")
+    void getUserUsingGET_403() throws Exception {
+        String path =  "/users/2"; // юзер запрашивает акк админа
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
+        Mockito.when(userRepository.findFirstByEmail("user@gmail.com")).thenReturn(Optional.of(getUserEntity()));
+
+        mockMvc.perform(get(path))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+
+    }
+
+
 
     @Test
     void getUserMeUsingGET() {
@@ -96,7 +144,7 @@ class UserControllerTest {
 
         Mockito.when(userAvatarRepository.findById(any(UUID.class))).thenReturn(Optional.of(getAvatarEntity()));
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(path);
+        MockHttpServletRequestBuilder requestBuilder = get(path);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk());
