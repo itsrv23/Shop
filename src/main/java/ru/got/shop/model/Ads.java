@@ -39,4 +39,8 @@ public class Ads {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "adsId")
     @ToString.Exclude
     private List<AdsComment> adsComment;
+
+//    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "id")
+    private List<Picture> pictures;
 }
