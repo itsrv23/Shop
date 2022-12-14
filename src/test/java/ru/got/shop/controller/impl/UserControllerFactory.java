@@ -11,6 +11,8 @@ import java.util.Base64;
 import java.util.UUID;
 
 public class UserControllerFactory {
+    static final String USER_LOGIN = "user@gmail.com";
+    static final String ADMIN_LOGIN = "admin@gmail.com";
 
     public static byte [] AVATAR_FILE() throws IOException {
         return Files.readAllBytes(Path.of("src/test/resources/user_avatar.jpg"));
@@ -20,7 +22,7 @@ public class UserControllerFactory {
         User user =  new User();
         user.setId(1);
         user.setPhone("+799912345566");
-        user.setEmail("user@gmail.com");
+        user.setEmail(USER_LOGIN);
         user.setFirstName("firstname");
         user.setLastName("lastname");
         user.setRoleGroup(Role.USER);
@@ -32,7 +34,7 @@ public class UserControllerFactory {
         User user =  new User();
         user.setId(2);
         user.setPhone("+799912345566");
-        user.setEmail("admin@gmail.com");
+        user.setEmail(ADMIN_LOGIN);
         user.setFirstName("firstname");
         user.setLastName("lastname");
         user.setRoleGroup(Role.ADMIN);
