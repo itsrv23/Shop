@@ -10,12 +10,14 @@ import java.io.Serializable;
 @Data
 public class AdDto implements Serializable {
 
-
     @JsonProperty("pk")
     private Integer pk;
 
     @JsonProperty("author")
     private Integer author;
+
+    @JsonProperty("image")
+    private String image;
 
     @JsonProperty("title")
     private String title;

@@ -1,6 +1,5 @@
 package ru.got.shop.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -13,17 +12,20 @@ import java.util.Objects;
 @Table(name = "ads_pictures")
 @Setter
 @Getter
-public class Picture implements Serializable{
+public class Picture implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "id")
     private Ads id;
-    @Column(name = "file_size")
+    @Column(name = "content_size")
     private Integer fileSize;
-    @Column(name = "file_path")
+    @Column(name = "file_name")
     private String filePath;
     @Column(name = "media_type")
     private String mediaType;
+    @Column(name = "file_bytes")
+    @Lob
+    private Byte[] data;
 
     @Override
     public boolean equals(Object o) {
