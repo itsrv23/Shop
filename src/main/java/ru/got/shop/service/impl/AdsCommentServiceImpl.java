@@ -5,28 +5,38 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
+import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.dto.AdsCommentDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.repository.AdsCommentRepository;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.service.AdsCommentService;
+import ru.got.shop.model.AdsComment;
+import ru.got.shop.model.Ads;
+import ru.got.shop.security.AuthenticationFacade;
+import ru.got.shop.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AdsCommentServiceImpl implements AdsCommentService {
+public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationFacade {
 
     private final ResponseWrapperAdsCommentMapper responseWrapperAdsCommentMapper;
     private final AdsCommentMapper adsCommentMapper;
     private final AdsCommentRepository adsCommentRepository;
     private final AdsRepository adsRepository;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @Override
     public AdsCommentDto addAdsComments(Integer adId, AdsCommentDto comment) {
-        ru.got.shop.model.AdsComment newComment = adsCommentMapper.toEntity(comment);
+        AdsComment newComment = adsCommentMapper.toEntity(comment);
+        newComment.setUserId(userMapper.toEntity(userService.findUser(getLogin())));
+        newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist")));
         AdsCommentDto addedComment =  adsCommentMapper.toDto(adsCommentRepository.save(newComment));
@@ -55,10 +65,10 @@ public class AdsCommentServiceImpl implements AdsCommentService {
             throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
         }
 
-        ru.got.shop.model.Ads adsByAdId = adsRepository.findById(adId)
+        Ads adsByAdId = adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-        List<ru.got.shop.model.AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
-        ru.got.shop.model.AdsComment neededCommentWithId = allAdsCommentsByAdId
+        List<AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
+        AdsComment neededCommentWithId = allAdsCommentsByAdId
                 .stream()
                 .filter(adsCom -> (adsCom.getPk().equals(id)))
                 .findFirst()
@@ -71,9 +81,9 @@ public class AdsCommentServiceImpl implements AdsCommentService {
 
     @Override
     public ResponseWrapperAdsCommentDto getAdsComments(Integer adId) {
-        ru.got.shop.model.Ads adsByAdId = adsRepository.findById(adId)
+        Ads adsByAdId = adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-        List<ru.got.shop.model.AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
+        List<AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
         ResponseWrapperAdsCommentDto foundComments = responseWrapperAdsCommentMapper.toDto(allAdsCommentsByAdId.size(),
                 adsCommentMapper.toDtos(allAdsCommentsByAdId));
 
@@ -87,7 +97,7 @@ public class AdsCommentServiceImpl implements AdsCommentService {
             throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
         }
 
-        ru.got.shop.model.AdsComment updateComment = adsCommentMapper.toEntity(comment);
+        AdsComment updateComment = adsCommentMapper.toEntity(comment);
         updateComment.setPk(id);
         updateComment.setAdsId(adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist")));
@@ -100,9 +110,9 @@ public class AdsCommentServiceImpl implements AdsCommentService {
 
     private boolean adsContainsAdsComment (Integer adId, Integer id) {
         try {
-            ru.got.shop.model.Ads adsByAdId = adsRepository.findById(adId)
+            Ads adsByAdId = adsRepository.findById(adId)
                     .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-            ru.got.shop.model.AdsComment commentById = adsCommentRepository.findById(id)
+            AdsComment commentById = adsCommentRepository.findById(id)
                      .orElseThrow(()-> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
             return adsByAdId.getAdsComment().contains(commentById);
         } catch (EntityNotFoundException e) { return false; }
