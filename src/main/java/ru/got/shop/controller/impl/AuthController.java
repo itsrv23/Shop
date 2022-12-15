@@ -33,7 +33,7 @@ public class AuthController implements AuthApi, AuthenticationFacade {
     @Override
     public ResponseEntity<Object> registerUsingPOST(RegReqDto req) {
         //TODO  не передаются все данные о пользователе при регистрации. Уточнить
-        boolean register = authService.register(req, RegReqDto.RoleEnum.USER);
+        boolean register = authService.register(req);
         if (register) {
             return ResponseEntity.ok().build();
         } else {

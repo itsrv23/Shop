@@ -26,7 +26,9 @@ import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.impl.UserAvatarServiceImpl;
 import ru.got.shop.service.impl.UserServiceImpl;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Optional;
 import java.util.UUID;
 
