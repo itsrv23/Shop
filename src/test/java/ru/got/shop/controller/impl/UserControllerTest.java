@@ -1,9 +1,7 @@
 package ru.got.shop.controller.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,7 +14,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,23 +23,18 @@ import ru.got.shop.model.User;
 import ru.got.shop.model.UserAvatar;
 import ru.got.shop.model.dto.NewPasswordDto;
 import ru.got.shop.model.dto.ResponseWrapperUserDto;
-import ru.got.shop.model.dto.UserDto;
 import ru.got.shop.repository.UserAvatarRepository;
 import ru.got.shop.repository.UserRepository;
-import ru.got.shop.service.impl.UserAvatarServiceImpl;
-import ru.got.shop.service.impl.UserServiceImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.got.shop.controller.impl.UserControllerFactory.*;
 
 
@@ -54,16 +46,10 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @SpyBean
-    private UserServiceImpl userService;
-    @SpyBean
-    private UserAvatarServiceImpl avatarService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
     private UserAvatarRepository userAvatarRepository;
-
     @SpyBean
     private UserMapperImpl userMapper;
 
@@ -274,12 +260,9 @@ class UserControllerTest {
         Mockito.when(userAvatarRepository.save(any(UserAvatar.class))).thenReturn(getAvatarEntity());
 
         MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(path);
-        builder.with(new RequestPostProcessor() {
-            @Override
-            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                request.setMethod("PATCH");
-                return request;
-            }
+        builder.with(request -> {
+            request.setMethod("PATCH");
+            return request;
         });
 
         mockMvc.perform(builder.file(mff))
