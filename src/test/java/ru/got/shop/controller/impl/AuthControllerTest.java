@@ -51,7 +51,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void loginUsingPOST_400_Bad_credentials() throws Exception {
+    void loginUsingPOST_403() throws Exception {
         String path = "/login";
 
         LoginReqDto loginReqDto = LoginReqDto.builder().username(USER_LOGIN).password("WRONG_PASS").build();
@@ -62,8 +62,7 @@ class AuthControllerTest {
         mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("\"Bad credentials\""));
+                .andExpect(status().isForbidden());
     }
 
     @Test
