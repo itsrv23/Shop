@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +24,15 @@ public class AuthController implements AuthApi, AuthenticationFacade {
 
     @Override
     public ResponseEntity<Authentication> loginUsingPOST(LoginReqDto req) {
-        if (authService.login(req.getUsername(), req.getPassword())) {
-            return ResponseEntity.ok(getAuthentication());
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        try {
+            if (authService.login(req.getUsername(), req.getPassword())) {
+                return ResponseEntity.ok(getAuthentication());
+            }
+        } catch (BadCredentialsException e) {
+            log.info("AuthController {}, data: {}",  e.getMessage(), req);
         }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
     }
 
     @Override
