@@ -9,6 +9,5 @@ import ru.got.shop.model.dto.RegReqDto;
 public interface UserRegisterMapper {
 
     @Mapping(source = "username", target = "email")
-    @Mapping(source = "password", target = "password")
     User toEntity(RegReqDto req);
 }

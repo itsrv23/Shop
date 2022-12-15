@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegReqDto registerReq, RegReqDto.RoleEnum role) {
+    public boolean register(RegReqDto registerReq) {
         Optional<User> firstByEmail = userRepository.findFirstByEmail(registerReq.getUsername());
         if (firstByEmail.isPresent()) {
             throw new RuntimeException("This email is already in use another account!!!");
