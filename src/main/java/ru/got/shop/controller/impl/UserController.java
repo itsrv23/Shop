@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.controller.UsersApi;
+import ru.got.shop.exception.ForbiddenException;
 import ru.got.shop.model.dto.NewPasswordDto;
 import ru.got.shop.model.dto.ResponseWrapperUserDto;
 import ru.got.shop.model.dto.UserDto;
@@ -38,6 +39,7 @@ public class UserController implements UsersApi, AuthenticationFacade {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('users.read')")
     public ResponseEntity<UserDto> getUserMeUsingGET() {
         return ResponseEntity.ok(userService.findUser(getLogin()));
     }
