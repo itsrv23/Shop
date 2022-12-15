@@ -44,7 +44,7 @@ public interface UsersApi {
             tags = {"Users"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "400", description = "Access is denied"),
                     @ApiResponse(responseCode = "403", description = "Forbidden"),
                     @ApiResponse(responseCode = "404", description = "Not Found")
             }
@@ -73,6 +73,7 @@ public interface UsersApi {
             tags = {"Users"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseWrapperUserDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Access is denied"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "403", description = "Forbidden")
             }
@@ -90,9 +91,7 @@ public interface UsersApi {
             tags = {"Users"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "Not Found")
+                    @ApiResponse(responseCode = "400", description = "Access is denied")
             }
     )
     @RequestMapping(
@@ -119,7 +118,6 @@ public interface UsersApi {
             tags = {"Users"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = NewPasswordDto.class))),
-                    @ApiResponse(responseCode = "201", description = "Created"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "403", description = "Forbidden"),
                     @ApiResponse(responseCode = "404", description = "Not Found")
@@ -152,6 +150,7 @@ public interface UsersApi {
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
                     @ApiResponse(responseCode = "204", description = "No Content"),
+                    @ApiResponse(responseCode = "400", description = "Access is denied"),
                     @ApiResponse(responseCode = "401", description = "Unauthorized"),
                     @ApiResponse(responseCode = "403", description = "Forbidden")
             }

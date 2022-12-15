@@ -2,13 +2,13 @@ package ru.got.shop.controller.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -21,21 +21,20 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import ru.got.shop.mapper.UserMapperImpl;
 import ru.got.shop.model.User;
 import ru.got.shop.model.UserAvatar;
+import ru.got.shop.model.dto.NewPasswordDto;
+import ru.got.shop.model.dto.ResponseWrapperUserDto;
 import ru.got.shop.repository.UserAvatarRepository;
 import ru.got.shop.repository.UserRepository;
-import ru.got.shop.service.impl.UserAvatarServiceImpl;
-import ru.got.shop.service.impl.UserServiceImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.got.shop.controller.impl.UserControllerFactory.*;
 
 
@@ -47,22 +46,16 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @SpyBean
-    private UserServiceImpl userService;
-    @SpyBean
-    private UserAvatarServiceImpl avatarService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
     private UserAvatarRepository userAvatarRepository;
-
     @SpyBean
     private UserMapperImpl userMapper;
 
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, roles = "ADMIN")
+    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
     void getUserUsingGET() throws Exception {
         String path = "/users/" + getAdminEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getAdminEntity()));
@@ -80,7 +73,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, roles = "USER")
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
     void getUserUsingGET_200() throws Exception {
         String PATH = "/users/" + getUserEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -96,7 +89,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, roles = "ADMIN")
+    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
     void getUserUsingGET_200_admin() throws Exception {
         String path = "/users/1"; // админ запрашивает акк юзера
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -112,7 +105,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, roles = "USER")
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
     void getUserUsingGET_403() throws Exception {
         String path = "/users/2"; // юзер запрашивает акк админа
 
@@ -128,23 +121,136 @@ class UserControllerTest {
 
 
     @Test
-    void getUserMeUsingGET() {
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    void getUserMeUsingGET_200() throws Exception {
+        String path = "/users/me";
+        String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+
+        mockMvc.perform(get(path))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonResult));
     }
 
     @Test
-    void getUsersUsingGET() {
+    void getUserMeUsingGET_400() throws Exception {
+        String path = "/users/me";
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+
+        mockMvc.perform(get(path))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("\"Access is denied\""));
     }
 
     @Test
-    void setPasswordUsingPOST() {
+    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
+    void getUsersUsingGET_200() throws Exception{
+        // todo  не используется на фронте
+        String path = "/users";
+        ResponseWrapperUserDto responseWrapperUserDto = new ResponseWrapperUserDto(1, List.of(userMapper.toDto(getUserEntity())));
+        String json = objectMapper.writeValueAsString(responseWrapperUserDto);
+
+        Mockito.when(userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))).thenReturn(List.of(getUserEntity()));
+
+        mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andExpect(content().string(json));
     }
 
     @Test
-    void updateUserUsingPATCH() {
+    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    void getUsersUsingGET_400() throws Exception{
+        // todo  не используется на фронте
+        String path = "/users";
+
+        mockMvc.perform(get(path))
+                .andExpect(status().is(400))
+                .andExpect(content().string("\"Access is denied\""));
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, roles = "USER")
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    void setPasswordUsingPOST_200() throws Exception {
+        String path = "/users/set_password";
+        String json = objectMapper.writeValueAsString(getNewPasswordDto());
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(getUserEntity());
+
+        mockMvc.perform(post(path)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    void setPasswordUsingPOST_401() throws Exception {
+        String path = "/users/set_password";
+        String json = objectMapper.writeValueAsString(getNewPasswordDto());
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(getUserEntity());
+
+        mockMvc.perform(post(path)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().is(401));
+
+    }
+
+    @Test
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    void setPasswordUsingPOST_403() throws Exception {
+        String path = "/users/set_password";
+        NewPasswordDto newPasswordDto = getNewPasswordDto();
+        newPasswordDto.setCurrentPassword("WRONG OLD PASS");
+        String json = objectMapper.writeValueAsString(newPasswordDto);
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(getUserEntity());
+
+        mockMvc.perform(post(path)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    void updateUserUsingPATCH() throws Exception {
+        String path = "/users/me";
+        String json = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
+
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(getUserEntity());
+
+        mockMvc.perform(patch(path)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(content().json(json));
+
+    }
+
+    @Test
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
     void updateUserAvatar() throws Exception {
         String path = "/users/me/image";
         MockMultipartFile mff = new MockMultipartFile("image", AVATAR_FILE());
@@ -154,12 +260,9 @@ class UserControllerTest {
         Mockito.when(userAvatarRepository.save(any(UserAvatar.class))).thenReturn(getAvatarEntity());
 
         MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(path);
-        builder.with(new RequestPostProcessor() {
-            @Override
-            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                request.setMethod("PATCH");
-                return request;
-            }
+        builder.with(request -> {
+            request.setMethod("PATCH");
+            return request;
         });
 
         mockMvc.perform(builder.file(mff))
