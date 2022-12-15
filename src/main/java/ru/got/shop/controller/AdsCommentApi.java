@@ -20,10 +20,10 @@ import javax.annotation.Generated;
 @Tag(name = "Comments", description = "the Ads API")
 public interface AdsCommentApi {
     /**
-     * POST /ads/{ad_id}/comment : addAdsComments
+     * POST /ads/{ad_id}/comments : addAdsComments
      *
      * @param adId ad_id (required)
-     * @param comment comment (required)
+     * @param comments comments (required)
      * @return OK (status code 200)
      *         or Created (status code 201)
      *         or Unauthorized (status code 401)
@@ -44,18 +44,18 @@ public interface AdsCommentApi {
     )
     @RequestMapping(
             method = RequestMethod.POST,
-            value = "/ads/{ad_id}/comment",
+            value = "/ads/{ad_id}/comments",
             produces = { "application/json" },
             consumes = { "application/json" }
     )
     ResponseEntity<AdsCommentDto> addAdsComments(
             @Parameter(name = "ad_id", description = "ad_id", required = true, schema = @Schema(description = "")) @PathVariable("ad_id") Integer adId,
-            @Parameter(name = "comment", description = "comment", required = true, schema = @Schema(description = "")) @Valid @RequestBody AdsCommentDto comment
+            @Parameter(name = "comments", description = "comments", required = true, schema = @Schema(description = "")) @Valid @RequestBody AdsCommentDto comments
     );
 
 
     /**
-     * DELETE /ads/{ad_id}/comment/{id} : deleteAdsComment
+     * DELETE /ads/{ad_id}/comments/{id} : deleteAdsComment
      *
      * @param adId ad_id (required)
      * @param id id (required)
@@ -77,7 +77,7 @@ public interface AdsCommentApi {
     )
     @RequestMapping(
             method = RequestMethod.DELETE,
-            value = "/ads/{ad_id}/comment/{id}"
+            value = "/ads/{ad_id}/comments/{id}"
     )
     ResponseEntity<AdsCommentDto> deleteAdsComment(
             @Parameter(name = "ad_id", description = "ad_id", required = true, schema = @Schema(description = "")) @PathVariable("ad_id") Integer adId,
@@ -86,7 +86,7 @@ public interface AdsCommentApi {
 
 
     /**
-     * GET /ads/{ad_id}/comment/{id} : getAdsComment
+     * GET /ads/{ad_id}/comments/{id} : getAdsComment
      *
      * @param adId ad_id (required)
      * @param id id (required)
@@ -108,7 +108,7 @@ public interface AdsCommentApi {
     )
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/ads/{ad_id}/comment/{id}",
+            value = "/ads/{ad_id}/comments/{id}",
             produces = { "application/json" }
     )
     ResponseEntity<AdsCommentDto> getAdsComment(
@@ -118,7 +118,7 @@ public interface AdsCommentApi {
 
 
     /**
-     * GET /ads/{ad_id}/comment : getAdsComments
+     * GET /ads/{ad_id}/comments : getAdsComments
      *
      * @param adId ad_id (required)
      * @return OK (status code 200)
@@ -139,7 +139,7 @@ public interface AdsCommentApi {
     )
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/ads/{ad_id}/comment",
+            value = "/ads/{ad_id}/comments",
             produces = { "application/json" }
     )
     ResponseEntity<ResponseWrapperAdsCommentDto> getAdsComments(
@@ -148,11 +148,11 @@ public interface AdsCommentApi {
 
 
     /**
-     * PATCH /ads/{ad_id}/comment/{id} : updateAdsComment
+     * PATCH /ads/{ad_id}/comments/{id} : updateAdsComment
      *
      * @param adId ad_id (required)
      * @param id id (required)
-     * @param comment comment (required)
+     * @param comments comments (required)
      * @return OK (status code 200)
      *         or No Content (status code 204)
      *         or Unauthorized (status code 401)
@@ -171,13 +171,13 @@ public interface AdsCommentApi {
     )
     @RequestMapping(
             method = RequestMethod.PATCH,
-            value = "/ads/{ad_id}/comment/{id}",
+            value = "/ads/{ad_id}/comments/{id}",
             produces = { "application/json" },
             consumes = { "application/json" }
     )
     ResponseEntity<AdsCommentDto> updateAdsComment(
             @Parameter(name = "ad_id", description = "ad_id", required = true, schema = @Schema(description = "")) @PathVariable("ad_id") Integer adId,
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = "")) @PathVariable("id") Integer id,
-            @Parameter(name = "comment", description = "comment", required = true, schema = @Schema(description = "")) @Valid @RequestBody AdsCommentDto comment
+            @Parameter(name = "comments", description = "comments", required = true, schema = @Schema(description = "")) @Valid @RequestBody AdsCommentDto comments
     );
 }

@@ -3,6 +3,7 @@ package ru.got.shop.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.AdsComment;
+import ru.got.shop.model.dto.AdsCommentDto;
 
 import java.util.List;
 
@@ -10,10 +11,10 @@ import java.util.List;
 public interface AdsCommentMapper {
 
     @Mapping(source = "author", target ="userId.id")
-    AdsComment toEntity(ru.got.shop.model.dto.AdsCommentDto adsComment);
+    AdsComment toEntity(AdsCommentDto adsComment);
 
     @Mapping(source = "userId.id", target ="author")
-    ru.got.shop.model.dto.AdsCommentDto toDto(AdsComment adsComment);
+    AdsCommentDto toDto(AdsComment adsComment);
 
-    List<ru.got.shop.model.dto.AdsCommentDto> toDtos(List<AdsComment> adsCommentList);
+    List<AdsCommentDto> toDtos(List<AdsComment> adsCommentList);
 }

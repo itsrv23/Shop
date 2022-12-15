@@ -19,8 +19,6 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class ResponseWrapperAdsCommentDto implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-
   @JsonProperty("count")
   private Integer count;
 
