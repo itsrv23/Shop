@@ -7,7 +7,9 @@ package ru.got.shop.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +41,7 @@ public interface AdsApi {
     ResponseEntity<ResponseWrapperAdsDto> getAllAds();
 
     /**
-     * POST /ads : addAds
+     * POST /ad : adDto
      * Добавить ads
      *
      * @param createAds createAds (required)
@@ -49,30 +51,19 @@ public interface AdsApi {
      * or Bad Request (status code 400)
      * or Not Found (status code 404)
      */
-//    @Operation(operationId = "addAd",
-//            summary = "adding an advertisment",
-//            tags = { "Ads" },
-//            responses = @ApiResponse(responseCode = "201",
-//                    description = "Created",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = ResponseWrapperAdsDto.class))))
-//    @RequestMapping(method = RequestMethod.POST,
-//            value = "/ads",
-//            produces = { "application/json" },
-//            consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
-//    ResponseEntity<AdDto> addAd(@Parameter(name = "AdDto",
-//            description = "Ads creation",
-//            required = true,
-//            schema = @Schema(description = "")) @Valid @RequestBody AdDto adDto,
-//                                @Parameter(name = "Picture file",
-//                                        description = "Picture adding",
-//                                        required = true,
-//                                        schema = @Schema(description = ""))
-//                                @RequestParam MultipartFile file);
-    @PostMapping(value = "/ads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<AdDto> addAd(@Valid @RequestPart("properties")
-                                @Parameter(schema = @Schema(type = "string", format = "binary")) AdDto adDto,
-                                @RequestParam("image") MultipartFile file);
+    @Operation(operationId = "addAd",
+            summary = "adding an advertisment",
+            tags = { "Ads" },
+            responses = @ApiResponse(responseCode = "201",
+                    description = "Created",
+                    content = @Content(mediaType = MediaType.MULTIPART_MIXED_VALUE,
+                            schema = @Schema(implementation = AdDto.class))))
+    @RequestMapping(method = RequestMethod.POST,
+            value = "/ads",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<AdDto> addAd(@Valid @RequestPart(value = "properties") AdDto adDto,
+                                @RequestParam(value = "image") MultipartFile file);
 
     /**
      * GET /ads/me : Ads
@@ -98,6 +89,19 @@ public interface AdsApi {
     ResponseEntity<FullAdDto> getFullAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id);
+
+    /**
+     * GET /ads/{id}/image : get image by ads id
+     *
+     * @param id id (required)
+     * @return OK (status code 200)
+     * or Unauthorized (status code 401)
+     * or Forbidden (status code 403)
+     * or Not Found (status code 404)
+     */
+    @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = { "Ads" })
+    @RequestMapping(method = RequestMethod.GET, value = "/ads/{id}/image")
+    ResponseEntity<?> getAdImage(@PathVariable("id") Integer id);
 
     /**
      * DELETE /ads/{id} : removeAds

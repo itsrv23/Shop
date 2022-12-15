@@ -15,8 +15,11 @@ import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.service.AdsService;
+import ru.got.shop.service.PictureService;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -31,17 +34,33 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     private final String EXIST = "The ads already exists!!!";
 
     private final UserRepository userRepository;
+    private final PictureService pictureService;
 
     @Override
     public AdDto addAd(AdDto adDto, MultipartFile file) {
         List<Ads> ads = adsRepository.findByTitleAndPrice(adDto.getTitle(), adDto.getPrice());
         if (ads.isEmpty()) {
+            String originalName = file.getOriginalFilename();
+            String uniqueName = pictureService.getUniqueName(originalName);
+            try {
+                adDto.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            pictureService.download(file, uniqueName);
             adDto.setAuthor(getAuthorId());
+            log.debug("adDto from service:: {}", adDto);
             adsRepository.save(adsMapper.toEntity(adDto));
         } else {
             throw new IllegalArgumentException(EXIST);
         }
         return adDto;
+    }
+
+    @Override
+    public byte[] getImageById(Integer id) {
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        return pictureService.upload(ads.getImage());
     }
 
     @Override
@@ -54,6 +73,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public ResponseWrapperAdsDto getMyAds() {
         List<Ads> adsList = adsRepository.findAllAdsByAuthorId(getAuthorId());
+        log.debug("GET  /ads/me object:: {}", adsList.toString());
         List<AdDto> adDtoList = adsMapper.toDtos(adsList);
         return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
@@ -64,7 +84,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         FullAdDto fullAdsDto = fullAdsMapper.toDto(fullAd);
 //        Ads ads = adsRepository.findById(id).orElseThrow(()->new EntityNotFoundException(NOT_FOUND));
 //       AdDto ad=  adsMapper.toDto(ads);
-        log.debug(fullAdsDto.toString());
+        log.debug("GET  /ads/{id} object:: {}", fullAdsDto.toString());
         return fullAdsMapper.toDto(fullAdsDto);
 //        return ad;
     }
@@ -73,7 +93,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     public AdDto removeAd(Integer id) {
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
         AdDto adDto = adsMapper.toDto(ads);
-        log.debug(adDto.toString());
+        log.debug("DELETE  /ads/{id} object:: {}\"", adDto.toString());
         adsRepository.delete(ads);
         return adDto;
     }
@@ -89,6 +109,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         ads = adsMapper.toEntity(adDto);
         log.debug(ads.toString());
         adsRepository.save(ads);
+        log.debug("PATCH  /ads/{id} object:: {}", adDto);
         return adDto;
     }
 

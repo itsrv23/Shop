@@ -7,3 +7,5 @@ databaseChangeLog:
       file: liquibase/sql/20_ads_comment.sql
   - include:
       file: liquibase/sql/30_user_avatars.sql
+  - include:
+      file: liquibase/sql/40_ads_pictures.sql

@@ -6,7 +6,7 @@ import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 
 public interface AdsService {
-    AdDto addAd(AdDto createAds, MultipartFile file);
+    AdDto addAd(AdDto adDto, MultipartFile file);
 
     ResponseWrapperAdsDto getAllAds();
 
@@ -17,4 +17,6 @@ public interface AdsService {
     AdDto removeAd(Integer id);
 
     AdDto updateAd(Integer id, AdDto adDto);
+
+    byte[] getImageById(Integer id);
 }
