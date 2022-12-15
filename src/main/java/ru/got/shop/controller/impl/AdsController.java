@@ -27,9 +27,14 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdDto> addAd(AdDto adDto, MultipartFile file) {
-        log.debug(adDto.toString());
-        log.debug(file.getOriginalFilename());
+        log.debug("adDto from controller:: {}", adDto);
+        log.debug("file from controller:: {}", file.getOriginalFilename());
         return ResponseEntity.ok(adsService.addAd(adDto, file));
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getAdImage(Integer id) {
+        return ResponseEntity.ok(adsService.getImageById(id));
     }
 
     @Override
@@ -44,7 +49,6 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdDto> removeAd(Integer id) {
-
         return ResponseEntity.ok(adsService.removeAd(id));
     }
 

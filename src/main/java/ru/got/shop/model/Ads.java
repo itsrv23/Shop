@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @Table(name = "ads")
 public class Ads {
@@ -25,6 +24,9 @@ public class Ads {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User userId;
+
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "description")
     private String description;
@@ -39,8 +41,7 @@ public class Ads {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "adsId")
     @ToString.Exclude
     private List<AdsComment> adsComment;
-
 //    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "id")
-    private List<Picture> pictures;
+//    @OneToMany(fetch = FetchType.LAZY,mappedBy = "id")
+//    private List<Picture> pictures;
 }
