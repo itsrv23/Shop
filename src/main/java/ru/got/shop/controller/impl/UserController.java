@@ -1,6 +1,7 @@
 package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,8 @@ public class UserController implements UsersApi, AuthenticationFacade {
     private final UserAvatarService avatarService;
     private final PermissionService permissionService;
 
-    private final Long MAX_AVATAR_SIZE = (long) (2 * 1024 * 1024);
+    @Value("${shop.avatar.size}")
+    private Long MAX_AVATAR_SIZE;
 
     @Override
     public ResponseEntity<UserDto> getUserUsingGET(Integer id) {

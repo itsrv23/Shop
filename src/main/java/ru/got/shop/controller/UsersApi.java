@@ -172,7 +172,7 @@ public interface UsersApi {
             value = "/users/me/image",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    ResponseEntity<String> updateUserAvatar(@RequestParam MultipartFile image);
+    ResponseEntity<String> updateUserAvatar(@RequestPart(value = "image") MultipartFile file);
 
     @GetMapping(value = "/images/{id}/", produces = {MediaType.IMAGE_PNG_VALUE})
     public byte[] getImage(@PathVariable("id") UUID uuid);

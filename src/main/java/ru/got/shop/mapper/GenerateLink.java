@@ -7,6 +7,6 @@ public interface GenerateLink {
         if (user.getAvatarId() == null) {
             return null;
         }
-        return "http://127.0.0.1:8080/images/" + user.getAvatarId().getUuid() + "/";
+        return "/images/" + user.getAvatarId().getUuid() + "/";
     }
 }
