@@ -1,12 +1,15 @@
 package ru.got.shop.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import ru.got.shop.model.dto.AdDto;
+
+import java.util.UUID;
 
 public interface PictureService {
 
-    byte[] download(MultipartFile file,String uniqueFileName);
+    UUID download(MultipartFile file, AdDto adDto);
 
-    byte[] upload(String uniqueFileName);
+    byte[] upload(Integer ad_pk);
 
     String getUniqueName(String fileName);
 }
