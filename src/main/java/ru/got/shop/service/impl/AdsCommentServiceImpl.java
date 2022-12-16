@@ -35,6 +35,7 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
     @Override
     public AdsCommentDto addAdsComments(Integer adId, AdsCommentDto comment) {
         AdsComment newComment = adsCommentMapper.toEntity(comment);
+        newComment.setPk(null);
         newComment.setUserId(userMapper.toEntity(userService.findUser(getLogin())));
         newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
