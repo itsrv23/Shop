@@ -8,6 +8,7 @@ package ru.got.shop.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,18 +30,6 @@ import javax.annotation.Generated;
 public interface AdsApi {
 
     /**
-     * GET /ads : getALLAds
-     *
-     * @return OK (status code 200)
-     * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
-     * or Not Found (status code 404)
-     */
-    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = { "application/json" })
-    ResponseEntity<ResponseWrapperAdsDto> getAllAds();
-
-    /**
      * POST /ad : adDto
      * Добавить ads
      *
@@ -58,9 +47,25 @@ public interface AdsApi {
                     description = "Created",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = AdDto.class))))
+    @RequestBody(content = {
+            @Content(encoding = @Encoding(name = "properties", contentType = MediaType.APPLICATION_JSON_VALUE)),
+            @Content(encoding = @Encoding(name = "image", contentType = "image/*"))
+    })
     @PostMapping(value = "/ads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<AdDto> addAd(@RequestPart(value = "properties") AdDto adDto,
                                 @RequestParam(value = "image") MultipartFile file);
+
+    /**
+     * GET /ads : getALLAds
+     *
+     * @return OK (status code 200)
+     * or Unauthorized (status code 401)
+     * or Forbidden (status code 403)
+     * or Not Found (status code 404)
+     */
+    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = { "Ads" })
+    @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = { "application/json" })
+    ResponseEntity<ResponseWrapperAdsDto> getAllAds();
 
     /**
      * GET /ads/me : Ads
@@ -97,7 +102,9 @@ public interface AdsApi {
      * or Not Found (status code 404)
      */
     @Operation(operationId = "getFullAd", summary = "get ad image", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.GET, value = "/ads/image/{uuid}")
+    @RequestMapping(method = RequestMethod.GET,
+            value = "/ads/image/{uuid}",
+            produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<?> getAdImage(@PathVariable("uuid") String uuid);
 
     /**
