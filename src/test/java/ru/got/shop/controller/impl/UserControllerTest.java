@@ -26,6 +26,8 @@ import ru.got.shop.model.dto.ResponseWrapperUserDto;
 import ru.got.shop.repository.UserAvatarRepository;
 import ru.got.shop.repository.UserRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -270,6 +272,45 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(getAvatarEntity().getUuid().toString()));
     }
+    @Test
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    void updateUserAvatar_BigFile() throws Exception {
+        String path = "/users/me/image";
+        MockMultipartFile mff = new MockMultipartFile("image", AVATAR_FILE_BIG_FILE());
+
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(path);
+        builder.with(request -> {
+            request.setMethod("PATCH");
+            return request;
+        });
+
+        mockMvc.perform(builder.file(mff))
+                .andDo(print())
+                .andExpect(status().isIAmATeapot());
+    }
+
+    @Test
+    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    void updateUserAvatar_IOException() throws Exception {
+        String path = "/users/me/image";
+        CustomMockMultipartFile mff = new CustomMockMultipartFile("image", AVATAR_FILE());
+
+        Mockito.when(userRepository.findFirstByEmail(USER_LOGIN)).thenReturn(Optional.of(getUserEntity()));
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(getUserEntity());
+        Mockito.when(userAvatarRepository.findFirstByUser(any(User.class))).thenReturn(Optional.of(getAvatarEntity()));
+        Mockito.when(userAvatarRepository.save(any(UserAvatar.class))).thenReturn(getAvatarEntity());
+
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(path);
+        builder.with(request -> {
+            request.setMethod("PATCH");
+            return request;
+        });
+
+        mockMvc.perform(builder.file(mff))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("\"IOException, please repeat request again\""));
+    }
 
     @Test
     void getImage() throws Exception {
@@ -280,5 +321,16 @@ class UserControllerTest {
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().bytes(AVATAR_FILE()));
+    }
+
+    private class CustomMockMultipartFile extends MockMultipartFile {
+        public CustomMockMultipartFile(String name, byte[] content) {
+            super(name, content);
+        }
+
+        @Override
+        public byte[] getBytes() throws IOException {
+            throw new IOException();
+        }
     }
 }
