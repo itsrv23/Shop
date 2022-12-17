@@ -25,8 +25,9 @@ public class Ads {
     @JoinColumn(name = "user_id")
     private User userId;
 
-    @Column(name = "image")
-    private String image;
+    @OneToOne
+    @JoinColumn(name = "picture")
+    private Picture picture;
 
     @Column(name = "description")
     private String description;
@@ -41,7 +42,4 @@ public class Ads {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "adsId")
     @ToString.Exclude
     private List<AdsComment> adsComment;
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY,mappedBy = "id")
-//    private List<Picture> pictures;
 }

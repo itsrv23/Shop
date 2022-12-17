@@ -8,6 +8,7 @@ CREATE TABLE ads
     description text,
     price       INTEGER,
     title       text,
+    picture   uuid,
     CONSTRAINT pk_ads PRIMARY KEY (id)
 );
 

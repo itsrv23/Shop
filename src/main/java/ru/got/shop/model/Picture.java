@@ -22,13 +22,11 @@ public class Picture {
     private UUID uuid;
     @Column(name = "content_size")
     private long fileSize;
-    @Column(name = "file_name")
-    private String filePath;
     @Column(name = "media_type")
     private String mediaType;
     @Column(name = "file_bytes")
     @Lob
     private byte[] data;
-    @Column(name = "ads_id")
-    private int adsId;
+    @Column(name = "file_name")
+    private String fileName;
 }

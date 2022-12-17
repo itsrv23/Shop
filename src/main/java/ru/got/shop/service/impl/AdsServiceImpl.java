@@ -13,16 +13,20 @@ import ru.got.shop.model.dto.FullAd;
 import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.repository.PictureRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.service.AdsService;
 import ru.got.shop.service.PictureService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
@@ -34,6 +38,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     private final UserRepository userRepository;
     private final PictureService pictureService;
+    private final PictureRepository pictureRepository;
     @Value("${pic.path}")
     private String path;
 
@@ -43,11 +48,10 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         if (ads.isEmpty()) {
             log.debug("adDto from service:: {}", adDto);
             adDto.setAuthor(getAuthorId());
-            adDto = adsMapper.toDto(adsRepository.save(adsMapper.toEntity(adDto)));
+            String uuid = pictureService.download(file).toString();
+            adDto.setImage(uuid);
             log.debug("adDto from service:: {}", adDto);
-            String uuid = pictureService.download(file, adDto).toString();
-            adDto.setImage(getPath(uuid));
-            adsRepository.save(adsMapper.toEntity(adDto));
+            adDto = adsMapper.toDto(adsRepository.save(adsMapper.toEntity(adDto)));
         } else {
             throw new IllegalArgumentException(EXIST);
         }
@@ -56,14 +60,14 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     @Override
     public byte[] getImageById(String uuid) {
-        Ads ads = adsRepository.findByImage(getPath(uuid)).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-        return pictureService.upload(ads.getPk());
+        return pictureService.upload(UUID.fromString(uuid));
     }
 
     @Override
     public ResponseWrapperAdsDto getAllAds() {
         List<Ads> ads = adsRepository.findAll();
         List<AdDto> adDtoList = adsMapper.toDtos(ads);
+        log.debug("SERVICE DTO LIST{}", adDtoList);
         return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
 
@@ -117,7 +121,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
                 .getId();
     }
 
-    private String getPath(String uuid) {
+    private String buildPath(String uuid) {
         return path.concat(uuid);
     }
 }
