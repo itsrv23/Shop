@@ -54,7 +54,8 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdDto> updateAd(Integer id, AdDto adDto) {
-        log.info(adDto.toString());
+        log.debug("From PATCH controller {}", id);
+        log.debug("From PATCH controller {}", adDto);
         return ResponseEntity.ok(adsService.updateAd(id, adDto));
     }
 }

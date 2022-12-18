@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Builder
 @Data
@@ -32,6 +33,9 @@ public class FullAdDto implements Serializable, FullAd {
 
     @JsonProperty("price")
     private Integer price;
+
+    @JsonProperty("image")
+    private List<String> images;
 
     @JsonProperty("description")
     private String description;

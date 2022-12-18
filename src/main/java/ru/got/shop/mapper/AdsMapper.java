@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface AdsMapper {
 
     @Mapping(target = "picture", ignore = true)
-    @Mapping(target = "picture.uuid", expression = "java(mapToPic(adDto))")
+    @Mapping(target = "picture.uuid", expression = "java(getPicUUID(adDto))")
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "adsComment", ignore = true)
     @Mapping(target = "userId.id", source = "author")
@@ -29,7 +29,7 @@ public interface AdsMapper {
         return picture != null ? "/ads/image/".concat(picture.getUuid().toString()) : null;
     }
 
-    default UUID mapToPic(AdDto adDto) {
+    default UUID getPicUUID(AdDto adDto) {
         return adDto.getImage() != null ? UUID.fromString(adDto.getImage()) : null;
     }
 }

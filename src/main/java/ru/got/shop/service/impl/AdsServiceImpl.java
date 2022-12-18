@@ -2,18 +2,16 @@ package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.FullAdsMapper;
 import ru.got.shop.model.Ads;
+import ru.got.shop.model.User;
 import ru.got.shop.model.dto.AdDto;
-import ru.got.shop.model.dto.FullAd;
 import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 import ru.got.shop.repository.AdsRepository;
-import ru.got.shop.repository.PictureRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.service.AdsService;
@@ -38,19 +36,16 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     private final UserRepository userRepository;
     private final PictureService pictureService;
-    private final PictureRepository pictureRepository;
-    @Value("${pic.path}")
-    private String path;
 
     @Override
     public AdDto addAd(AdDto adDto, MultipartFile file) {
         List<Ads> ads = adsRepository.findByTitleAndPrice(adDto.getTitle(), adDto.getPrice());
         if (ads.isEmpty()) {
-            log.debug("adDto from service:: {}", adDto);
-            adDto.setAuthor(getAuthorId());
+            log.debug("POST: /ads  adDto from service:: {}", adDto);
+            adDto.setAuthor(getUser().getId());
             String uuid = pictureService.download(file).toString();
             adDto.setImage(uuid);
-            log.debug("adDto from service:: {}", adDto);
+            log.debug(" adDto before save:: {}", adDto);
             adDto = adsMapper.toDto(adsRepository.save(adsMapper.toEntity(adDto)));
         } else {
             throw new IllegalArgumentException(EXIST);
@@ -73,7 +68,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     @Override
     public ResponseWrapperAdsDto getMyAds() {
-        List<Ads> adsList = adsRepository.findAllAdsByAuthorId(getAuthorId());
+        List<Ads> adsList = adsRepository.findAllByUserId(getUser());
         List<AdDto> adDtoList = adsMapper.toDtos(adsList);
         ResponseWrapperAdsDto wrapperAdsDto = new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
         log.debug("GET  /ads/me object:: {}", wrapperAdsDto);
@@ -82,13 +77,10 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     @Override
     public FullAdDto getAds(Integer id) {
-        FullAd fullAd = adsRepository.getFullAds(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-        FullAdDto fullAdsDto = fullAdsMapper.toDto(fullAd);
-//        Ads ads = adsRepository.findById(id).orElseThrow(()->new EntityNotFoundException(NOT_FOUND));
-//       AdDto ad=  adsMapper.toDto(ads);
-        log.debug("GET  /ads/{id} object:: {}", fullAdsDto.toString());
-        return fullAdsMapper.toDto(fullAdsDto);
-//        return ad;
+        User user = userRepository.findFirstByEmail(getLogin())
+                .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST));
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        return fullAdsMapper.toDto(user, ads);
     }
 
     @Override
@@ -115,13 +107,8 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         return adDto;
     }
 
-    private int getAuthorId() {
+    private User getUser() {
         return userRepository.findFirstByEmail(getLogin())
-                .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST))
-                .getId();
-    }
-
-    private String buildPath(String uuid) {
-        return path.concat(uuid);
+                .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST));
     }
 }
