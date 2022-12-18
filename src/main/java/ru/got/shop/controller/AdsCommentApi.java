@@ -20,10 +20,10 @@ import javax.annotation.Generated;
 @Tag(name = "Comments", description = "the Ads API")
 public interface AdsCommentApi {
     /**
-     * POST /ads/{ad_id}/comments : addAdsComments
+     * POST /ads/{ad_id}/comments : addAdsComment
      *
      * @param adId ad_id (required)
-     * @param comments comments (required)
+     * @param comment comment (required)
      * @return OK (status code 200)
      *         or Created (status code 201)
      *         or Unauthorized (status code 401)
@@ -31,9 +31,9 @@ public interface AdsCommentApi {
      *         or Not Found (status code 404)
      */
     @Operation(
-            operationId = "addAdsComments",
-            summary = "addAdsComments",
-            tags = { "Comments" },
+            operationId = "addAdsComment",
+            summary = "addAdsComment",
+            tags = { "Comment" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  AdsCommentDto.class))),
                     @ApiResponse(responseCode = "201", description = "Created"),
@@ -48,9 +48,9 @@ public interface AdsCommentApi {
             produces = { "application/json" },
             consumes = { "application/json" }
     )
-    ResponseEntity<AdsCommentDto> addAdsComments(
+    ResponseEntity<AdsCommentDto> addAdsComment(
             @Parameter(name = "ad_id", description = "ad_id", required = true, schema = @Schema(description = "")) @PathVariable("ad_id") Integer adId,
-            @Parameter(name = "comments", description = "comments", required = true, schema = @Schema(description = "")) @Valid @RequestBody AdsCommentDto comments
+            @Parameter(name = "comments", description = "comments", required = true, schema = @Schema(description = "")) @Valid @RequestBody AdsCommentDto comment
     );
 
 

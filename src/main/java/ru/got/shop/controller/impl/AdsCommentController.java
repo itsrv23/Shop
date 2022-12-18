@@ -2,6 +2,7 @@ package ru.got.shop.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ru.got.shop.controller.AdsCommentApi;
@@ -17,8 +18,8 @@ public class AdsCommentController implements AdsCommentApi {
     private final AdsCommentService adsCommentService;
 
     @Override
-    public ResponseEntity<AdsCommentDto> addAdsComments(Integer adId, AdsCommentDto comment) {
-        return ResponseEntity.ok(adsCommentService.addAdsComments(adId, comment));
+    public ResponseEntity<AdsCommentDto> addAdsComment(Integer adId, AdsCommentDto comment) {
+        return ResponseEntity.ok(adsCommentService.addAdsComment(adId, comment));
     }
 
     @Override
