@@ -32,7 +32,6 @@ public class AdsCommentControllerFactory {
         Ads adminAds = new Ads();
         adminAds.setPk(ADMIN_ADS_ID);
         adminAds.setUserId(getAdminEntity());
-        adminAds.setImage(null);
         adminAds.setTitle(VALUE);
         adminAds.setDescription(DESCRIPTION);
         adminAds.setPrice(PRICE);
@@ -44,7 +43,6 @@ public class AdsCommentControllerFactory {
         Ads userAds = new Ads();
         userAds.setPk(USER_ADS_ID);
         userAds.setUserId(getUserEntity());
-        userAds.setImage(null);
         userAds.setTitle(VALUE);
         userAds.setDescription(DESCRIPTION);
         userAds.setPrice(PRICE);
