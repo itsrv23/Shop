@@ -1,44 +1,32 @@
 package ru.got.shop.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ads_pictures")
 @Setter
 @Getter
-public class Picture implements Serializable {
+@RequiredArgsConstructor
+public class Picture {
+
     @Id
-    @ManyToOne
-    @JoinColumn(name = "id")
-    private Ads id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @EqualsAndHashCode.Include
+    @Column(name = "uuid")
+    private UUID uuid;
     @Column(name = "content_size")
-    private Integer fileSize;
-    @Column(name = "file_name")
-    private String filePath;
+    private long fileSize;
     @Column(name = "media_type")
     private String mediaType;
     @Column(name = "file_bytes")
     @Lob
-    private Byte[] data;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-            return false;
-        Picture picture = (Picture) o;
-        return id != null && Objects.equals(id, picture.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    private byte[] data;
+    @Column(name = "file_name")
+    private String fileName;
 }

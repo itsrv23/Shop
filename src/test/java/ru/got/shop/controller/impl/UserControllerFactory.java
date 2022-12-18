@@ -22,6 +22,10 @@ public class UserControllerFactory {
         return Files.readAllBytes(Path.of("src/test/resources/user_avatar.jpg"));
     }
 
+    public static byte [] AVATAR_FILE_BIG_FILE() throws IOException {
+        return Files.readAllBytes(Path.of("src/test/resources/user_avatar_big.jpg"));
+    }
+
     public static User getUserEntity() throws Exception {
         User user =  new User();
         user.setId(1);

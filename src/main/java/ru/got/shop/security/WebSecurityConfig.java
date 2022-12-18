@@ -26,11 +26,15 @@ public class WebSecurityConfig {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/ads", "/ads/me", "/ads/**",
-            "/users/me", "/users/me/image",
+            "/ads",
+            "/ads/me",
+            "/ads/**",
+            "/users/me",
+            "/users/me/image",
             "/path/t*/*",
-            "/ads/*/comments/*", "/ads/*/comments",
+            "/ads/*/comments/*",
             "/images/**",
+            "/ads/image/*",
             "/register"
     };
 
@@ -51,7 +55,8 @@ public class WebSecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .cors().disable()
+                .cors()
+                .disable()
                 .httpBasic(withDefaults());
         return http.build();
     }

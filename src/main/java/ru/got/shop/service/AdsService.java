@@ -18,5 +18,5 @@ public interface AdsService {
 
     AdDto updateAd(Integer id, AdDto adDto);
 
-    byte[] getImageById(Integer id);
+    byte[] getImageById(String uuid);
 }

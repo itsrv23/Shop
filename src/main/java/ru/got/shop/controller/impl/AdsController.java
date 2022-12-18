@@ -33,8 +33,8 @@ public class AdsController implements AdsApi {
     }
 
     @Override
-    public ResponseEntity<byte[]> getAdImage(Integer id) {
-        return ResponseEntity.ok(adsService.getImageById(id));
+    public ResponseEntity<byte[]> getAdImage(String uuid) {
+        return ResponseEntity.ok(adsService.getImageById(uuid));
     }
 
     @Override

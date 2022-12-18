@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.got.shop.exception.CustomIOException;
 import ru.got.shop.model.User;
 import ru.got.shop.model.UserAvatar;
 import ru.got.shop.repository.UserAvatarRepository;
@@ -39,8 +40,8 @@ public class UserAvatarServiceImpl implements UserAvatarService {
             userRepository.save(user);
             return avatar.getUuid().toString();
         } catch (IOException e) {
-            log.warn("Ошибка при загрузке аватарки от пользователя: {}", user);
-            throw new RuntimeException(e);
+            log.warn("Ошибка при загрузке аватарки от пользователя: {}", user.getEmail());
+            throw new CustomIOException();
         }
     }
 
