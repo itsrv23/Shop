@@ -9,6 +9,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * AdsComment
@@ -30,5 +31,18 @@ public class AdsCommentDto implements Serializable {
 
   @JsonProperty("text")
   private String text;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AdsCommentDto that = (AdsCommentDto) o;
+    return pk.equals(that.pk);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(pk);
+  }
 }
 

@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -34,4 +35,17 @@ public class AdsComment {
 
     @Column(name = "text")
     private String text;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AdsComment that = (AdsComment) o;
+        return pk.equals(that.pk);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pk);
+    }
 }

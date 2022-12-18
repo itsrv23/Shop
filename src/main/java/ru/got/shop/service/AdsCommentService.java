@@ -4,7 +4,7 @@ import ru.got.shop.model.dto.AdsCommentDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsCommentDto;
 
 public interface AdsCommentService {
-    AdsCommentDto addAdsComments(Integer adId, AdsCommentDto comment);
+    AdsCommentDto addAdsComment(Integer adId, AdsCommentDto comment);
 
     AdsCommentDto deleteAdsComment(Integer adId, Integer id);
 

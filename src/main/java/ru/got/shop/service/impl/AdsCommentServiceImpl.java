@@ -3,6 +3,7 @@ package ru.got.shop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.got.shop.exception.ForbiddenException;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
 import ru.got.shop.mapper.UserMapper;
@@ -10,6 +11,8 @@ import ru.got.shop.model.dto.AdsCommentDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.repository.AdsCommentRepository;
 import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.repository.UserRepository;
+import ru.got.shop.security.Role;
 import ru.got.shop.service.AdsCommentService;
 import ru.got.shop.model.AdsComment;
 import ru.got.shop.model.Ads;
@@ -19,6 +22,7 @@ import ru.got.shop.service.UserService;
 import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,12 +33,18 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
     private final AdsCommentMapper adsCommentMapper;
     private final AdsCommentRepository adsCommentRepository;
     private final AdsRepository adsRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
     private final UserMapper userMapper;
 
     @Override
-    public AdsCommentDto addAdsComments(Integer adId, AdsCommentDto comment) {
+    public AdsCommentDto addAdsComment(Integer adId, AdsCommentDto comment) {
+        if (comment.getText() == null) {
+            throw new EntityNotFoundException("CommentNotFound or does not exist");
+        }
+
         AdsComment newComment = adsCommentMapper.toEntity(comment);
+        newComment.setPk(null);
         newComment.setUserId(userMapper.toEntity(userService.findUser(getLogin())));
         newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
@@ -47,23 +57,17 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
 
     @Override
     public AdsCommentDto deleteAdsComment(Integer adId, Integer id) {
-        if (! adsContainsAdsComment(adId, id)) {
-            throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
-        }
-
-        AdsCommentDto deletedComment = adsCommentMapper.toDto(adsCommentRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("AdsCommentNotFound or does not exist")));
+        AdsCommentDto commentToDelete = getAdsComment(adId, id);
+        testUserHasAccessToEditComment(commentToDelete);
         adsCommentRepository.deleteById(id);
 
-        log.info("remowal successfull " + deletedComment);
-        return deletedComment;
+        log.info("remowal successfull " + commentToDelete);
+        return commentToDelete;
     }
 
     @Override
     public AdsCommentDto getAdsComment(Integer adId, Integer id) {
-        if (! adsContainsAdsComment(adId, id)) {
-            throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
-        }
+        testAdsHasComment(adId, id);
 
         Ads adsByAdId = adsRepository.findById(adId)
                 .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
@@ -93,9 +97,8 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
 
     @Override
     public AdsCommentDto updateAdsComment(Integer adId, Integer id, AdsCommentDto comment) {
-        if (! adsContainsAdsComment(adId, id)) {
-            throw new EntityNotFoundException("Ads does not contain adsComment or does not exist");
-        }
+        testAdsHasComment(adId, id);
+        testUserHasAccessToEditComment(comment);
 
         AdsComment updateComment = adsCommentMapper.toEntity(comment);
         updateComment.setPk(id);
@@ -108,13 +111,27 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
         return updatedComment;
     }
 
-    private boolean adsContainsAdsComment (Integer adId, Integer id) {
-        try {
-            Ads adsByAdId = adsRepository.findById(adId)
-                    .orElseThrow(()-> new EntityNotFoundException("AdsNotFound or does not exist"));
-            AdsComment commentById = adsCommentRepository.findById(id)
-                     .orElseThrow(()-> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
-            return adsByAdId.getAdsComment().contains(commentById);
-        } catch (EntityNotFoundException e) { return false; }
+    private boolean testAdsHasComment (Integer adId, Integer id) {
+        Ads adsByAdId = adsRepository.findById(adId)
+                .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist"));
+        AdsComment commentById = adsCommentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
+        if (!adsByAdId.getAdsComment().contains(commentById)) {
+            throw new EntityNotFoundException("Ads does not contain adsComment");
+        }
+        return true;
+    }
+
+    private boolean testUserHasAccessToEditComment (AdsCommentDto comment) {
+        if (!Role.ADMIN.equals(
+                (userRepository
+                        .findFirstByEmail(getLogin())
+                        .orElseThrow(EntityNotFoundException::new))
+                        .getRoleGroup())
+                &&
+                (!Objects.equals(userService.findUser(getLogin()).getId(), comment.getAuthor()))) {
+            throw new ForbiddenException("Access id denied, someone else's comment");
+        }
+        return true;
     }
 }
