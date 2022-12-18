@@ -32,7 +32,6 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     private final FullAdsMapper fullAdsMapper;
     private final AdsRepository adsRepository;
     private final String NOT_FOUND = "Ads doesn't exist!!!";
-    private final String EXIST = "The ads already exists!!!";
 
     private final UserRepository userRepository;
     private final PictureService pictureService;
@@ -48,7 +47,8 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
             log.debug(" adDto before save:: {}", adDto);
             adDto = adsMapper.toDto(adsRepository.save(adsMapper.toEntity(adDto)));
         } else {
-            throw new IllegalArgumentException(EXIST);
+            String exist = "The ads already exists!!!";
+            throw new IllegalArgumentException(exist);
         }
         return adDto;
     }
@@ -95,16 +95,10 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public AdDto updateAd(Integer id, AdDto adDto) {
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-        AdDto adDtoTmp = adsMapper.toDto(ads);
-        adDto.setAuthor(ads.getUserId().getId());
-        adDto.setPk(ads.getPk());
-        if (adDtoTmp.equals(adDto))
-            throw new IllegalArgumentException(EXIST);
-        ads = adsMapper.toEntity(adDto);
-        log.debug(ads.toString());
-        adsRepository.save(ads);
-        log.debug("PATCH  /ads/{id} object:: {}", adDto);
-        return adDto;
+        AdDto dtoToSave = adsMapper.updateDto(adDto, ads);
+        log.debug("PATCHED TO SAVE {}", dtoToSave);
+        ads = adsMapper.toEntity(dtoToSave);
+        return adsMapper.toDto(adsRepository.save(ads));
     }
 
     private User getUser() {

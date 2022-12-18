@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -47,7 +46,7 @@ public interface AdsApi {
                     description = "Created",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = AdDto.class))))
-    @RequestBody(content = {
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
             @Content(encoding = @Encoding(name = "properties", contentType = MediaType.APPLICATION_JSON_VALUE)),
             @Content(encoding = @Encoding(name = "image", contentType = "image/*"))
     })

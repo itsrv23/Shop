@@ -25,12 +25,26 @@ public interface AdsMapper {
 
     List<AdDto> toDtos(List<Ads> adsList);
 
+    @Mapping(target = "pk", source = "ads.pk")
+    @Mapping(target = "author", source = "ads.userId.id")
+    @Mapping(target = "description", source = "adDto.description")
+    @Mapping(target = "image", expression = "java(getStringUUID(ads))")
+    @Mapping(target = "price", source = "adDto.price")
+    @Mapping(target = "title", source = "adDto.title")
+    AdDto updateDto(AdDto adDto, Ads ads);
+
     default String getLink(Picture picture) {
         return picture != null ? "/ads/image/".concat(picture.getUuid().toString()) : null;
     }
 
     default UUID getPicUUID(AdDto adDto) {
         return adDto.getImage() != null ? UUID.fromString(adDto.getImage()) : null;
+    }
+
+    default String getStringUUID(Ads ads) {
+        return ads.getPicture() != null && ads.getPicture().getUuid() != null ? ads.getPicture()
+                .getUuid()
+                .toString() : null;
     }
 }
 
