@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface AdsMapper {
 
     @Mapping(target = "picture", ignore = true)
-    @Mapping(target = "picture.uuid", expression = "java(mapToPic(adDto))")
+    @Mapping(target = "picture.uuid", expression = "java(getPicUUID(adDto))")
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "adsComment", ignore = true)
     @Mapping(target = "userId.id", source = "author")
@@ -25,12 +25,26 @@ public interface AdsMapper {
 
     List<AdDto> toDtos(List<Ads> adsList);
 
+    @Mapping(target = "pk", source = "ads.pk")
+    @Mapping(target = "author", source = "ads.userId.id")
+    @Mapping(target = "description", source = "adDto.description")
+    @Mapping(target = "image", expression = "java(getStringUUID(ads))")
+    @Mapping(target = "price", source = "adDto.price")
+    @Mapping(target = "title", source = "adDto.title")
+    AdDto updateDto(AdDto adDto, Ads ads);
+
     default String getLink(Picture picture) {
         return picture != null ? "/ads/image/".concat(picture.getUuid().toString()) : null;
     }
 
-    default UUID mapToPic(AdDto adDto) {
+    default UUID getPicUUID(AdDto adDto) {
         return adDto.getImage() != null ? UUID.fromString(adDto.getImage()) : null;
+    }
+
+    default String getStringUUID(Ads ads) {
+        return ads.getPicture() != null && ads.getPicture().getUuid() != null ? ads.getPicture()
+                .getUuid()
+                .toString() : null;
     }
 }
 

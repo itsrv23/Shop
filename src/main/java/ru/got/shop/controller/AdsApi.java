@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -47,7 +46,7 @@ public interface AdsApi {
                     description = "Created",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = AdDto.class))))
-    @RequestBody(content = {
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
             @Content(encoding = @Encoding(name = "properties", contentType = MediaType.APPLICATION_JSON_VALUE)),
             @Content(encoding = @Encoding(name = "image", contentType = "image/*"))
     })
@@ -93,7 +92,7 @@ public interface AdsApi {
             @PathVariable("id") Integer id);
 
     /**
-     * GET /ads/{id}/image : get image by ads id
+     * GET /ads/image/{uuid} : get image by ads id
      *
      * @param id id (required)
      * @return OK (status code 200)
@@ -101,7 +100,7 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getFullAd", summary = "get ad image", tags = { "Ads" })
+    @Operation(operationId = "getImage", summary = "get ad image", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET,
             value = "/ads/image/{uuid}",
             produces = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -111,7 +110,7 @@ public interface AdsApi {
      * DELETE /ads/{id} : removeAds
      *
      * @param id id (required)
-     * @return No Content (status code 204)
+     * @return No Content (status code 200)
      * or Unauthorized (status code 401)
      * or Forbidden (status code 403)
      */
