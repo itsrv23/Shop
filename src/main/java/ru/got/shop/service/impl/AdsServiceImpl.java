@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.FullAdsMapper;
+import ru.got.shop.mapper.PictureMapper;
 import ru.got.shop.model.Ads;
+import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
 import ru.got.shop.model.dto.AdDto;
 import ru.got.shop.model.dto.FullAdDto;
@@ -19,6 +21,7 @@ import ru.got.shop.service.PictureService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +38,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     private final UserRepository userRepository;
     private final PictureService pictureService;
+    private final PictureMapper pictureMapper;
 
     @Override
     public AdDto addAd(AdDto adDto, MultipartFile file) {
@@ -42,7 +46,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         if (ads.isEmpty()) {
             log.debug("POST: /ads  adDto from service:: {}", adDto);
             adDto.setAuthor(getUser().getId());
-            String uuid = pictureService.download(file).toString();
+            String uuid = pictureService.download(file, null).toString();
             adDto.setImage(uuid);
             log.debug(" adDto before save:: {}", adDto);
             adDto = adsMapper.toDto(adsRepository.save(adsMapper.toEntity(adDto)));
@@ -76,7 +80,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     }
 
     @Override
-    public FullAdDto getAds(Integer id) {
+    public FullAdDto getFullAdDto(Integer id) {
         User user = userRepository.findFirstByEmail(getLogin())
                 .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST));
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
@@ -99,6 +103,19 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         log.debug("PATCHED TO SAVE {}", dtoToSave);
         ads = adsMapper.toEntity(dtoToSave);
         return adsMapper.toDto(adsRepository.save(ads));
+    }
+
+    @Override
+    public AdDto updatePicture(Integer adId, MultipartFile file) {
+        try {
+            Ads ads = adsRepository.findById(adId).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+            pictureService.download(file, ads.getPicture().getUuid());
+            Picture picture = pictureMapper.mapToPicture(file, ads.getPicture().getUuid());
+            ads.setPicture(picture);
+            return adsMapper.toDto(adsRepository.save(ads));
+        } catch (IOException e) {
+            throw new RuntimeException("Something went wrong wile picture reading", e);
+        }
     }
 
     private User getUser() {

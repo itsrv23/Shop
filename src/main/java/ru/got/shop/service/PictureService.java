@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface PictureService {
 
-    UUID download(MultipartFile file);
+    UUID download(MultipartFile file, UUID uuid);
 
     byte[] upload(UUID uuid);
 }

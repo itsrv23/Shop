@@ -27,9 +27,16 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdDto> addAd(AdDto adDto, MultipartFile file) {
-        log.debug("adDto from controller:: {}", adDto);
-        log.debug("file from controller:: {}", file.getOriginalFilename());
+        log.debug("POST /ads :: {}", adDto);
+        log.debug("POST /ads :: {}", file.getOriginalFilename());
         return ResponseEntity.ok(adsService.addAd(adDto, file));
+    }
+
+    @Override
+    public ResponseEntity<AdDto> editPicture(Integer id, MultipartFile file) {
+        log.debug("PATCH /ads/{id}/image :: {}", id);
+        log.debug("PATCH /ads/{id}/image :: {}", file.getOriginalFilename());
+        return ResponseEntity.ok(adsService.updatePicture(id, file));
     }
 
     @Override
@@ -44,7 +51,7 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<FullAdDto> getFullAd(Integer id) {
-        return ResponseEntity.ok(adsService.getAds(id));
+        return ResponseEntity.ok(adsService.getFullAdDto(id));
     }
 
     @Override
@@ -54,8 +61,8 @@ public class AdsController implements AdsApi {
 
     @Override
     public ResponseEntity<AdDto> updateAd(Integer id, AdDto adDto) {
-        log.debug("From PATCH controller {}", id);
-        log.debug("From PATCH controller {}", adDto);
+        log.debug(" PATCH :: /ads/{id}  {}", id);
+        log.debug(" PATCH :: /ads/{id}adDto {}", adDto);
         return ResponseEntity.ok(adsService.updateAd(id, adDto));
     }
 }

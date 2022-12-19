@@ -12,11 +12,13 @@ public interface AdsService {
 
     ResponseWrapperAdsDto getMyAds();
 
-    FullAdDto getAds(Integer id);
+    FullAdDto getFullAdDto(Integer id);
 
     AdDto removeAd(Integer id);
 
     AdDto updateAd(Integer id, AdDto adDto);
+
+    AdDto updatePicture(Integer adId, MultipartFile file);
 
     byte[] getImageById(String uuid);
 }
