@@ -54,6 +54,16 @@ public interface AdsApi {
     ResponseEntity<AdDto> addAd(@RequestPart(value = "properties") AdDto adDto,
                                 @RequestParam(value = "image") MultipartFile file);
 
+    @Operation(operationId = "Edit picture",
+            summary = "Edit picture by advertisment id",
+            tags = { "Ads" },
+            responses = @ApiResponse(responseCode = "200",
+                    description = "OK",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = AdDto.class))))
+    @PatchMapping(value = "/ads/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<?> editPicture(@PathVariable Integer id, @RequestParam(value = "image") MultipartFile file);
+
     /**
      * GET /ads : getALLAds
      *

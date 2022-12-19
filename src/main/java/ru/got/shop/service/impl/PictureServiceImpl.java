@@ -19,10 +19,10 @@ public class PictureServiceImpl implements PictureService {
     private final PictureMapper pictureMapper;
 
     @Override
-    public UUID download(MultipartFile file) {
+    public UUID download(MultipartFile file, UUID uuid) {
         Picture picture;
         try {
-            picture = pictureMapper.mapToPicture(file);
+            picture = pictureMapper.mapToPicture(file, uuid);
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong while picture reading!!!", e);
         }
