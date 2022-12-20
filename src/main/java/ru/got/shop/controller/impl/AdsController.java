@@ -65,4 +65,9 @@ public class AdsController implements AdsApi {
         log.debug(" PATCH :: /ads/{id}adDto {}", adDto);
         return ResponseEntity.ok(adsService.updateAd(id, adDto));
     }
+
+    @Override
+    public ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleLike(String title) {
+        return ResponseEntity.ok(adsService.getAllByTitle(title));
+    }
 }

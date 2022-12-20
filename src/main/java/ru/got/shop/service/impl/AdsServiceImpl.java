@@ -63,6 +63,12 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     }
 
     @Override
+    public ResponseWrapperAdsDto getAllByTitle(String title) {
+        List<AdDto> allByTitleLike = adsMapper.toDtos(adsRepository.findAllByTitleStartingWithIgnoreCase(title));
+        return new ResponseWrapperAdsDto(allByTitleLike.size(), allByTitleLike);
+    }
+
+    @Override
     public ResponseWrapperAdsDto getAllAds() {
         List<Ads> ads = adsRepository.findAll();
         List<AdDto> adDtoList = adsMapper.toDtos(ads);

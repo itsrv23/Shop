@@ -149,4 +149,10 @@ public interface AdsApi {
             @PathVariable("id") Integer id,
             @Parameter(name = "ads", description = "ads", required = true, schema = @Schema(description = ""))
             @RequestBody AdDto adDto);
+
+    @Operation(operationId = "Find all by title", summary = "Find all by title like", tags = { "Ads" })
+    @RequestMapping(method = RequestMethod.GET,
+            value = "/ads/{title}/find",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleLike(@PathVariable String title);
 }
