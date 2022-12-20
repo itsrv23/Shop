@@ -21,4 +21,6 @@ public interface AdsService {
     AdDto updatePicture(Integer adId, MultipartFile file);
 
     byte[] getImageById(String uuid);
+
+    ResponseWrapperAdsDto getAllByTitle(String title);
 }
