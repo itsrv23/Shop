@@ -22,5 +22,8 @@ public interface AdsService {
 
     byte[] getImageById(String uuid);
 
-    ResponseWrapperAdsDto getAllByTitle(String title);
+    ResponseWrapperAdsDto getAllByTitleDescriptionPriceMoreLess(String title,
+                                                                String description,
+                                                                Integer moreThan,
+                                                                Integer lessThan);
 }

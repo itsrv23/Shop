@@ -151,8 +151,10 @@ public interface AdsApi {
             @RequestBody AdDto adDto);
 
     @Operation(operationId = "Find all by title", summary = "Find all by title like", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.GET,
-            value = "/ads/{title}/find",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleLike(@PathVariable String title);
+    @RequestMapping(method = RequestMethod.GET, value = "/ads/find", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleDescriptionPriceMoreLess(
+            @RequestParam(required = false, name = "title satrt wiht") String title,
+            @RequestParam(required = false, name = "description satrt wiht") String description,
+            @RequestParam(required = false, name = "The price greather than") Integer moreThan,
+            @RequestParam(required = false, name = "The price less than") Integer lessThan);
 }
