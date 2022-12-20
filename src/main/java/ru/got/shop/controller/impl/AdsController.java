@@ -67,7 +67,13 @@ public class AdsController implements AdsApi {
     }
 
     @Override
-    public ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleLike(String title) {
-        return ResponseEntity.ok(adsService.getAllByTitle(title));
+    public ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleDescriptionPriceMoreLess(String title,
+                                                                                          String description,
+                                                                                          Integer moreThan,
+                                                                                          Integer lessThan) {
+        return ResponseEntity.ok(adsService.getAllByTitleDescriptionPriceMoreLess(title,
+                description,
+                moreThan,
+                lessThan));
     }
 }

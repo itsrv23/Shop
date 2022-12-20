@@ -12,5 +12,9 @@ public interface AdsRepository extends JpaRepository<Ads, Integer> {
 
     List<Ads> findByTitleAndPrice(String title, Integer price);
 
-    List<Ads> findAllByTitleStartingWithIgnoreCase(String title);
+    List<Ads> findAllByTitleIsStartingWithIgnoreCaseOrDescriptionStartingWithIgnoreCaseOrPriceIsGreaterThanEqualOrPriceLessThanEqual(
+            String title,
+            String description,
+            Integer moreThan,
+            Integer lessThan);
 }
