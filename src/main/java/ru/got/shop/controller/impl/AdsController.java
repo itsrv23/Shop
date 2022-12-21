@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.controller.AdsApi;
+import ru.got.shop.model.dto.AdCreateDto;
 import ru.got.shop.model.dto.AdDto;
 import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
@@ -26,10 +27,10 @@ public class AdsController implements AdsApi {
     }
 
     @Override
-    public ResponseEntity<AdDto> addAd(AdDto adDto, MultipartFile file) {
-        log.debug("POST /ads :: {}", adDto);
+    public ResponseEntity<AdDto> addAd(AdCreateDto adCreateDto, MultipartFile file) {
+        log.debug("POST /ads :: {}", adCreateDto);
         log.debug("POST /ads :: {}", file.getOriginalFilename());
-        return ResponseEntity.ok(adsService.addAd(adDto, file));
+        return ResponseEntity.ok(adsService.addAd(adCreateDto, file));
     }
 
     @Override
@@ -60,10 +61,10 @@ public class AdsController implements AdsApi {
     }
 
     @Override
-    public ResponseEntity<AdDto> updateAd(Integer id, AdDto adDto) {
+    public ResponseEntity<AdDto> updateAd(Integer id, AdCreateDto adCreateDto) {
         log.debug(" PATCH :: /ads/{id}  {}", id);
-        log.debug(" PATCH :: /ads/{id}adDto {}", adDto);
-        return ResponseEntity.ok(adsService.updateAd(id, adDto));
+        log.debug(" PATCH :: /ads/{id}adDto {}", adCreateDto);
+        return ResponseEntity.ok(adsService.updateAd(id, adCreateDto));
     }
 
     @Override

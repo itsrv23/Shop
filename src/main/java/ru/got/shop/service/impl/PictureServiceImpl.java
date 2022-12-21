@@ -2,31 +2,31 @@ package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import ru.got.shop.mapper.PictureMapper;
+import org.springframework.transaction.annotation.Transactional;
 import ru.got.shop.model.Picture;
 import ru.got.shop.repository.PictureRepository;
 import ru.got.shop.service.PictureService;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
 import java.util.UUID;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PictureServiceImpl implements PictureService {
     private final PictureRepository pictureRepository;
-    private final PictureMapper pictureMapper;
 
     @Override
-    public UUID download(MultipartFile file, UUID uuid) {
-        Picture picture;
-        try {
-            picture = pictureMapper.mapToPicture(file, uuid);
-        } catch (IOException e) {
-            throw new RuntimeException("Something went wrong while picture reading!!!", e);
-        }
-        return pictureRepository.save(picture).getUuid();
+    public Picture download(Picture picture) {
+        return pictureRepository.save(picture);
+    }
+
+    @Override
+    public void update(UUID uuid, Picture picture) {
+        pictureRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(" Picture does noe " + "exist")));
+        picture.setUuid(uuid);
+        pictureRepository.save(picture);
     }
 
     @Override

@@ -1,12 +1,14 @@
 package ru.got.shop.service;
 
-import org.springframework.web.multipart.MultipartFile;
+import ru.got.shop.model.Picture;
 
 import java.util.UUID;
 
 public interface PictureService {
 
-    UUID download(MultipartFile file, UUID uuid);
+    Picture download(Picture picture);
+
+    void update(UUID uuid, Picture picture);
 
     byte[] upload(UUID uuid);
 }

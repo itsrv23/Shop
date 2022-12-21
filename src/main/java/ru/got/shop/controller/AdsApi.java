@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.got.shop.model.dto.AdCreateDto;
 import ru.got.shop.model.dto.AdDto;
 import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
@@ -51,7 +52,7 @@ public interface AdsApi {
             @Content(encoding = @Encoding(name = "image", contentType = "image/*"))
     })
     @PostMapping(value = "/ads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<AdDto> addAd(@RequestPart(value = "properties") AdDto adDto,
+    ResponseEntity<AdDto> addAd(@RequestPart(value = "properties") AdCreateDto adCreateDto,
                                 @RequestParam(value = "image") MultipartFile file);
 
     @Operation(operationId = "Edit picture",
@@ -111,9 +112,7 @@ public interface AdsApi {
      * or Not Found (status code 404)
      */
     @Operation(operationId = "getImage", summary = "get ad image", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.GET,
-            value = "/ads/image/{uuid}",
-            produces = MediaType.ALL_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/ads/image/{uuid}", produces = MediaType.IMAGE_PNG_VALUE)
     ResponseEntity<?> getAdImage(@PathVariable("uuid") String uuid);
 
     /**
@@ -148,13 +147,13 @@ public interface AdsApi {
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id,
             @Parameter(name = "ads", description = "ads", required = true, schema = @Schema(description = ""))
-            @RequestBody AdDto adDto);
+            @RequestBody AdCreateDto adCreateDto);
 
     @Operation(operationId = "Find all by title", summary = "Find all by title like", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads/find", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleDescriptionPriceMoreLess(
-            @RequestParam(required = false, name = "title satrt wiht") String title,
-            @RequestParam(required = false, name = "description satrt wiht") String description,
-            @RequestParam(required = false, name = "The price greather than") Integer moreThan,
+            @RequestParam(required = false, name = "The title starts wiht") String title,
+            @RequestParam(required = false, name = "The description starts wiht") String description,
+            @RequestParam(required = false, name = "The price greater than") Integer moreThan,
             @RequestParam(required = false, name = "The price less than") Integer lessThan);
 }

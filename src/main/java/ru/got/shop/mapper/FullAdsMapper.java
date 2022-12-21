@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FullAdsMapper {
-    @Mapping(target = "pk", source = "ads.pk")
+    @Mapping(target = "pk", source = "ads.id")
     @Mapping(target = "authorFirstName", source = "user.firstName")
     @Mapping(target = "authorLastName", source = "user.lastName")
     @Mapping(target = "phone", source = "user.phone")
