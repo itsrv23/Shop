@@ -4,47 +4,38 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.Picture;
+import ru.got.shop.model.User;
+import ru.got.shop.model.dto.AdCreateDto;
 import ru.got.shop.model.dto.AdDto;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface AdsMapper {
-
-    @Mapping(target = "picture", ignore = true)
-    @Mapping(target = "picture.uuid", expression = "java(getPicUUID(adDto))")
-    @Mapping(target = "userId", ignore = true)
-    @Mapping(target = "adsComment", ignore = true)
-    @Mapping(target = "userId.id", source = "author")
-    Ads toEntity(AdDto adDto);
-
+    @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "userId.id")
-    @Mapping(target = "image", expression = "java(getLink(ads.getPicture()))")
+    @Mapping(target = "image", expression = "java(getLinkList(ads.getPicture()))")
     AdDto toDto(Ads ads);
 
     List<AdDto> toDtos(List<Ads> adsList);
 
-    @Mapping(target = "pk", source = "ads.pk")
-    @Mapping(target = "author", source = "ads.userId.id")
-    @Mapping(target = "description", source = "adDto.description")
-    @Mapping(target = "image", expression = "java(getStringUUID(ads))")
-    @Mapping(target = "price", source = "adDto.price")
-    @Mapping(target = "title", source = "adDto.title")
-    AdDto updateDto(AdDto adDto, Ads ads);
+    @Mapping(target = "title", source = "adCreateDto.title")
+    @Mapping(target = "price", source = "adCreateDto.price")
+    @Mapping(target = "description", source = "adCreateDto.description")
+    Ads updateAds(AdCreateDto adCreateDto, Ads ads);
 
-    default String getLink(Picture picture) {
-        return picture != null ? "/ads/image/".concat(picture.getUuid().toString()) : null;
+    default List<String> getLinkList(Picture picture) {
+        String prefix = "/ads/image/";
+        return picture != null ? List.of(prefix.concat(picture.getUuid().toString())) : null;
     }
 
-    default UUID getPicUUID(AdDto adDto) {
-        return adDto.getImage() != null ? UUID.fromString(adDto.getImage()) : null;
-    }
-
-    default String getStringUUID(Ads ads) {
-        return ads.getPicture() != null && ads.getPicture().getUuid() != null ? ads.getPicture()
-                .getUuid()
-                .toString() : null;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "userId.id", source = "user.id")
+    @Mapping(target = "picture", source = "picture")
+    @Mapping(target = "description", source = "adCreateDto.description")
+    @Mapping(target = "price", source = "adCreateDto.price")
+    @Mapping(target = "title", source = "adCreateDto.title")
+    Ads buildAds(User user, AdCreateDto adCreateDto, Picture picture);
 }
 
