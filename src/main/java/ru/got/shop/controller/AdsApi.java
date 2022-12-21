@@ -113,7 +113,7 @@ public interface AdsApi {
     @Operation(operationId = "getImage", summary = "get ad image", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET,
             value = "/ads/image/{uuid}",
-            produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+            produces = MediaType.ALL_VALUE)
     ResponseEntity<?> getAdImage(@PathVariable("uuid") String uuid);
 
     /**
