@@ -114,6 +114,11 @@
             <artifactId>liquibase-core</artifactId>
             <version>${org.liquibase.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>5.3.28.Final</version>
+        </dependency>
         <!-- End DB -->
 
         <!-- Test -->
@@ -154,7 +159,6 @@
             </plugin>
 
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -177,6 +181,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${lombok-mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>5.3.28.Final</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
