@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.Valid;
 import java.io.Serializable;
+import java.util.List;
 
 @Builder
 @Data
@@ -17,15 +19,13 @@ public class AdDto implements Serializable {
     private Integer author;
 
     @JsonProperty("image")
-    private String image;
-
-    @JsonProperty("title")
-    private String title;
+    @Valid
+    private List<String> image;
 
     @JsonProperty("price")
     private Integer price;
 
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("title")
+    private String title;
 }
 

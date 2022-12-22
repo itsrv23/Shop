@@ -3,6 +3,7 @@ package ru.got.shop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.FullAdsMapper;
@@ -10,6 +11,7 @@ import ru.got.shop.mapper.PictureMapper;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
+import ru.got.shop.model.dto.AdCreateDto;
 import ru.got.shop.model.dto.AdDto;
 import ru.got.shop.model.dto.FullAdDto;
 import ru.got.shop.model.dto.ResponseWrapperAdsDto;
@@ -20,14 +22,12 @@ import ru.got.shop.service.AdsService;
 import ru.got.shop.service.PictureService;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
@@ -35,31 +35,43 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     private final FullAdsMapper fullAdsMapper;
     private final AdsRepository adsRepository;
     private final String NOT_FOUND = "Ads doesn't exist!!!";
-
     private final UserRepository userRepository;
     private final PictureService pictureService;
     private final PictureMapper pictureMapper;
 
+    //    @Transactional
     @Override
-    public AdDto addAd(AdDto adDto, MultipartFile file) {
-        List<Ads> ads = adsRepository.findByTitleAndPrice(adDto.getTitle(), adDto.getPrice());
-        if (ads.isEmpty()) {
-            log.debug("POST: /ads  adDto from service:: {}", adDto);
-            adDto.setAuthor(getUser().getId());
-            String uuid = pictureService.download(file, null).toString();
-            adDto.setImage(uuid);
-            log.debug(" adDto before save:: {}", adDto);
-            adDto = adsMapper.toDto(adsRepository.save(adsMapper.toEntity(adDto)));
-        } else {
-            String exist = "The ads already exists!!!";
-            throw new IllegalArgumentException(exist);
+    public AdDto addAd(AdCreateDto adCreateDto, MultipartFile file) {
+        try {
+            log.debug("POST: /ads  adCreateDto from service:: {}", adCreateDto);
+            User user = getUser();
+            Picture picture = pictureMapper.mapToPicture(file);
+            picture = pictureService.download(picture);
+            Ads ads = adsMapper.buildAds(user, adCreateDto, picture);
+            log.debug(" asd before save :: {}", ads);
+            return adsMapper.toDto(adsRepository.save(ads));
+        } catch (IOException e) {
+            throw new RuntimeException("Something went wrong while picture reading ", e);
         }
-        return adDto;
     }
 
     @Override
     public byte[] getImageById(String uuid) {
         return pictureService.upload(UUID.fromString(uuid));
+    }
+
+    @Override
+    public ResponseWrapperAdsDto getAllByTitleDescriptionPriceMoreLess(String title,
+                                                                       String description,
+                                                                       Integer moreThan,
+                                                                       Integer lessThan) {
+        List<AdDto> allByTitleLike =
+                adsMapper.toDtos(adsRepository.findAllByTitleIsStartingWithIgnoreCaseOrDescriptionStartingWithIgnoreCaseOrPriceIsGreaterThanEqualOrPriceLessThanEqual(
+                        title,
+                        description,
+                        moreThan,
+                        lessThan));
+        return new ResponseWrapperAdsDto(allByTitleLike.size(), allByTitleLike);
     }
 
     @Override
@@ -70,6 +82,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
         return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
 
+    @Transactional
     @Override
     public ResponseWrapperAdsDto getMyAds() {
         List<Ads> adsList = adsRepository.findAllByUserId(getUser());
@@ -97,25 +110,24 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     }
 
     @Override
-    public AdDto updateAd(Integer id, AdDto adDto) {
+    public AdDto updateAd(Integer id, AdCreateDto adCreateDto) {
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-        AdDto dtoToSave = adsMapper.updateDto(adDto, ads);
-        log.debug("PATCHED TO SAVE {}", dtoToSave);
-        ads = adsMapper.toEntity(dtoToSave);
+        ads = adsMapper.updateAds(adCreateDto, ads);
         return adsMapper.toDto(adsRepository.save(ads));
     }
 
     @Override
     public AdDto updatePicture(Integer adId, MultipartFile file) {
+        Ads ads = adsRepository.findById(adId).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        Picture picture;
         try {
-            Ads ads = adsRepository.findById(adId).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-            pictureService.download(file, ads.getPicture().getUuid());
-            Picture picture = pictureMapper.mapToPicture(file, ads.getPicture().getUuid());
-            ads.setPicture(picture);
-            return adsMapper.toDto(adsRepository.save(ads));
+            picture = pictureMapper.mapToPicture(file);
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong wile picture reading", e);
         }
+        UUID uuid = ads.getPicture().getUuid();
+        pictureService.update(uuid, picture);
+        return adsMapper.toDto(ads);
     }
 
     private User getUser() {
