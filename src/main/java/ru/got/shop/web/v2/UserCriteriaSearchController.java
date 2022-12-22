@@ -1,6 +1,7 @@
 package ru.got.shop.web.v2;
 
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.User;
 import ru.got.shop.model.User_;
 import ru.got.shop.model.dto.UserDto;
@@ -23,14 +25,15 @@ import java.util.Objects;
 public class UserCriteriaSearchController {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     /**
      * Sample Criteria search
      */
     @PreAuthorize("hasAuthority('users.read:write')")
     @PostMapping("/filter")
-    public List<User> getUsers(@RequestBody UserDto userDto, Pageable pageable) {
-        return userRepository.findAll(
+    public List<UserDto> getUsers(@RequestBody UserDto userDto,@ParameterObject Pageable pageable) {
+        List<User> users = userRepository.findAll(
                 (root, query, cb) -> {
                     Predicate conjunction = cb.conjunction();
                     // Если есть id, ищем только по нему
@@ -58,5 +61,6 @@ public class UserCriteriaSearchController {
                     return conjunction;
                 }
                 , pageable).getContent();
+        return userMapper.toDtos(users);
     }
 }
