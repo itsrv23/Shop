@@ -2,6 +2,7 @@ package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +38,10 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     private final AdsRepository adsRepository;
     private final String NOT_FOUND = "Ads doesn't exist!!!";
     private final UserRepository userRepository;
+    @Qualifier("pictureDiskServiceImpl")
     private final PictureService pictureService;
     private final PictureMapper pictureMapper;
 
-    //    @Transactional
     @Override
     public AdDto addAd(AdCreateDto adCreateDto, MultipartFile file) {
         try {

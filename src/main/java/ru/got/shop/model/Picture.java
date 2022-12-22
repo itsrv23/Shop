@@ -29,4 +29,6 @@ public class Picture {
     private byte[] data;
     @Column(name = "file_name")
     private String fileName;
+    @Column(name = "file_path")
+    private String filePath;
 }

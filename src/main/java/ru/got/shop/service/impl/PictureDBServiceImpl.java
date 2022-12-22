@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PictureServiceImpl implements PictureService {
+public class PictureDBServiceImpl implements PictureService {
     private final PictureRepository pictureRepository;
 
     @Override
