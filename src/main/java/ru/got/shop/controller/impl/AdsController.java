@@ -66,15 +66,4 @@ public class AdsController implements AdsApi {
         log.debug(" PATCH :: /ads/{id}adDto {}", adCreateDto);
         return ResponseEntity.ok(adsService.updateAd(id, adCreateDto));
     }
-
-    @Override
-    public ResponseEntity<ResponseWrapperAdsDto> searchAllByTitleDescriptionPriceMoreLess(String title,
-                                                                                          String description,
-                                                                                          Integer moreThan,
-                                                                                          Integer lessThan) {
-        return ResponseEntity.ok(adsService.getAllByTitleDescriptionPriceMoreLess(title,
-                description,
-                moreThan,
-                lessThan));
-    }
 }
