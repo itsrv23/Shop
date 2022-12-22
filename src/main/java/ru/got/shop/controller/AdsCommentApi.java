@@ -33,7 +33,7 @@ public interface AdsCommentApi {
     @Operation(
             operationId = "addAdsComment",
             summary = "addAdsComment",
-            tags = { "Comment" },
+            tags = { "Comments" },
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  AdsCommentDto.class))),
                     @ApiResponse(responseCode = "201", description = "Created"),

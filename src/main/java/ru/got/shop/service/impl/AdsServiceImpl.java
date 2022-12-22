@@ -24,6 +24,7 @@ import ru.got.shop.service.PictureService;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Slf4j
@@ -58,20 +59,6 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public byte[] getImageById(String uuid) {
         return pictureService.upload(UUID.fromString(uuid));
-    }
-
-    @Override
-    public ResponseWrapperAdsDto getAllByTitleDescriptionPriceMoreLess(String title,
-                                                                       String description,
-                                                                       Integer moreThan,
-                                                                       Integer lessThan) {
-        List<AdDto> allByTitleLike =
-                adsMapper.toDtos(adsRepository.findAllByTitleIsStartingWithIgnoreCaseOrDescriptionStartingWithIgnoreCaseOrPriceIsGreaterThanEqualOrPriceLessThanEqual(
-                        title,
-                        description,
-                        moreThan,
-                        lessThan));
-        return new ResponseWrapperAdsDto(allByTitleLike.size(), allByTitleLike);
     }
 
     @Override

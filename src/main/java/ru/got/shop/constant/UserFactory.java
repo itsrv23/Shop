@@ -13,7 +13,7 @@ public final class UserFactory {
     private static final String FIRSTNAME1 = "Игорь";
     private static final String LASTNAME1 = "Шапранский";
     private static final String EMAIL1 = "is@srub.com";
-    private static final String PHONE1 = "+7(777)777-77-77";
+    private static final String PHONE1 = " ";
     private static final Integer ID1 = 1;
 
     private static final String FIRSTNAME2 = "Алексей";
