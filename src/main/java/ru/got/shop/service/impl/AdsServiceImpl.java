@@ -2,6 +2,7 @@ package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import ru.got.shop.service.PictureService;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Slf4j
@@ -36,10 +38,10 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     private final AdsRepository adsRepository;
     private final String NOT_FOUND = "Ads doesn't exist!!!";
     private final UserRepository userRepository;
+    @Qualifier("pictureDiskServiceImpl")
     private final PictureService pictureService;
     private final PictureMapper pictureMapper;
 
-    //    @Transactional
     @Override
     public AdDto addAd(AdCreateDto adCreateDto, MultipartFile file) {
         try {
@@ -58,20 +60,6 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public byte[] getImageById(String uuid) {
         return pictureService.upload(UUID.fromString(uuid));
-    }
-
-    @Override
-    public ResponseWrapperAdsDto getAllByTitleDescriptionPriceMoreLess(String title,
-                                                                       String description,
-                                                                       Integer moreThan,
-                                                                       Integer lessThan) {
-        List<AdDto> allByTitleLike =
-                adsMapper.toDtos(adsRepository.findAllByTitleIsStartingWithIgnoreCaseOrDescriptionStartingWithIgnoreCaseOrPriceIsGreaterThanEqualOrPriceLessThanEqual(
-                        title,
-                        description,
-                        moreThan,
-                        lessThan));
-        return new ResponseWrapperAdsDto(allByTitleLike.size(), allByTitleLike);
     }
 
     @Override

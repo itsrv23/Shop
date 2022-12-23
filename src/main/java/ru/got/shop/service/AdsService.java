@@ -22,9 +22,4 @@ public interface AdsService {
     AdDto updatePicture(Integer adId, MultipartFile file);
 
     byte[] getImageById(String uuid);
-
-    ResponseWrapperAdsDto getAllByTitleDescriptionPriceMoreLess(String title,
-                                                                String description,
-                                                                Integer moreThan,
-                                                                Integer lessThan);
 }
