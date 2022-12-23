@@ -20,24 +20,13 @@ import ru.got.shop.dto.NewPasswordDto;
 import ru.got.shop.dto.ResponseWrapperUserDto;
 import ru.got.shop.dto.UserDto;
 
-import javax.annotation.Generated;
 import javax.validation.Valid;
 import java.util.UUID;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
 @Tag(name = "Users", description = "the Users API")
 public interface UsersApi {
 
-    /**
-     * GET /users/{id} : getUser
-     *
-     * @param id id (required)
-     * @return OK (status code 200)
-     * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
-     * or Not Found (status code 404)
-     */
     @Operation(
             operationId = "getUserUsingGET",
             summary = "getUser",
@@ -59,14 +48,6 @@ public interface UsersApi {
     );
 
 
-    /**
-     * GET /users/me : getUsers
-     *
-     * @return OK (status code 200)
-     * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
-     * or Not Found (status code 404)
-     */
     @Operation(
             operationId = "getUsersUsingGET",
             summary = "getUsers",
@@ -102,16 +83,6 @@ public interface UsersApi {
     ResponseEntity<UserDto> getUserMeUsingGET();
 
 
-    /**
-     * POST /users/set_password : setPassword
-     *
-     * @param newPasswordDto newPassword (required)
-     * @return OK (status code 200)
-     * or Created (status code 201)
-     * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
-     * or Not Found (status code 404)
-     */
     @Operation(
             operationId = "setPasswordUsingPOST",
             summary = "setPassword",
@@ -134,15 +105,6 @@ public interface UsersApi {
     );
 
 
-    /**
-     * PATCH /users/me : updateUser
-     *
-     * @param userDto user (required)
-     * @return OK (status code 200)
-     * or No Content (status code 204)
-     * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
-     */
     @Operation(
             operationId = "updateUserUsingPATCH",
             summary = "updateUser",
@@ -173,7 +135,7 @@ public interface UsersApi {
     )
     ResponseEntity<String> updateUserAvatar(@RequestPart(value = "image") MultipartFile file);
 
-    @GetMapping(value = "/images/{id}/", produces = {MediaType.IMAGE_PNG_VALUE})
+    @GetMapping(value = "/users/avatar/{id}/", produces = {MediaType.IMAGE_PNG_VALUE})
     public byte[] getImage(@PathVariable("id") UUID uuid);
 
 }

@@ -1,8 +1,8 @@
 package ru.got.shop.controller;
 
+import ru.got.shop.dto.NewPasswordDto;
 import ru.got.shop.model.User;
 import ru.got.shop.model.UserAvatar;
-import ru.got.shop.dto.NewPasswordDto;
 import ru.got.shop.security.Role;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class UserControllerFactory {
         user.setFirstName("firstname");
         user.setLastName("lastname");
         user.setPassword("$2a$10$z4L2CvJCdVe2Lfjc1tS5W.WAJ6LECIExfcj.LRhfZy8q.XmaVgorG");
-        user.setRoleGroup(Role.USER);
+        user.setRoleGroup(Role.ROLE_USER);
         user.setAvatarId(getAvatarEntity());
         return user;
     }
@@ -43,7 +43,7 @@ public class UserControllerFactory {
         user.setEmail(ADMIN_LOGIN);
         user.setFirstName("firstname");
         user.setLastName("lastname");
-        user.setRoleGroup(Role.ADMIN);
+        user.setRoleGroup(Role.ROLE_ADMIN);
         user.setAvatarId(getAvatarEntity());
         return user;
     }

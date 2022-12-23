@@ -1,10 +1,11 @@
-package ru.got.shop.exception;
+package ru.got.shop.exception.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import ru.got.shop.exception.ForbiddenException;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -12,7 +13,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 public class ExceptionHandler {
-    // Делал Серега)) с прошлого проекта
+    // TODO Привести в порядок кастомные эксепшины и удалить?
 
     /**
      * Обработка EntityNotFoundException исключений и проброс текста

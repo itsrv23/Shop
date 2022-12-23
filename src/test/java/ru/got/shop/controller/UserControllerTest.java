@@ -1,6 +1,7 @@
 package ru.got.shop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.got.shop.dto.NewPasswordDto;
+import ru.got.shop.dto.ResponseWrapperUserDto;
 import ru.got.shop.mapper.UserMapperImpl;
 import ru.got.shop.model.User;
 import ru.got.shop.model.UserAvatar;
-import ru.got.shop.dto.NewPasswordDto;
-import ru.got.shop.dto.ResponseWrapperUserDto;
 import ru.got.shop.repository.UserAvatarRepository;
 import ru.got.shop.repository.UserRepository;
 
@@ -56,7 +57,7 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
     void getUserUsingGET() throws Exception {
         String path = "/users/" + getAdminEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getAdminEntity()));
@@ -74,7 +75,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "user.all.read")
     void getUserUsingGET_200() throws Exception {
         String PATH = "/users/" + getUserEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -90,7 +91,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
     void getUserUsingGET_200_admin() throws Exception {
         String path = "/users/1"; // админ запрашивает акк юзера
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -106,7 +107,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET_403() throws Exception {
         String path = "/users/2"; // юзер запрашивает акк админа
 
@@ -122,7 +123,7 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserMeUsingGET_200() throws Exception {
         String path = "/users/me";
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -147,12 +148,11 @@ class UserControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("\"Access is denied\""));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
     void getUsersUsingGET_200() throws Exception{
         // todo  не используется на фронте
         String path = "/users";
@@ -167,7 +167,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUsersUsingGET_400() throws Exception{
         // todo  не используется на фронте
         String path = "/users";
@@ -178,7 +178,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void setPasswordUsingPOST_200() throws Exception {
         String path = "/users/set_password";
         String json = objectMapper.writeValueAsString(getNewPasswordDto());
@@ -213,7 +213,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void setPasswordUsingPOST_403() throws Exception {
         String path = "/users/set_password";
         NewPasswordDto newPasswordDto = getNewPasswordDto();
@@ -233,7 +233,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void updateUserUsingPATCH() throws Exception {
         String path = "/users/me";
         String json = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -251,7 +251,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void updateUserAvatar() throws Exception {
         String path = "/users/me/image";
         MockMultipartFile mff = new MockMultipartFile("image", AVATAR_FILE());
@@ -271,8 +271,9 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(getAvatarEntity().getUuid().toString()));
     }
+
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void updateUserAvatar_BigFile() throws Exception {
         String path = "/users/me/image";
         MockMultipartFile mff = new MockMultipartFile("image", AVATAR_FILE_BIG_FILE());
@@ -289,7 +290,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN,  authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void updateUserAvatar_IOException() throws Exception {
         String path = "/users/me/image";
         CustomMockMultipartFile mff = new CustomMockMultipartFile("image", AVATAR_FILE());
@@ -313,7 +314,7 @@ class UserControllerTest {
 
     @Test
     void getImage() throws Exception {
-        String path = "/images/" + getAvatarEntity().getUuid().toString() + "/";
+        String path = "/users/avatar/" + getAvatarEntity().getUuid().toString() + "/";
 
         Mockito.when(userAvatarRepository.findById(any(UUID.class))).thenReturn(Optional.of(getAvatarEntity()));
 
@@ -322,13 +323,13 @@ class UserControllerTest {
                 .andExpect(content().bytes(AVATAR_FILE()));
     }
 
-    private class CustomMockMultipartFile extends MockMultipartFile {
+    private static class CustomMockMultipartFile extends MockMultipartFile {
         public CustomMockMultipartFile(String name, byte[] content) {
             super(name, content);
         }
 
         @Override
-        public byte[] getBytes() throws IOException {
+        public byte @NotNull [] getBytes() throws IOException {
             throw new IOException();
         }
     }

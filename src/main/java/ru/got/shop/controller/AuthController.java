@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.got.shop.api.AuthApi;
 import ru.got.shop.dto.LoginReqDto;
@@ -26,24 +28,24 @@ public class AuthController implements AuthApi, AuthenticationFacade {
     public ResponseEntity<Authentication> loginUsingPOST(LoginReqDto req) {
         try {
             if (authService.login(req.getUsername(), req.getPassword())) {
-                return ResponseEntity.ok(getAuthentication());
+                return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication());
             }
         } catch (BadCredentialsException e) {
-            log.info("AuthController {}, data: {}",  e.getMessage(), req);
+            log.info("AuthController {}, data: {}", e.getMessage(), req);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
     }
 
     @Override
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> registerUsingPOST(RegReqDto req) {
-        //TODO  не передаются все данные о пользователе при регистрации. Уточнить
         boolean register = authService.register(req);
         if (register) {
             return ResponseEntity.ok().build();
-        } else {
-            //todo нужна еще проверка и обработка на фронте если пользователь уже есть в базе с таким логином
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
     }
 }

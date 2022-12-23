@@ -10,13 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.got.shop.dto.AdsCommentDto;
+import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
 import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.AdsComment;
-import ru.got.shop.dto.AdsCommentDto;
-import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.repository.AdsCommentRepository;
 import ru.got.shop.repository.AdsRepository;
 
@@ -29,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.got.shop.controller.AdsCommentControllerFactory.*;
-import static ru.got.shop.controller.UserControllerFactory.*;
+import static ru.got.shop.controller.UserControllerFactory.ADMIN_LOGIN;
+import static ru.got.shop.controller.UserControllerFactory.USER_LOGIN;
 
 
 @AutoConfigureMockMvc
@@ -61,7 +62,7 @@ class AdsCommentControllerTest {
     private AdsCommentRepository adsCommentRepository;
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void addComment200() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments";
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
@@ -82,7 +83,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void addComment404TextOfCommentNotFound() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments";
 
@@ -100,7 +101,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void deleteComment200() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
@@ -115,7 +116,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.crud")
     void deleteUsersComment200byAdmin() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
@@ -131,7 +132,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void deleteComment403ForbiddenToStrangerUser() throws Exception {
         String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getPk();
 
@@ -220,7 +221,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void updateComment200() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
         String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
@@ -237,7 +238,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN,  authorities = "users.read:write")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.full")
     void updateUsersComment200ByAdmin() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
         String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
@@ -254,7 +255,7 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "users.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void updateComment403ForbiddenToStrangerUser() throws Exception {
         String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getPk();
         String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getAdminCommentEntity()));

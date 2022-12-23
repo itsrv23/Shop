@@ -38,37 +38,40 @@ public class UserController implements UsersApi, AuthenticationFacade {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('users.read')")
+    @PreAuthorize("hasAuthority('users.crud')")
     public ResponseEntity<UserDto> getUserMeUsingGET() {
         return ResponseEntity.ok(userService.findUser(getLogin()));
     }
 
     @Override
-    @PreAuthorize("hasAuthority('users.read:write')")
+    @PreAuthorize("hasAuthority('admin.all.full')")
     public ResponseEntity<ResponseWrapperUserDto> getUsersUsingGET() {
         return ResponseEntity.ok(userService.getUsers());
     }
 
     @Override
+    @PreAuthorize("hasAuthority('users.crud')")
     public ResponseEntity<NewPasswordDto> setPasswordUsingPOST(NewPasswordDto newPasswordDto) {
         return ResponseEntity.ok(userService.setPassword(newPasswordDto, getLogin()));
     }
 
     @Override
+    @PreAuthorize("hasAuthority('users.crud')")
     public ResponseEntity<UserDto> updateUserUsingPATCH(UserDto userDto) {
         if (userDto.getEmail() == null) {
             userDto.setEmail(getLogin());
         } // c фронта может прилетать null
         permissionService.checkPermissionForUserController(getLogin(), userDto);
-        UserDto user = userService.findUser(getLogin()); //Берем логин из авторизации
+        UserDto user = userService.findUser(getLogin());
         userDto.setEmail(user.getEmail());
         return ResponseEntity.ok(userService.updateUser(userDto));
     }
 
     @Override
+    @PreAuthorize("hasAuthority('users.crud')")
     public ResponseEntity<String> updateUserAvatar(MultipartFile image) {
         if (image.getSize() > MAX_AVATAR_SIZE) {
-            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("Чайник не может вместить в себя такой размер");
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("The teapot cannot accommodate such a size");
         }
         return ResponseEntity.ok(avatarService.save(image, getLogin()));
     }

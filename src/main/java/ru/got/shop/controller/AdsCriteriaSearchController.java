@@ -3,17 +3,16 @@ package ru.got.shop.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.got.shop.dto.AdCriteriaDto;
+import ru.got.shop.dto.AdDto;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.Ads_;
-import ru.got.shop.dto.AdDto;
 import ru.got.shop.repository.AdsRepository;
-import ru.got.shop.dto.AdCriteriaDto;
 
 import javax.persistence.criteria.Predicate;
 import java.util.List;
@@ -31,7 +30,6 @@ public class AdsCriteriaSearchController {
     /**
      * Ads Criteria search
      */
-    @PreAuthorize("hasAuthority('users.read:write')")
     @PostMapping("/filter")
     public List<AdDto> getAdsByCriteria(@RequestBody AdCriteriaDto adCriteriaDto, Pageable pageable) {
         List<Ads> adsByFilter = adsRepository.findAll(

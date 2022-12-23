@@ -5,12 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.got.shop.exception.ForbiddenException;
-import ru.got.shop.mapper.UserMapper;
-import ru.got.shop.model.User;
 import ru.got.shop.dto.NewPasswordDto;
 import ru.got.shop.dto.ResponseWrapperUserDto;
 import ru.got.shop.dto.UserDto;
+import ru.got.shop.exception.ForbiddenException;
+import ru.got.shop.exception.UserNotFoundException;
+import ru.got.shop.mapper.UserMapper;
+import ru.got.shop.model.User;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.UserService;
 
@@ -26,23 +27,21 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public final static String NOT_EXIST = "User doesn't exist!!!";
 
     @Override
     public UserDto findUser(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_EXIST));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return userMapper.toDto(user);
     }
 
     @Override
     public UserDto findUser(String login) {
-        User user = userRepository.findFirstByEmail(login).orElseThrow(() -> new EntityNotFoundException(NOT_EXIST));
+        User user = userRepository.findFirstByEmail(login).orElseThrow(() -> new UserNotFoundException(login));
         return userMapper.toDto(user);
     }
 
     @Override
     public ResponseWrapperUserDto getUsers() {
-        // Выше проверка на роли
         List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return new ResponseWrapperUserDto(users.size(), userMapper.toDtos(users));
     }
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public NewPasswordDto setPassword(NewPasswordDto newPasswordDto, String login) {
         User user = findUserByLogin(login);
         if (!passwordEncoder.matches(newPasswordDto.getCurrentPassword(), user.getPassword())) {
-            throw new ForbiddenException("Не верный старый пароль");
+            throw new ForbiddenException("Invalid old password");
         }
         user.setPassword(passwordEncoder.encode(newPasswordDto.getNewPassword()));
         userRepository.save(user);

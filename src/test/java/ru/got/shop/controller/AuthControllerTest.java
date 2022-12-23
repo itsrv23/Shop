@@ -15,6 +15,7 @@ import ru.got.shop.repository.UserRepository;
 
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -102,7 +103,7 @@ class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(regReqDto))
                 ).andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("\"This email is already in use another account!!!\""));
+                .andExpect(content().string(containsString("This email is already in use another account")));
 
     }
 

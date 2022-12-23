@@ -7,6 +7,6 @@ public interface GenerateLink {
         if (user.getAvatarId() == null) {
             return null;
         }
-        return "/images/" + user.getAvatarId().getUuid() + "/";
+        return "/users/avatar/" + user.getAvatarId().getUuid() + "/";
     }
 }

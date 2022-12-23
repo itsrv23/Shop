@@ -20,75 +20,53 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.got.shop.dto.LoginReqDto;
 import ru.got.shop.dto.RegReqDto;
 
-import javax.annotation.Generated;
 import javax.validation.Valid;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
 @Tag(name = "Auth", description = "the Auth API")
 public interface AuthApi {
 
-    /**
-     * POST /login : login
-     *
-     * @param req req (required)
-     * @return OK (status code 200)
-     *         or Created (status code 201)
-     *         or Unauthorized (status code 401)
-     *         or Forbidden (status code 403)
-     *         or Not Found (status code 404)
-     */
     @Operation(
-        operationId = "loginUsingPOST",
-        summary = "login",
-        tags = { "Auth" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  Authentication.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized")
-        }
+            operationId = "loginUsingPOST",
+            summary = "login",
+            tags = {"Auth"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Authentication.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            }
     )
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/login",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+            method = RequestMethod.POST,
+            value = "/login",
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
     ResponseEntity<Authentication> loginUsingPOST(
-        @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody LoginReqDto req
+            @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody LoginReqDto req
     );
 
 
-    /**
-     * POST /register : register
-     *
-     * @param req req (required)
-     * @return OK (status code 200)
-     *         or Created (status code 201)
-     *         or Unauthorized (status code 401)
-     *         or Forbidden (status code 403)
-     *         or Not Found (status code 404)
-     */
     @Operation(
-        operationId = "registerUsingPOST",
-        summary = "register",
-        tags = { "Auth" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation =  Object.class))),
-            @ApiResponse(responseCode = "201", description = "Created"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-        }
+            operationId = "registerUsingPOST",
+            summary = "register",
+            tags = {"Auth"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Object.class))),
+                    @ApiResponse(responseCode = "201", description = "Created"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not Found")
+            }
     )
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/register",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+            method = RequestMethod.POST,
+            value = "/register",
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
     ResponseEntity<Object> registerUsingPOST(
-        @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody RegReqDto req
+            @Parameter(name = "req", description = "req", required = true, schema = @Schema(description = "")) @Valid @RequestBody RegReqDto req
     );
 
 }
