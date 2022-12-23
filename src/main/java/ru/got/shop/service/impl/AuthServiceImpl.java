@@ -8,11 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.got.shop.dto.RegReqDto;
+import ru.got.shop.exception.RegisterException;
 import ru.got.shop.mapper.UserRegisterMapper;
 import ru.got.shop.model.User;
-import ru.got.shop.model.UserAvatar;
-import ru.got.shop.model.dto.RegReqDto;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.Role;
 import ru.got.shop.service.AuthService;
@@ -41,13 +40,12 @@ public class AuthServiceImpl implements AuthService {
     public boolean register(RegReqDto registerReq) {
         Optional<User> firstByEmail = userRepository.findFirstByEmail(registerReq.getUsername());
         if (firstByEmail.isPresent()) {
-            throw new RuntimeException("This email is already in use another account!!!");
+            throw new RegisterException("This email is already in use another account :: " + registerReq.getUsername());
         }
         User entity = userRegisterMapper.toEntity(registerReq);
         String pass = passwordEncoder.encode(entity.getPassword());
         entity.setPassword(pass);
-        entity.setRoleGroup(Role.USER);
-        log.info("User register: {}", entity);
+        entity.setRoleGroup(Role.ROLE_USER);
         userRepository.save(entity);
         return true;
     }

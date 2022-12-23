@@ -6,10 +6,20 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.got.shop.security.Permission.*;
+
 @RequiredArgsConstructor
 public enum Role {
-    USER(Set.of(Permission.USERS_R)),
-    ADMIN(Set.of(Permission.USERS_R, Permission.USERS_RW));
+    ROLE_USER(Set.of(
+            USERS_CRUD,
+            ADS_CRUD,
+            ADS_COMMENT_CRUD)
+    ),
+    ROLE_ADMIN(Set.of(
+            ADS_CRUD, ADS_FULL,
+            ADS_COMMENT_CRUD, ADS_COMMENT_FULL,
+            USERS_CRUD, USERS_FULL
+    ));
     private final Set<Permission> permissions;
 
     public Set<SimpleGrantedAuthority> getAuthorities() {

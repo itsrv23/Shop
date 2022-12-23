@@ -10,6 +10,12 @@ ___
 - и что то еще ...
 
 --- 
+
 ### Дефолтные данные для входа. В миграции
+
 user@gmail.com userpass
 admin@gmail.com adminpass
+
+###
+
+Коллекция для Postman src/test/resources/ShopCollectionForPostman.postman_collection.json

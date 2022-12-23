@@ -6,16 +6,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.got.shop.dto.AdCreateDto;
+import ru.got.shop.dto.AdDto;
+import ru.got.shop.dto.FullAdDto;
+import ru.got.shop.dto.ResponseWrapperAdsDto;
+import ru.got.shop.exception.UserNotFoundException;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.FullAdsMapper;
 import ru.got.shop.mapper.PictureMapper;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.AdCreateDto;
-import ru.got.shop.model.dto.AdDto;
-import ru.got.shop.model.dto.FullAdDto;
-import ru.got.shop.model.dto.ResponseWrapperAdsDto;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.AuthenticationFacade;
@@ -25,7 +26,6 @@ import ru.got.shop.service.PictureService;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Slf4j
@@ -83,7 +83,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public FullAdDto getFullAdDto(Integer id) {
         User user = userRepository.findFirstByEmail(getLogin())
-                .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST));
+                .orElseThrow(() -> new UserNotFoundException(id));
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
         return fullAdsMapper.toDto(user, ads);
     }
@@ -119,7 +119,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     }
 
     private User getUser() {
-        return userRepository.findFirstByEmail(getLogin())
-                .orElseThrow(() -> new EntityNotFoundException(UserServiceImpl.NOT_EXIST));
+        String login = getLogin();
+        return userRepository.findFirstByEmail(login).orElseThrow(() -> new UserNotFoundException(login));
     }
 }

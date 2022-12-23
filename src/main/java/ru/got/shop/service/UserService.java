@@ -1,8 +1,8 @@
 package ru.got.shop.service;
 
-import ru.got.shop.model.dto.NewPasswordDto;
-import ru.got.shop.model.dto.ResponseWrapperUserDto;
-import ru.got.shop.model.dto.UserDto;
+import ru.got.shop.dto.NewPasswordDto;
+import ru.got.shop.dto.ResponseWrapperUserDto;
+import ru.got.shop.dto.UserDto;
 
 public interface UserService {
     UserDto findUser(Integer id);

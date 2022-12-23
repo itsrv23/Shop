@@ -3,7 +3,7 @@ package ru.got.shop.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.AdsComment;
-import ru.got.shop.model.dto.AdsCommentDto;
+import ru.got.shop.dto.AdsCommentDto;
 
 import java.util.List;
 

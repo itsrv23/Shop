@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.FullAdDto;
+import ru.got.shop.dto.FullAdDto;
 
 import java.util.ArrayList;
 import java.util.List;

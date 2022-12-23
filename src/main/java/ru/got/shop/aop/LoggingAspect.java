@@ -36,4 +36,10 @@ public class LoggingAspect {
         return result;
     }
 
+    //TODO  Вынести логирование в аспекты
+    @Around("execution(* ru.got.shop.controller..*(..)))")
+    public Object logControllerMethodExecutionTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        return logMethodExecutionTime(proceedingJoinPoint);
+    }
+
 }

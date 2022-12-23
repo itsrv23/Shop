@@ -1,7 +1,7 @@
 package ru.got.shop.service;
 
-import ru.got.shop.model.dto.AdsCommentDto;
-import ru.got.shop.model.dto.ResponseWrapperAdsCommentDto;
+import ru.got.shop.dto.AdsCommentDto;
+import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
 
 public interface AdsCommentService {
     AdsCommentDto addAdsComment(Integer adId, AdsCommentDto comment);

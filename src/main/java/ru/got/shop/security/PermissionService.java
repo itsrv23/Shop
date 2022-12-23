@@ -2,9 +2,9 @@ package ru.got.shop.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.got.shop.dto.UserDto;
 import ru.got.shop.exception.ForbiddenException;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.UserDto;
 import ru.got.shop.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,7 +33,7 @@ public class PermissionService {
     }
 
     private boolean isAdminRole(String login) {
-        return Role.ADMIN.equals(findUserByLogin(login).getRoleGroup());
+        return Role.ROLE_ADMIN.equals(findUserByLogin(login).getRoleGroup());
     }
 
 

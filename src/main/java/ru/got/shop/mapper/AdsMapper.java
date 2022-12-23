@@ -5,8 +5,8 @@ import org.mapstruct.Mapping;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.AdCreateDto;
-import ru.got.shop.model.dto.AdDto;
+import ru.got.shop.dto.AdCreateDto;
+import ru.got.shop.dto.AdDto;
 
 import java.util.List;
 
