@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import ru.got.shop.exception.ForbiddenException;
 import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.NewPasswordDto;
-import ru.got.shop.model.dto.ResponseWrapperUserDto;
-import ru.got.shop.model.dto.UserDto;
+import ru.got.shop.dto.NewPasswordDto;
+import ru.got.shop.dto.ResponseWrapperUserDto;
+import ru.got.shop.dto.UserDto;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.UserService;
 

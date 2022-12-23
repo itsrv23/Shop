@@ -3,7 +3,7 @@ package ru.got.shop.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.UserDto;
+import ru.got.shop.dto.UserDto;
 
 import java.util.List;
 

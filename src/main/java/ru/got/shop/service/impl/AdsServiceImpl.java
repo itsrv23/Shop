@@ -12,10 +12,10 @@ import ru.got.shop.mapper.PictureMapper;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.AdCreateDto;
-import ru.got.shop.model.dto.AdDto;
-import ru.got.shop.model.dto.FullAdDto;
-import ru.got.shop.model.dto.ResponseWrapperAdsDto;
+import ru.got.shop.dto.AdCreateDto;
+import ru.got.shop.dto.AdDto;
+import ru.got.shop.dto.FullAdDto;
+import ru.got.shop.dto.ResponseWrapperAdsDto;
 import ru.got.shop.repository.AdsRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.AuthenticationFacade;
@@ -25,7 +25,6 @@ import ru.got.shop.service.PictureService;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Slf4j

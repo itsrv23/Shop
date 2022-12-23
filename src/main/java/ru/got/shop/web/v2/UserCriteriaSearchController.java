@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.User;
 import ru.got.shop.model.User_;
-import ru.got.shop.model.dto.UserDto;
+import ru.got.shop.dto.UserDto;
 import ru.got.shop.repository.UserRepository;
 
 import javax.persistence.criteria.Predicate;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.got.shop.exception.ForbiddenException;
 import ru.got.shop.model.User;
-import ru.got.shop.model.dto.UserDto;
+import ru.got.shop.dto.UserDto;
 import ru.got.shop.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;

@@ -1,6 +1,6 @@
 package ru.got.shop.service;
 
-import ru.got.shop.model.dto.RegReqDto;
+import ru.got.shop.dto.RegReqDto;
 
 public interface AuthService {
     boolean login(String userName, String password);
