@@ -16,6 +16,8 @@ import java.util.UUID;
 public class PictureDBServiceImpl implements PictureService {
     private final PictureRepository pictureRepository;
 
+    private final String NOT_EXIST = " UUID Picture does not exist";
+
     @Override
     public Picture download(Picture picture) {
         return pictureRepository.save(picture);
@@ -24,7 +26,7 @@ public class PictureDBServiceImpl implements PictureService {
     @Override
     public void update(UUID uuid, Picture picture) {
         pictureRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(" Picture does noe " + "exist")));
+                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(NOT_EXIST)));
         picture.setUuid(uuid);
         pictureRepository.save(picture);
     }
@@ -32,7 +34,7 @@ public class PictureDBServiceImpl implements PictureService {
     @Override
     public byte[] upload(UUID uuid) {
         Picture picture = pictureRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(" picture not found")));
+                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(NOT_EXIST)));
         return picture.getData();
     }
 }

@@ -1,7 +1,6 @@
 package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AdsServiceImpl implements AdsService, AuthenticationFacade {
@@ -45,12 +43,10 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public AdDto addAd(AdCreateDto adCreateDto, MultipartFile file) {
         try {
-            log.debug("POST: /ads  adCreateDto from service:: {}", adCreateDto);
             User user = getUser();
             Picture picture = pictureMapper.mapToPicture(file);
             picture = pictureService.download(picture);
             Ads ads = adsMapper.buildAds(user, adCreateDto, picture);
-            log.debug(" asd before save :: {}", ads);
             return adsMapper.toDto(adsRepository.save(ads));
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong while picture reading ", e);
@@ -66,7 +62,6 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     public ResponseWrapperAdsDto getAllAds() {
         List<Ads> ads = adsRepository.findAll();
         List<AdDto> adDtoList = adsMapper.toDtos(ads);
-        log.debug("SERVICE DTO LIST{}", adDtoList);
         return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
 
@@ -75,15 +70,12 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     public ResponseWrapperAdsDto getMyAds() {
         List<Ads> adsList = adsRepository.findAllByUserId(getUser());
         List<AdDto> adDtoList = adsMapper.toDtos(adsList);
-        ResponseWrapperAdsDto wrapperAdsDto = new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
-        log.debug("GET  /ads/me object:: {}", wrapperAdsDto);
-        return wrapperAdsDto;
+        return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
 
     @Override
     public FullAdDto getFullAdDto(Integer id) {
-        User user = userRepository.findFirstByEmail(getLogin())
-                .orElseThrow(() -> new UserNotFoundException(id));
+        User user = userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(id));
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
         return fullAdsMapper.toDto(user, ads);
     }
@@ -92,7 +84,6 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     public AdDto removeAd(Integer id) {
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
         AdDto adDto = adsMapper.toDto(ads);
-        log.debug("DELETE  /ads/{id} object:: {}\"", adDto.toString());
         adsRepository.delete(ads);
         return adDto;
     }

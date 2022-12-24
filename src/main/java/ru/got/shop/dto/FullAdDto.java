@@ -9,7 +9,7 @@ import java.util.List;
 
 @Builder
 @Data
-public class FullAdDto implements Serializable, FullAd {
+public class FullAdDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,7 +1,6 @@
 package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +19,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager manager;
@@ -31,8 +29,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean login(String userName, String password) {
         Authentication authenticate = manager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
-        SecurityContextHolder.getContext()
-                .setAuthentication(authenticate);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
         return true;
     }
 

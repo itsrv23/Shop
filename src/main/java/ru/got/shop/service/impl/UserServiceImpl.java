@@ -1,7 +1,6 @@
 package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,14 +18,12 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
 
     @Override
     public UserDto findUser(Integer id) {
@@ -69,5 +66,4 @@ public class UserServiceImpl implements UserService {
     private User findUserByLogin(String login) {
         return userRepository.findFirstByEmail(login).orElseThrow(EntityNotFoundException::new);
     }
-
 }

@@ -2,7 +2,6 @@ package ru.got.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +17,13 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class PictureDiskServiceImpl implements PictureService {
     @Value("${picture.dir}")
     private String dir;
     private final PictureRepository pictureRepository;
+    private final String NOT_EXIST = " UUID Picture does not exist";
 
     @Override
     public Picture download(Picture picture) {
@@ -38,7 +37,7 @@ public class PictureDiskServiceImpl implements PictureService {
     @Override
     public void update(UUID uuid, Picture picture) {
         Picture pictureToSave = pictureRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException(uuid + " Picture doesn't exist."));
+                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(NOT_EXIST)));
         Path path = Path.of(dir, getFileNane(picture));
         pictureToSave.setFilePath(path.toAbsolutePath().toString());
         saveToDisk(path, picture.getData());
@@ -49,7 +48,7 @@ public class PictureDiskServiceImpl implements PictureService {
     @SneakyThrows
     public byte[] upload(UUID uuid) {
         Picture picture = pictureRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException(uuid + " Picture doesn't exist."));
+                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(NOT_EXIST)));
         Path path = Paths.get(picture.getFilePath());
         return Files.readAllBytes(path);
     }
@@ -63,6 +62,8 @@ public class PictureDiskServiceImpl implements PictureService {
 
     private String getFileNane(Picture picture) {
         String mdSum = DigestUtils.md5DigestAsHex(picture.getData());
-        return String.format("%s%s", mdSum, picture.getFileName().substring(picture.getFileName().lastIndexOf(".")));
+        String pattern = "%s%s";
+        String index = ".";
+        return String.format(pattern, mdSum, picture.getFileName().substring(picture.getFileName().lastIndexOf(index)));
     }
 }
