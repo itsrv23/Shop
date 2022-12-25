@@ -5,7 +5,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import java.util.Arrays;
 
@@ -15,10 +17,25 @@ import java.util.Arrays;
 public class LoggingAspect {
 
     @Pointcut("execution(public * *(..)) && within(ru.got.shop.service..*)")
-    public void adsControllerPointcut() {
+    public void adsServicePointcut() {
     }
 
-    @Around("adsControllerPointcut()")
+    @Around("adsServicePointcut()")
+    public Object logMethodExecutionTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        final StopWatch stopWatch = new StopWatch();
+        //calculate method execution time
+        stopWatch.start();
+        Object result = proceedingJoinPoint.proceed();
+        stopWatch.stop();
+        //Log method execution time
+        log.debug("Execution time of " + methodSignature.getDeclaringType().getSimpleName() // Class Name
+                + "." + methodSignature.getName() + " " // Method Name
+                + ":: " + stopWatch.getTotalTimeMillis() + " ms");
+        return result;
+    }
+
+    @Around("adsServicePointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("Method name = {}() :: input  params = {}",
                 joinPoint.getSignature().getName(),

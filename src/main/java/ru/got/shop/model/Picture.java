@@ -1,9 +1,6 @@
 package ru.got.shop.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -12,6 +9,7 @@ import java.util.UUID;
 @Table(name = "ads_pictures")
 @Setter
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class Picture {
 
