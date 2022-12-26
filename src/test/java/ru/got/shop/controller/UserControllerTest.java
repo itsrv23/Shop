@@ -93,7 +93,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUserUsingGET_200_admin() throws Exception {
-        String path = "/users/1"; // админ запрашивает акк юзера
+        String path = "/users/1";
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
         Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
@@ -109,7 +109,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET_403() throws Exception {
-        String path = "/users/2"; // юзер запрашивает акк админа
+        String path = "/users/2";
 
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
         Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
@@ -154,7 +154,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUsersUsingGET_200() throws Exception{
-        // todo  не используется на фронте
+        // todo  пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         String path = "/users";
         ResponseWrapperUserDto responseWrapperUserDto = new ResponseWrapperUserDto(1, List.of(userMapper.toDto(getUserEntity())));
         String json = objectMapper.writeValueAsString(responseWrapperUserDto);
@@ -169,7 +169,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUsersUsingGET_400() throws Exception{
-        // todo  не используется на фронте
+        // todo  пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         String path = "/users";
 
         mockMvc.perform(get(path))
