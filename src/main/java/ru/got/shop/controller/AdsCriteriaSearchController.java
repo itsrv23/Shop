@@ -32,6 +32,10 @@ public class AdsCriteriaSearchController {
      */
     @PostMapping("/filter")
     public List<AdDto> getAdsByCriteria(@RequestBody AdCriteriaDto adCriteriaDto, Pageable pageable) {
+        if (adCriteriaDto.getMinPrice()>adCriteriaDto.getMaxPrice()) {
+            throw new IllegalArgumentException("Entered mininum value should be less than maximum value. ");
+        }
+
         List<Ads> adsByFilter = adsRepository.findAll(
                 (root, query, cb) -> {
                     Predicate conjunction = cb.conjunction();

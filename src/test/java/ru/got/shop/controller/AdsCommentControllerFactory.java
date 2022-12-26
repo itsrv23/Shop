@@ -28,6 +28,13 @@ public class AdsCommentControllerFactory {
 
     static final String TEXT = "Подойдет для самолета?";
 
+
+    static final Integer ANOTHER_USER_ADS_ID = 3;
+    static final Integer ANOTHER_PRICE = 7500;
+    static final String ANOTHER_VALUE = "Вольер для щенков. ";
+    static final String ANOTHER_DESCRIPTION = "1м * 1м * 1м, с дверцей";
+
+
     public static Ads getAdminAdsEntity() throws Exception {
         Ads adminAds = new Ads();
         adminAds.setId(ADMIN_ADS_ID);
@@ -50,9 +57,20 @@ public class AdsCommentControllerFactory {
         return userAds;
     }
 
-    public static AdsComment getAdminCommentEntity() throws Exception {
+    public static Ads getAnotherUserAdsEntity() throws Exception {
+        Ads userAds = new Ads();
+        userAds.setId(ANOTHER_USER_ADS_ID);
+        userAds.setUserId(getUserEntity());
+        userAds.setTitle(ANOTHER_VALUE);
+        userAds.setDescription(ANOTHER_DESCRIPTION);
+        userAds.setPrice(ANOTHER_PRICE);
+        userAds.setAdsComment(List.of(getUserCommentEntity()));
+        return userAds;
+    }
+
+    public static AdsComment getAdminCommentEntity() {
         AdsComment adminAdsComment = new AdsComment();
-        adminAdsComment.setPk(ADMIN_ADS_COMMENT_ID);
+        adminAdsComment.setId(ADMIN_ADS_COMMENT_ID);
         User user = new User();
         user.setId(2);
         adminAdsComment.setUserId(user);
@@ -65,9 +83,9 @@ public class AdsCommentControllerFactory {
         return adminAdsComment;
     }
 
-    public static AdsComment getUserCommentEntity() throws Exception {
+    public static AdsComment getUserCommentEntity() {
         AdsComment userAdsComment = new AdsComment();
-        userAdsComment.setPk(USER_ADS_COMMENT_ID);
+        userAdsComment.setId(USER_ADS_COMMENT_ID);
         User user = new User();
         user.setId(1);
         userAdsComment.setUserId(user);
