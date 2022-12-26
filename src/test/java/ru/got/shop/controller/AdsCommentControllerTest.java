@@ -13,9 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.got.shop.dto.AdsCommentDto;
 import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.mapper.AdsCommentMapper;
-import ru.got.shop.mapper.AdsMapper;
-import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
-import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.AdsComment;
 import ru.got.shop.repository.AdsCommentRepository;
 import ru.got.shop.repository.AdsRepository;
@@ -32,7 +29,6 @@ import static ru.got.shop.controller.AdsCommentControllerFactory.*;
 import static ru.got.shop.controller.UserControllerFactory.ADMIN_LOGIN;
 import static ru.got.shop.controller.UserControllerFactory.USER_LOGIN;
 
-
 @AutoConfigureMockMvc
 @SpringBootTest
 class AdsCommentControllerTest {
@@ -44,16 +40,7 @@ class AdsCommentControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private AdsMapper adsMapper;
-
-    @Autowired
     private AdsCommentMapper adsCommentMapper;
-
-    @Autowired
-    private ResponseWrapperAdsCommentMapper responseWrapperAdsCommentMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @MockBean
     private AdsRepository adsRepository;
@@ -83,6 +70,27 @@ class AdsCommentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.full")
+    void addComment200byAdmin() throws Exception {
+        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments";
+        String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getAdminCommentEntity()));
+
+        Mockito.when(adsRepository.findById(getAdminAdsEntity().getId())).thenReturn(Optional.of(getAdminAdsEntity()));
+        Mockito.when(adsCommentRepository.save(any(AdsComment.class))).thenReturn(getAdminCommentEntity());
+
+        AdsCommentDto newCommentDto = AdsCommentDto.builder()
+                .text("Подойдет для самолета?")
+                .build();
+
+        mockMvc.perform(post(path)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newCommentDto))
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonResult));
+    }
+
+    @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void addComment404TextOfCommentNotFound() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments";
@@ -97,18 +105,18 @@ class AdsCommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newCommentDto))
                 ).andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void deleteComment200() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
+        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
 
         Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
-        Mockito.doNothing().when(adsCommentRepository).deleteById(getUserCommentEntity().getPk());
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.doNothing().when(adsCommentRepository).deleteById(getUserCommentEntity().getId());
         mockMvc.perform(delete(path))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -116,14 +124,29 @@ class AdsCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.crud")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.full")
+    void deleteComment200byAdmin() throws Exception {
+        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getId();
+        String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getAdminCommentEntity()));
+
+        Mockito.when(adsRepository.findById(getAdminAdsEntity().getId())).thenReturn(Optional.of(getAdminAdsEntity()));
+        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getId())).thenReturn(Optional.of(getAdminCommentEntity()));
+        Mockito.doNothing().when(adsCommentRepository).deleteById(getAdminCommentEntity().getId());
+        mockMvc.perform(delete(path))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonResult));
+    }
+
+    @Test
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.full")
     void deleteUsersComment200byAdmin() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
+        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
 
         Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
-        Mockito.doNothing().when(adsCommentRepository).deleteById(getUserCommentEntity().getPk());
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.doNothing().when(adsCommentRepository).deleteById(getUserCommentEntity().getId());
 
         mockMvc.perform(delete(path))
                 .andDo(print())
@@ -134,10 +157,10 @@ class AdsCommentControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void deleteComment403ForbiddenToStrangerUser() throws Exception {
-        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getPk();
+        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getId();
 
         Mockito.when(adsRepository.findById(getAdminAdsEntity().getId())).thenReturn(Optional.of(getAdminAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getPk())).thenReturn(Optional.of(getAdminCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getId())).thenReturn(Optional.of(getAdminCommentEntity()));
 
         mockMvc.perform(delete(path))
                 .andDo(print())
@@ -146,11 +169,11 @@ class AdsCommentControllerTest {
 
     @Test
     void getComment200() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
+        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
 
         Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
 
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -160,14 +183,14 @@ class AdsCommentControllerTest {
 
     @Test
     void getComment404AdsNotFound() throws Exception {
-        String path = "/ads/" + 3 + "/comments/" + getUserCommentEntity().getPk();
+        String path = "/ads/" + 3 + "/comments/" + getUserCommentEntity().getId();
 
         Mockito.when(adsRepository.findById(3)).thenReturn(Optional.empty());
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -179,19 +202,19 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     void getComment404AdsWithCommentNotFound() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getPk();
+        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getId();
 
         Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getPk())).thenReturn(Optional.of(getAdminCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getId())).thenReturn(Optional.of(getAdminCommentEntity()));
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -213,21 +236,21 @@ class AdsCommentControllerTest {
         String path = "/ads/" + 3 + "/comments";
 
         Mockito.when(adsRepository.findById(3)).thenReturn(Optional.empty());
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void updateComment200() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
+        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
 
         Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
         Mockito.when(adsCommentRepository.save(any(AdsComment.class))).thenReturn(getUserCommentEntity());
 
         mockMvc.perform(patch(path)
@@ -239,12 +262,29 @@ class AdsCommentControllerTest {
 
     @Test
     @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.full")
+    void updateComment200byAdmin() throws Exception {
+        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getId();
+        String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getAdminCommentEntity()));
+
+        Mockito.when(adsRepository.findById(getAdminAdsEntity().getId())).thenReturn(Optional.of(getAdminAdsEntity()));
+        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getId())).thenReturn(Optional.of(getAdminCommentEntity()));
+        Mockito.when(adsCommentRepository.save(any(AdsComment.class))).thenReturn(getAdminCommentEntity());
+
+        mockMvc.perform(patch(path)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(content().json(json));
+    }
+
+    @Test
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "ads.comment.full")
     void updateUsersComment200ByAdmin() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getPk();
+        String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
 
         Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getPk())).thenReturn(Optional.of(getUserCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getUserCommentEntity().getId())).thenReturn(Optional.of(getUserCommentEntity()));
         Mockito.when(adsCommentRepository.save(any(AdsComment.class))).thenReturn(getUserCommentEntity());
 
         mockMvc.perform(patch(path)
@@ -257,15 +297,15 @@ class AdsCommentControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void updateComment403ForbiddenToStrangerUser() throws Exception {
-        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getPk();
+        String path = "/ads/" + getAdminAdsEntity().getId() + "/comments/" + getAdminCommentEntity().getId();
         String json = objectMapper.writeValueAsString(adsCommentMapper.toDto(getAdminCommentEntity()));
 
         Mockito.when(adsRepository.findById(getAdminAdsEntity().getId())).thenReturn(Optional.of(getAdminAdsEntity()));
-        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getPk())).thenReturn(Optional.of(getAdminCommentEntity()));
+        Mockito.when(adsCommentRepository.findById(getAdminCommentEntity().getId())).thenReturn(Optional.of(getAdminCommentEntity()));
 
         mockMvc.perform(patch(path)
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isForbidden());
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isForbidden());
     }
 }

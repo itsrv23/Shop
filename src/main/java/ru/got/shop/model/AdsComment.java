@@ -20,7 +20,7 @@ public class AdsComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer pk;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -41,11 +41,11 @@ public class AdsComment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AdsComment that = (AdsComment) o;
-        return pk.equals(that.pk);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pk);
+        return Objects.hash(id);
     }
 }

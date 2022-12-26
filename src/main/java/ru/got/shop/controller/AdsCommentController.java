@@ -18,13 +18,13 @@ public class AdsCommentController implements AdsCommentApi {
     private final AdsCommentService adsCommentService;
 
     @Override
-    @PreAuthorize("hasAuthority('ads.comment.crud')")
+    @PreAuthorize("hasAnyAuthority('ads.comment.crud', 'ads.comment.full')")
     public ResponseEntity<AdsCommentDto> addAdsComment(Integer adId, AdsCommentDto comment) {
         return ResponseEntity.ok(adsCommentService.addAdsComment(adId, comment));
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ads.comment.crud')")
+    @PreAuthorize("hasAnyAuthority('ads.comment.crud', 'ads.comment.full')")
     public ResponseEntity<AdsCommentDto> deleteAdsComment(Integer adId, Integer id) {
         return ResponseEntity.ok(adsCommentService.deleteAdsComment(adId, id));
     }
@@ -44,5 +44,4 @@ public class AdsCommentController implements AdsCommentApi {
     public ResponseEntity<AdsCommentDto> updateAdsComment(Integer adId, Integer id, AdsCommentDto comment) {
         return ResponseEntity.ok(adsCommentService.updateAdsComment(adId, id, comment));
     }
-    //
 }
