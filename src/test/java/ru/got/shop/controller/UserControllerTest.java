@@ -57,7 +57,7 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET() throws Exception {
         String path = "/users/" + getAdminEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getAdminEntity()));
@@ -75,7 +75,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "user.all.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET_200() throws Exception {
         String PATH = "/users/" + getUserEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -91,7 +91,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUserUsingGET_200_admin() throws Exception {
         String path = "/users/1"; // админ запрашивает акк юзера
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -152,7 +152,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUsersUsingGET_200() throws Exception{
         // todo  не используется на фронте
         String path = "/users";
