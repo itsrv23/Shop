@@ -154,7 +154,6 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUsersUsingGET_200() throws Exception{
-        // todo  �� ������������ �� ������
         String path = "/users";
         ResponseWrapperUserDto responseWrapperUserDto = new ResponseWrapperUserDto(1, List.of(userMapper.toDto(getUserEntity())));
         String json = objectMapper.writeValueAsString(responseWrapperUserDto);
@@ -169,7 +168,6 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUsersUsingGET_400() throws Exception{
-        // todo  �� ������������ �� ������
         String path = "/users";
 
         mockMvc.perform(get(path))
