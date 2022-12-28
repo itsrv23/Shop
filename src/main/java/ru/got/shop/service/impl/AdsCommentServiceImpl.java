@@ -7,7 +7,6 @@ import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.exception.*;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
-import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.AdsComment;
 import ru.got.shop.repository.AdsCommentRepository;
@@ -32,7 +31,6 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @Override
     public AdsCommentDto addAdsComment(Integer adId, AdsCommentDto comment) {
@@ -41,7 +39,7 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
         }
         AdsComment newComment = adsCommentMapper.toEntity(comment);
         newComment.setId(null);
-        newComment.setUserId(userMapper.toEntity(userService.findUser(getLogin())));
+        newComment.setUserId(userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(getLogin())));
         newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
                 .orElseThrow(() -> new AdsNotFoundException(adId)));
