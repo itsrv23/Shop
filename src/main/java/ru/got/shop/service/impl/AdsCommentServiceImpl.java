@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.got.shop.dto.AdsCommentDto;
 import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
 import ru.got.shop.exception.ForbiddenException;
+import ru.got.shop.exception.UserNotFoundException;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
 import ru.got.shop.mapper.UserMapper;
@@ -45,7 +46,7 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
 
         AdsComment newComment = adsCommentMapper.toEntity(comment);
         newComment.setPk(null);
-        newComment.setUserId(userMapper.toEntity(userService.findUser(getLogin())));
+        newComment.setUserId(userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(getLogin())));
         newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
                 .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist")));
