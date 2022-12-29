@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset firiv:1
+--changeset firiv:20
 
 CREATE TABLE ads_comment
 (

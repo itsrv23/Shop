@@ -1,4 +1,6 @@
-FROM adoptopenjdk:11-jre-hotspot
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM bellsoft/liberica-openjdk-centos
+
+COPY target/shop.jar shop.jar
+COPY app.properties app.properties
+
+ENTRYPOINT ["java", "-jar", "shop.jar"]

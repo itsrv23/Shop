@@ -33,7 +33,8 @@ public class WebSecurityConfig {
             "/ads/*",
             "/ads/*/comments",
             "/ads/*/comments/*",
-            "/ads/image/*"
+            "/ads/image/*",
+            "/actuator/**"
     };
 
     public WebSecurityConfig(CustomUserDetailsService userDetailsService) {

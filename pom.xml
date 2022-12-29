@@ -11,7 +11,7 @@
     <groupId>ru.got</groupId>
     <artifactId>shop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>shop market</name>
+    <name>shop</name>
     <description>shop market</description>
     <properties>
         <java.version>11</java.version>
@@ -42,6 +42,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>2.7.0</version>
         </dependency>
         <!-- End Spring-->
 
@@ -241,6 +250,7 @@
             </plugin>
 
         </plugins>
+        <finalName>${name}}</finalName>
     </build>
 
 </project>
