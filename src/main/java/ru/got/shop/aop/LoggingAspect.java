@@ -37,12 +37,16 @@ public class LoggingAspect {
 
     @Around("adsServicePointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.debug("Method name = {}() :: input  params = {}",
+        log.debug("Method name = {}.{}() :: input  params = {}",
+                joinPoint.getSignature().getDeclaringType().getSimpleName(),
                 joinPoint.getSignature().getName(),
                 Arrays.toString(joinPoint.getArgs()));
         try {
             Object result = joinPoint.proceed();
-            log.debug("Method output data::{}() with result = {}", joinPoint.getSignature().getName(), result);
+            log.debug("Method output data::{}.{}() with result = {}",
+                    joinPoint.getSignature().getDeclaringType().getSimpleName(),
+                    joinPoint.getSignature().getName(),
+                    result);
             return result;
         } catch (RuntimeException e) {
             log.error("Illegal argument: {} in {}.{}()",

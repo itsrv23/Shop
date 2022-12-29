@@ -42,7 +42,7 @@ public interface AdsApi {
      */
     @Operation(operationId = "addAd",
             summary = "adding an advertisment",
-            tags = {"Ads"},
+            tags = { "Ads" },
             responses = @ApiResponse(responseCode = "201",
                     description = "Created",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -57,13 +57,13 @@ public interface AdsApi {
 
     @Operation(operationId = "Edit picture",
             summary = "Edit picture by advertisment id",
-            tags = {"Ads"},
+            tags = { "Ads" },
             responses = @ApiResponse(responseCode = "200",
                     description = "OK",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = AdDto.class))))
-    @PatchMapping(value = "/ads/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<?> editPicture(@PathVariable Integer id, @RequestParam(value = "image") MultipartFile file);
+    @PatchMapping(value = "/ads/{adID}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<?> editPicture(@PathVariable Integer adID, @RequestParam(value = "image") MultipartFile file);
 
     /**
      * GET /ads : getALLAds
@@ -73,8 +73,8 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = {"Ads"})
-    @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = {"application/json"})
+    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = { "Ads" })
+    @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = { "application/json" })
     ResponseEntity<ResponseWrapperAdsDto> getAllAds();
 
     /**
@@ -83,8 +83,8 @@ public interface AdsApi {
      * @param authorId Author id
      * @return ResponseEntity<ResponseWrapperAds>
      */
-    @Operation(operationId = "getMyAds", summary = "get all ads of me", tags = {"Ads"})
-    @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = {"application/json"})
+    @Operation(operationId = "getMyAds", summary = "get all ads of me", tags = { "Ads" })
+    @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = { "application/json" })
     ResponseEntity<ResponseWrapperAdsDto> getMyAds();
 
     /**
@@ -96,7 +96,7 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = {"Ads"})
+    @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<FullAdDto> getFullAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
@@ -111,7 +111,7 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getImage", summary = "get ad image", tags = {"Ads"})
+    @Operation(operationId = "getImage", summary = "get ad image", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads/image/{uuid}", produces = MediaType.IMAGE_PNG_VALUE)
     ResponseEntity<?> getAdImage(@PathVariable("uuid") String uuid);
 
@@ -123,9 +123,12 @@ public interface AdsApi {
      * or Unauthorized (status code 401)
      * or Forbidden (status code 403)
      */
-    @Operation(operationId = "removeAd", summary = "remove an advertisment", tags = {"Ads"})
-    @RequestMapping(method = RequestMethod.DELETE, value = "/ads/{id}", produces = {"application/json"})
-    ResponseEntity<AdDto> removeAd(
+    @Operation(operationId = "removeAd",
+            summary = "remove an advertisment",
+            tags = { "Ads" },
+            responses = @ApiResponse(responseCode = "203", description = "No content"))
+    @RequestMapping(method = RequestMethod.DELETE, value = "/ads/{id}", produces = { "application/json" })
+    ResponseEntity<Void> removeAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id);
 
@@ -138,11 +141,11 @@ public interface AdsApi {
      * or Unauthorized (status code 401)
      * or Forbidden (status code 403)
      */
-    @Operation(operationId = "updateAd", summary = "update an advertisment", tags = {"Ads"})
+    @Operation(operationId = "updateAd", summary = "update an advertisment", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.PATCH,
             value = "/ads/{id}",
-            produces = {"application/json"},
-            consumes = {"application/json"})
+            produces = { "application/json" },
+            consumes = { "application/json" })
     ResponseEntity<AdDto> updateAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id,

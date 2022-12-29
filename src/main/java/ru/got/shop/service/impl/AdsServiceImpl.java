@@ -75,17 +75,15 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     @Override
     public FullAdDto getFullAdDto(Integer id) {
-        User user = userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(id));
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        User user = userRepository.findById(ads.getUserId().getId()).orElseThrow(() -> new UserNotFoundException(id));
         return fullAdsMapper.toDto(user, ads);
     }
 
     @Override
-    public AdDto removeAd(Integer id) {
+    public void removeAd(Integer id) {
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
-        AdDto adDto = adsMapper.toDto(ads);
         adsRepository.delete(ads);
-        return adDto;
     }
 
     @Override
