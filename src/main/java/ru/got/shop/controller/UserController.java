@@ -32,6 +32,7 @@ public class UserController implements UsersApi, AuthenticationFacade {
     private Long MAX_AVATAR_SIZE;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('users.crud', 'users.full')")
     public ResponseEntity<UserDto> getUserUsingGET(Integer id) {
         permissionService.checkPermissionForUserController(getLogin(), id);
         return ResponseEntity.ok(userService.findUser(id));
@@ -44,7 +45,7 @@ public class UserController implements UsersApi, AuthenticationFacade {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('admin.all.full')")
+    @PreAuthorize("hasAuthority('users.full')")
     public ResponseEntity<ResponseWrapperUserDto> getUsersUsingGET() {
         return ResponseEntity.ok(userService.getUsers());
     }

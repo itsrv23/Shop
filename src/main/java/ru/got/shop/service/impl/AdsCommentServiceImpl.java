@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.got.shop.dto.AdsCommentDto;
 import ru.got.shop.dto.ResponseWrapperAdsCommentDto;
-import ru.got.shop.exception.ForbiddenException;
+import ru.got.shop.exception.*;
 import ru.got.shop.mapper.AdsCommentMapper;
 import ru.got.shop.mapper.ResponseWrapperAdsCommentMapper;
-import ru.got.shop.mapper.UserMapper;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.AdsComment;
 import ru.got.shop.repository.AdsCommentRepository;
@@ -18,7 +17,6 @@ import ru.got.shop.security.Role;
 import ru.got.shop.service.AdsCommentService;
 import ru.got.shop.service.UserService;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -33,19 +31,18 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @Override
     public AdsCommentDto addAdsComment(Integer adId, AdsCommentDto comment) {
         if (comment.getText() == null) {
-            throw new EntityNotFoundException("CommentNotFound or does not exist");
+            throw new IllegalArgumentException("Text of comment is empty. ");
         }
         AdsComment newComment = adsCommentMapper.toEntity(comment);
-        newComment.setPk(null);
-        newComment.setUserId(userMapper.toEntity(userService.findUser(getLogin())));
+        newComment.setId(null);
+        newComment.setUserId(userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(getLogin())));
         newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
-                .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist")));
+                .orElseThrow(() -> new AdsNotFoundException(adId)));
         return adsCommentMapper.toDto(adsCommentRepository.save(newComment));
     }
 
@@ -61,19 +58,19 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
     public AdsCommentDto getAdsComment(Integer adId, Integer id) {
         testAdsHasComment(adId, id);
         Ads adsByAdId = adsRepository.findById(adId)
-                .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist"));
+                .orElseThrow(() -> new AdsNotFoundException(adId));
         List<AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
         AdsComment neededCommentWithId = allAdsCommentsByAdId.stream()
-                .filter(adsCom -> (adsCom.getPk().equals(id)))
+                .filter(adsCom -> (adsCom.getId().equals(id)))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
+                .orElseThrow(() -> new AdsCommentNotFoundException(id));
         return adsCommentMapper.toDto(neededCommentWithId);
     }
 
     @Override
     public ResponseWrapperAdsCommentDto getAdsComments(Integer adId) {
         Ads adsByAdId = adsRepository.findById(adId)
-                .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist"));
+                .orElseThrow(() -> new AdsNotFoundException(adId));
         List<AdsComment> allAdsCommentsByAdId = adsByAdId.getAdsComment();
         return responseWrapperAdsCommentMapper.toDto(allAdsCommentsByAdId.size(),
                 adsCommentMapper.toDtos(allAdsCommentsByAdId));
@@ -84,29 +81,30 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
         testAdsHasComment(adId, id);
         testUserHasAccessToEditComment(comment);
         AdsComment updateComment = adsCommentMapper.toEntity(comment);
-        updateComment.setPk(id);
+        updateComment.setId(id);
         updateComment.setAdsId(adsRepository.findById(adId)
-                .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist")));
+                .orElseThrow(() -> new AdsNotFoundException(adId)));
         updateComment = adsCommentRepository.save(updateComment);
         return adsCommentMapper.toDto(updateComment);
     }
 
     private boolean testAdsHasComment(Integer adId, Integer id) {
         Ads adsByAdId = adsRepository.findById(adId)
-                .orElseThrow(() -> new EntityNotFoundException("AdsNotFound or does not exist"));
+                .orElseThrow(() -> new AdsNotFoundException(adId));
         AdsComment commentById = adsCommentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("AdsCommentNotFound or does not exist"));
+                .orElseThrow(() -> new AdsCommentNotFoundException(id));
         if (!adsByAdId.getAdsComment().contains(commentById)) {
-            throw new EntityNotFoundException("Ads does not contain adsComment");
+            throw new AdsWithCommentNotFoundException(adId, id);
         }
         return true;
     }
 
     private boolean testUserHasAccessToEditComment(AdsCommentDto comment) {
-        if (!Role.ROLE_ADMIN.equals((userRepository.findFirstByEmail(getLogin())
-                .orElseThrow(EntityNotFoundException::new)).getRoleGroup()) &&
+        if (!Role.ROLE_ADMIN.equals((userRepository.findFirstByEmail(getLogin()))
+                .orElseThrow(() -> new UserNotFoundException(getLogin())).getRoleGroup())
+                &&
                 (!Objects.equals(userService.findUser(getLogin()).getId(), comment.getAuthor()))) {
-            throw new ForbiddenException("Access id denied, someone else's comment");
+            throw new ForbiddenException("Access id denied, someone else's comment. ");
         }
         return true;
     }

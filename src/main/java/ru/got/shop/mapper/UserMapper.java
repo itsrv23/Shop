@@ -12,7 +12,7 @@ public interface UserMapper extends GenerateLink{
     @Mapping(target = "image", expression = "java(generateLink(user))")
     UserDto toDto(User user);
 
-    @Mapping(source = "image", target = "avatarId.uuid")
+    @Mapping(target = "avatarId.uuid", expression = "java(getUUID(userDto))")
     User toEntity(UserDto userDto);
 
     List<UserDto> toDtos(List<User> users);

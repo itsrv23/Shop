@@ -57,7 +57,7 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET() throws Exception {
         String path = "/users/" + getAdminEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getAdminEntity()));
@@ -75,7 +75,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "user.all.read")
+    @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET_200() throws Exception {
         String PATH = "/users/" + getUserEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
@@ -91,9 +91,9 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUserUsingGET_200_admin() throws Exception {
-        String path = "/users/1"; // админ запрашивает акк юзера
+        String path = "/users/1";
         String jsonResult = objectMapper.writeValueAsString(userMapper.toDto(getUserEntity()));
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
         Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
@@ -109,7 +109,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUserUsingGET_403() throws Exception {
-        String path = "/users/2"; // юзер запрашивает акк админа
+        String path = "/users/2";
 
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(getUserEntity()));
         Mockito.when(userRepository.findById(2)).thenReturn(Optional.of(getAdminEntity()));
@@ -152,9 +152,8 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = ADMIN_LOGIN, authorities = "admin.all.full")
+    @WithMockUser(username = ADMIN_LOGIN, authorities = "users.full")
     void getUsersUsingGET_200() throws Exception{
-        // todo  не используется на фронте
         String path = "/users";
         ResponseWrapperUserDto responseWrapperUserDto = new ResponseWrapperUserDto(1, List.of(userMapper.toDto(getUserEntity())));
         String json = objectMapper.writeValueAsString(responseWrapperUserDto);
@@ -169,7 +168,6 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
     void getUsersUsingGET_400() throws Exception{
-        // todo  не используется на фронте
         String path = "/users";
 
         mockMvc.perform(get(path))

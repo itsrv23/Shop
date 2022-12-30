@@ -18,4 +18,8 @@ admin@gmail.com adminpass
 
 ###
 
+### !TODO Развернуть в DockerCompose
+
+### !TODO Вынести в пакет ShopApp
+
 Коллекция для Postman src/test/resources/ShopCollectionForPostman.postman_collection.json
