@@ -1,10 +1,7 @@
 package ru.got.shop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.got.shop.security.Role;
 
 import javax.persistence.*;
@@ -18,6 +15,7 @@ import java.util.List;
 @Table(name = "users_account")
 public class User {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;

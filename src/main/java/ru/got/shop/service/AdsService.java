@@ -15,7 +15,7 @@ public interface AdsService {
 
     FullAdDto getFullAdDto(Integer id);
 
-    AdDto removeAd(Integer id);
+    void removeAd(Integer id);
 
     AdDto updateAd(Integer id, AdCreateDto adCreateDto);
 

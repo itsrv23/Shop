@@ -30,7 +30,8 @@ public class WebSecurityConfig {
             "/path/t*/*",
             "/users/avatar/*",
             "/ads",
-            "/ads/*",
+//            "/ads/**",  //should be uncommented to make frontend work
+//            "/users/*", //should be uncommented to make frontend work
             "/ads/*/comments",
             "/ads/*/comments/*",
             "/ads/image/*",
