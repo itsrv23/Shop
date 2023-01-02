@@ -33,5 +33,6 @@ build/
 .vscode/
 
 ### Config ###
+ShopApp/app.properties
+ShopApp/logs
 app.properties
-logs
