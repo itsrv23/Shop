@@ -1,7 +1,7 @@
 package ru.got.shop.controller;
 
+import ru.got.shop.dto.AdCreateDto;
 import ru.got.shop.dto.AdDto;
-import ru.got.shop.dto.ResponseWrapperAdsDto;
 import ru.got.shop.model.Picture;
 
 import java.util.List;
@@ -12,8 +12,8 @@ public class AdsFactory {
         return AdDto.builder().pk(1).author(1).image(List.of("image")).price(100).title("title").build();
     }
 
-    ResponseWrapperAdsDto getWrapperAdsDto() {
-        return ResponseWrapperAdsDto.builder().count(1).results(List.of(getAdDto())).build();
+    public static AdCreateDto getCreateAdsDto() {
+        return AdCreateDto.builder().title("title").price(100).description("to string").build();
     }
 
     public static Picture getPicture() {

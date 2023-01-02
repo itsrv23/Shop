@@ -47,7 +47,8 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
             Picture picture = pictureMapper.mapToPicture(file);
             picture = pictureService.download(picture);
             Ads ads = adsMapper.buildAds(user, adCreateDto, picture);
-            return adsMapper.toDto(adsRepository.save(ads));
+            Ads ads1 = adsRepository.save(ads);
+            return adsMapper.toDto(ads1);
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong while picture reading ", e);
         }
@@ -69,6 +70,9 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     @Override
     public ResponseWrapperAdsDto getMyAds() {
         List<Ads> adsList = adsRepository.findAllByUserId(getUser());
+        if (adsList.isEmpty()) {
+            throw new EntityNotFoundException("There is an empty myAdsList.");
+        }
         List<AdDto> adDtoList = adsMapper.toDtos(adsList);
         return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
     }
@@ -94,16 +98,23 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     }
 
     @Override
-    public AdDto updatePicture(Integer adId, MultipartFile file) {
-        Ads ads = adsRepository.findById(adId).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+    public AdDto updatePicture(Integer id, MultipartFile file) {
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
         Picture picture;
         try {
             picture = pictureMapper.mapToPicture(file);
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong wile picture reading", e);
         }
-        UUID uuid = ads.getPicture().getUuid();
-        pictureService.update(uuid, picture);
+        if (ads.getPicture() == null) {
+            Picture pictureNew = pictureService.download(picture);
+            ads.setPicture(pictureNew);
+            adsRepository.save(ads);
+        } else {
+            UUID uuid = ads.getPicture().getUuid();
+            pictureService.update(uuid, picture);
+            adsRepository.save(ads);
+        }
         return adsMapper.toDto(ads);
     }
 

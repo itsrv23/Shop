@@ -8,7 +8,6 @@ import ru.got.shop.exception.UserNotFoundException;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.User;
 import ru.got.shop.repository.AdsRepository;
-import ru.got.shop.repository.PictureRepository;
 import ru.got.shop.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,7 +17,6 @@ import javax.persistence.EntityNotFoundException;
 public class PermissionService implements AuthenticationFacade {
     private final UserRepository userRepository;
     private final AdsRepository adsRepository;
-    private final PictureRepository pictureRepository;
 
     public boolean checkPermissionForUserController(String login, UserDto userDto) {
         if (isAdminRole(login) || isCurrentUser(login, userDto)) {
@@ -38,12 +36,17 @@ public class PermissionService implements AuthenticationFacade {
         return userRepository.findFirstByEmail(login).orElseThrow(EntityNotFoundException::new);
     }
 
-    public boolean adsEditAccessAllowed(Integer id) {
-        Ads ads = getAds(id);
-        User user =
-                userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(getLogin()));
-        if (ads.getUserId().equals(user) || user.getRoleGroup().equals(Role.ROLE_ADMIN)) {
-            return true;
+    public boolean checkAllowedForbidden(Integer id) {
+        try {
+            Ads ads = adsRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Not found ads with id: ".concat(id.toString())));
+            User user = userRepository.findById(ads.getUserId().getId()).orElseThrow(() -> new UserNotFoundException(
+                    getLogin()));
+            if (ads.getUserId().equals(user) || user.getRoleGroup().equals(Role.ROLE_ADMIN)) {
+                return true;
+            }
+        } catch (RuntimeException e) {
+            throw new ForbiddenException(e.getMessage());
         }
         throw new ForbiddenException();
     }
@@ -60,10 +63,5 @@ public class PermissionService implements AuthenticationFacade {
     private boolean isCurrentUser(String login, UserDto userDto) {
         User userByLogin = findUserByLogin(login);
         return userDto.getEmail().equals(userByLogin.getEmail());
-    }
-
-    private Ads getAds(Integer id) {
-        return adsRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Not found ads with id: ".concat(id.toString())));
     }
 }

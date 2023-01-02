@@ -2,6 +2,7 @@ package ru.got.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,14 +33,14 @@ public class AdsController implements AdsApi {
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<AdDto> addAd(AdCreateDto adCreateDto, MultipartFile file) {
-        return ResponseEntity.ok(adsService.addAd(adCreateDto, file));
+        return ResponseEntity.status(HttpStatus.CREATED).body(adsService.addAd(adCreateDto, file));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
-    public ResponseEntity<AdDto> editPicture(Integer adID, MultipartFile file) {
-        permissionService.adsEditAccessAllowed(adID);
-        return ResponseEntity.ok(adsService.updatePicture(adID, file));
+    public ResponseEntity<AdDto> editPicture(Integer id, MultipartFile file) {
+        permissionService.checkAllowedForbidden(id);
+        return ResponseEntity.ok(adsService.updatePicture(id, file));
     }
 
     @Override
@@ -48,7 +49,7 @@ public class AdsController implements AdsApi {
     }
 
     @Override
-//    @PreAuthorize("hasAuthority('ads.crud')")
+    @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<ResponseWrapperAdsDto> getMyAds() {
         return ResponseEntity.ok(adsService.getMyAds());
     }
@@ -56,13 +57,14 @@ public class AdsController implements AdsApi {
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<FullAdDto> getFullAd(Integer id) {
+        permissionService.checkAllowedForbidden(id);
         return ResponseEntity.ok(adsService.getFullAdDto(id));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<Void> removeAd(Integer id) {
-        permissionService.adsEditAccessAllowed(id);
+        permissionService.checkAllowedForbidden(id);
         adsService.removeAd(id);
         return ResponseEntity.noContent().build();
     }
@@ -70,7 +72,7 @@ public class AdsController implements AdsApi {
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<AdDto> updateAd(Integer id, AdCreateDto adCreateDto) {
-        permissionService.adsEditAccessAllowed(id);
+        permissionService.checkAllowedForbidden(id);
         return ResponseEntity.ok(adsService.updateAd(id, adCreateDto));
     }
 }

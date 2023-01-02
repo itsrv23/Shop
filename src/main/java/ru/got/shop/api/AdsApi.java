@@ -40,13 +40,14 @@ public interface AdsApi {
      * or Bad Request (status code 400)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "addAd",
-            summary = "adding an advertisment",
-            tags = { "Ads" },
-            responses = @ApiResponse(responseCode = "201",
+    @Operation(operationId = "addAd", summary = "adding an advertisment", tags = { "Ads" }, responses = {
+            @ApiResponse(responseCode = "201",
                     description = "Created",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = AdDto.class))))
+                            schema = @Schema(implementation = AdDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+    })
+
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
             @Content(encoding = @Encoding(name = "properties", contentType = MediaType.APPLICATION_JSON_VALUE)),
             @Content(encoding = @Encoding(name = "image", contentType = "image/*"))
@@ -62,16 +63,15 @@ public interface AdsApi {
                     description = "OK",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = AdDto.class))))
-    @PatchMapping(value = "/ads/{adID}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<?> editPicture(@PathVariable Integer adID, @RequestParam(value = "image") MultipartFile file);
+    @PatchMapping(value = "/ads/{id}/image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<AdDto> editPicture(@PathVariable Integer id, @RequestParam(value = "image") MultipartFile file);
 
     /**
      * GET /ads : getALLAds
      *
      * @return OK (status code 200)
-     * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
-     * or Not Found (status code 404)
      */
     @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = { "Ads" })
     @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = { "application/json" })
@@ -119,7 +119,7 @@ public interface AdsApi {
      * DELETE /ads/{id} : removeAds
      *
      * @param id id (required)
-     * @return No Content (status code 200)
+     * @return No Content (status code 203)
      * or Unauthorized (status code 401)
      * or Forbidden (status code 403)
      */
