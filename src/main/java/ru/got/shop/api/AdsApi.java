@@ -38,7 +38,6 @@ public interface AdsApi {
      * or Created (status code 201)
      * or Unauthorized (status code 401)
      * or Bad Request (status code 400)
-     * or Not Found (status code 404)
      */
     @Operation(operationId = "addAd", summary = "adding an advertisment", tags = { "Ads" }, responses = {
             @ApiResponse(responseCode = "201",
@@ -93,7 +92,6 @@ public interface AdsApi {
      * @param id id (required)
      * @return OK (status code 200)
      * or Unauthorized (status code 401)
-     * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
     @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = { "Ads" })

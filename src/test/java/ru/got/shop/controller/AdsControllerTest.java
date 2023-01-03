@@ -232,16 +232,6 @@ class AdsControllerTest {
     }
 
     @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
-    void getFullAd_403() throws Exception {
-        when(permissionService.checkAllowedForbidden(1)).thenThrow(new ForbiddenException());
-
-        mockMvc.perform(get(AD_ID, 1).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
     void getFullAd_401() throws Exception {
         mockMvc.perform(get(AD_ID, 1).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
