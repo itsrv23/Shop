@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.got.shop.dto.UserDto;
 import ru.got.shop.exception.ForbiddenException;
-import ru.got.shop.exception.UserNotFoundException;
 import ru.got.shop.model.Ads;
 import ru.got.shop.model.User;
 import ru.got.shop.repository.AdsRepository;
@@ -37,18 +36,16 @@ public class PermissionService implements AuthenticationFacade {
     }
 
     public boolean checkAllowedForbidden(Integer id) {
-        try {
-            Ads ads = adsRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Not found ads with id: ".concat(id.toString())));
-            User user = userRepository.findById(ads.getUserId().getId()).orElseThrow(() -> new UserNotFoundException(
-                    getLogin()));
-            if (ads.getUserId().equals(user) || user.getRoleGroup().equals(Role.ROLE_ADMIN)) {
-                return true;
-            }
-        } catch (RuntimeException e) {
-            throw new ForbiddenException(e.getMessage());
+        Ads ads = adsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Not found ads with id: ".concat(id.toString())));
+        User currentUser = userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new EntityNotFoundException(
+                "Current user not found"));
+
+        if (ads.getUserId().equals(currentUser) || currentUser.getRoleGroup().equals(Role.ROLE_ADMIN)) {
+            return true;
+        } else {
+            throw new ForbiddenException();
         }
-        throw new ForbiddenException();
     }
 
     private boolean isAdminRole(String login) {

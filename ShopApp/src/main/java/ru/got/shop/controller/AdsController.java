@@ -57,7 +57,6 @@ public class AdsController implements AdsApi {
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<FullAdDto> getFullAd(Integer id) {
-        permissionService.checkAllowedForbidden(id);
         return ResponseEntity.ok(adsService.getFullAdDto(id));
     }
 
