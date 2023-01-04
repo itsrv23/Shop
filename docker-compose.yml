@@ -1,0 +1,44 @@
+version: '3'
+services:
+  psql:
+    image: postgres:12
+    container_name: psql
+    environment:
+      POSTGRES_DB: "shop"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root"
+    ports:
+      - "5432:5432"
+  shop:
+    image: shop:1.0
+    container_name: shop
+    depends_on:
+      - psql
+      - shop-admin
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/logs
+      - ./data:/data
+    command: java -jar shop.jar
+    restart: always
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "3"
+  shop-admin:
+    image: shop-admin:1.0
+    container_name: shop-admin
+    depends_on:
+      - psql
+    ports:
+      - "9090:9090"
+  adsclient:
+    image: skypro-frontend-diploma-image:latest
+    container_name: adsclient
+    ports:
+      - "3000:3000"
