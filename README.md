@@ -17,13 +17,15 @@ ___
 
 Коллекция для Postman src/test/resources/ShopCollectionForPostman.postman_collection.json
 
-### Запуск через Docker /Docker Compose
-- docker load -i "D:\Java\Sky\Lessons\9\fix\adsclientv16.tar"
+### Запуск через Docker 
+- docker load -i "..\fix\adsclientv16.tar"
 - docker run --rm -p 3000:3000 adsclient:v16
 - docker run --rm -p 3000:3000 skypro-frontend-diploma-image
 - docker run --name psql -d -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=root -e POSTGRES_DB=shop -p 5432:5432 --rm postgres:12
 ------------------------------------------------------------
 ### Запуск через Docker Compose
-- docker build -t shop:1.0 .
-- docker build -t shop-admin:1.0 .
+- docker load -i "..\fix\adsclientv16.tar"
+- docker load -i "..\skypro-frontend-diploma-image.tar.gz"
+- docker build -t shop:1.0 .\ShopApp\
+- docker build -t shop-admin:1.0 .\ShopAdmin\.
 - docker compose up
