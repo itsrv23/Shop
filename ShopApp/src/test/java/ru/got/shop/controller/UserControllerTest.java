@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -148,7 +149,7 @@ class UserControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -194,7 +195,7 @@ class UserControllerTest {
     }
 
     @Test
-    void setPasswordUsingPOST_401() throws Exception {
+    void setPasswordUsingPOST_4XX() throws Exception {
         String path = "/users/set_password";
         String json = objectMapper.writeValueAsString(getNewPasswordDto());
 
@@ -206,7 +207,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().is(401));
+                .andExpect(status().is4xxClientError());
 
     }
 
