@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -35,8 +34,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.got.shop.controller.UserControllerFactory.*;
 
 
@@ -168,12 +166,12 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "users.crud")
-    void getUsersUsingGET_400() throws Exception{
+    void getUsersUsingGET_401() throws Exception{
         String path = "/users";
 
         mockMvc.perform(get(path))
-                .andExpect(status().is(400))
-                .andExpect(content().string("\"Access is denied\""));
+                .andExpect(status().is(401))
+                .andExpect(jsonPath("$.message").value("Access is denied"));
     }
 
     @Test
@@ -307,8 +305,8 @@ class UserControllerTest {
 
         mockMvc.perform(builder.file(mff))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("\"IOException, please repeat request again\""));
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.message").value("IOException, please repeat request again"));
     }
 
     @Test
