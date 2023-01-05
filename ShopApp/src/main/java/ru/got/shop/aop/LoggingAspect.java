@@ -22,6 +22,10 @@ public class LoggingAspect {
     public void adsServicePointcut() {
     }
 
+    @Pointcut("execution(* ru.got.shop.api.*.*(..))")
+    public void adsExceptionPointcut() {
+    }
+
     @Around("adsServicePointcut()")
     public Object logMethodExecutionTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
@@ -51,7 +55,7 @@ public class LoggingAspect {
         return result;
     }
 
-    @AfterThrowing(value = "adsServicePointcut()", throwing = "ex")
+    @AfterThrowing(value = "adsExceptionPointcut()", throwing = "ex")
     public void logExceptions(JoinPoint joinPoint, Exception ex) {
 
         log.error("Error message :: {}:: {} in {}.{}()",
