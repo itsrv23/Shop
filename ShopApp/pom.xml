@@ -250,7 +250,7 @@
             </plugin>
 
         </plugins>
-        <finalName>${project.name}</finalName>
+        <finalName>shop</finalName>
     </build>
 
 </project>

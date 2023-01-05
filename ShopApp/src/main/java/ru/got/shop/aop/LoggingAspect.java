@@ -31,7 +31,7 @@ public class LoggingAspect {
         Object result = proceedingJoinPoint.proceed();
         stopWatch.stop();
         //Log method execution time
-        log.debug("Execution time of " + methodSignature.getDeclaringType().getSimpleName() // Class Name
+        log.info("Execution time of " + methodSignature.getDeclaringType().getSimpleName() // Class Name
                 + "." + methodSignature.getName() + " " // Method Name
                 + ":: " + stopWatch.getTotalTimeMillis() + " ms");
         return result;

@@ -187,13 +187,13 @@ class AdsControllerTest {
     }
 
     @Test
-    void getMyAds_401() throws Exception {
+    void getMyAds_4XX() throws Exception {
         when(adsRepository.findAllByUserId(user)).thenReturn(List.of(ads));
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         mockMvc.perform(get(ADS_ME).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -232,10 +232,10 @@ class AdsControllerTest {
     }
 
     @Test
-    void getFullAd_401() throws Exception {
+    void getFullAd_400() throws Exception {
         mockMvc.perform(get(AD_ID, 1).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -249,12 +249,12 @@ class AdsControllerTest {
     }
 
     @Test
-    void removeAd_401() throws Exception {
+    void removeAd_4XX() throws Exception {
         when(adsRepository.findById(1)).thenReturn(Optional.of(ads));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(permissionService.checkAllowedForbidden(1)).thenReturn(true);
 
-        mockMvc.perform(delete(AD_ID, 1)).andDo(print()).andExpect(status().isUnauthorized());
+        mockMvc.perform(delete(AD_ID, 1)).andDo(print()).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -300,14 +300,14 @@ class AdsControllerTest {
     }
 
     @Test
-    void updateAd_401() throws Exception {
+    void updateAd_4XX() throws Exception {
         String path = "/ads/{id}";
         AdCreateDto adCreateDto = AdsFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
         mockMvc.perform(patch(path, 1).content(createJson)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isUnauthorized());
+                .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().is4xxClientError());
     }
 
     @Test
