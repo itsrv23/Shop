@@ -1,7 +1,9 @@
 package ru.got.shop.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -41,19 +43,21 @@ public class LoggingAspect {
                 joinPoint.getSignature().getDeclaringType().getSimpleName(),
                 joinPoint.getSignature().getName(),
                 Arrays.toString(joinPoint.getArgs()));
-        try {
-            Object result = joinPoint.proceed();
-            log.debug("Method output data::{}.{}() with result = {}",
-                    joinPoint.getSignature().getDeclaringType().getSimpleName(),
-                    joinPoint.getSignature().getName(),
-                    result);
-            return result;
-        } catch (RuntimeException e) {
-            log.error("Illegal argument: {} in {}.{}()",
-                    Arrays.toString(joinPoint.getArgs()),
-                    joinPoint.getSignature().getDeclaringTypeName(),
-                    joinPoint.getSignature().getName());
-            throw e;
-        }
+        Object result = joinPoint.proceed();
+        log.debug("Method output data::{}.{}() with result = {}",
+                joinPoint.getSignature().getDeclaringType().getSimpleName(),
+                joinPoint.getSignature().getName(),
+                result);
+        return result;
+    }
+
+    @AfterThrowing(value = "adsServicePointcut()", throwing = "ex")
+    public void logExceptions(JoinPoint joinPoint, Exception ex) {
+
+        log.error("Error message :: {}:: {} in {}.{}()",
+                ex.getMessage(),
+                Arrays.toString(joinPoint.getArgs()),
+                joinPoint.getSignature().getDeclaringTypeName(),
+                joinPoint.getSignature().getName());
     }
 }

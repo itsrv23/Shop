@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import ru.got.shop.exception.PictureNotFoundException;
 import ru.got.shop.model.Picture;
 import ru.got.shop.repository.PictureRepository;
 import ru.got.shop.service.PictureService;
 
-import javax.persistence.EntityNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,7 +23,6 @@ public class PictureDiskServiceImpl implements PictureService {
     @Value("${picture.dir}")
     private String dir;
     private final PictureRepository pictureRepository;
-    private final String NOT_EXIST = " UUID Picture does not exist";
 
     @Override
     public Picture download(Picture picture) {
@@ -36,8 +35,8 @@ public class PictureDiskServiceImpl implements PictureService {
 
     @Override
     public void update(UUID uuid, Picture picture) {
-        Picture pictureToSave = pictureRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(NOT_EXIST)));
+        Picture pictureToSave =
+                pictureRepository.findByUuid(uuid).orElseThrow(() -> new PictureNotFoundException(uuid));
         Path path = Path.of(dir, getFileNane(picture));
         pictureToSave.setFilePath(path.toAbsolutePath().toString());
         saveToDisk(path, picture.getData());
@@ -47,8 +46,7 @@ public class PictureDiskServiceImpl implements PictureService {
     @Override
     @SneakyThrows
     public byte[] upload(UUID uuid) {
-        Picture picture = pictureRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException(uuid.toString().concat(NOT_EXIST)));
+        Picture picture = pictureRepository.findByUuid(uuid).orElseThrow(() -> new PictureNotFoundException(uuid));
         Path path = Paths.get(picture.getFilePath());
         return Files.readAllBytes(path);
     }

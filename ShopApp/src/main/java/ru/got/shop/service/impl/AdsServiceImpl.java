@@ -9,6 +9,8 @@ import ru.got.shop.dto.AdCreateDto;
 import ru.got.shop.dto.AdDto;
 import ru.got.shop.dto.FullAdDto;
 import ru.got.shop.dto.ResponseWrapperAdsDto;
+import ru.got.shop.exception.AdsNotFoundException;
+import ru.got.shop.exception.CustomIOException;
 import ru.got.shop.exception.UserNotFoundException;
 import ru.got.shop.mapper.AdsMapper;
 import ru.got.shop.mapper.FullAdsMapper;
@@ -22,7 +24,6 @@ import ru.got.shop.security.AuthenticationFacade;
 import ru.got.shop.service.AdsService;
 import ru.got.shop.service.PictureService;
 
-import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,6 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     private final AdsMapper adsMapper;
     private final FullAdsMapper fullAdsMapper;
     private final AdsRepository adsRepository;
-    private final String NOT_FOUND = "Ads doesn't exist!!!";
     private final UserRepository userRepository;
     @Qualifier("pictureDiskServiceImpl")
     private final PictureService pictureService;
@@ -50,7 +50,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
             Ads ads1 = adsRepository.save(ads);
             return adsMapper.toDto(ads1);
         } catch (IOException e) {
-            throw new RuntimeException("Something went wrong while picture reading ", e);
+            throw new CustomIOException("Something went wrong while picture file reading ");
         }
     }
 
@@ -71,7 +71,7 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
     public ResponseWrapperAdsDto getMyAds() {
         List<Ads> adsList = adsRepository.findAllByUserId(getUser());
         if (adsList.isEmpty()) {
-            throw new EntityNotFoundException("There is an empty myAdsList.");
+            throw new AdsNotFoundException("There is an empty myAdsList.");
         }
         List<AdDto> adDtoList = adsMapper.toDtos(adsList);
         return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
@@ -79,32 +79,32 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     @Override
     public FullAdDto getFullAdDto(Integer id) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
         User user = userRepository.findById(ads.getUserId().getId()).orElseThrow(() -> new UserNotFoundException(id));
         return fullAdsMapper.toDto(user, ads);
     }
 
     @Override
     public void removeAd(Integer id) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
         adsRepository.delete(ads);
     }
 
     @Override
     public AdDto updateAd(Integer id, AdCreateDto adCreateDto) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
         ads = adsMapper.updateAds(adCreateDto, ads);
         return adsMapper.toDto(adsRepository.save(ads));
     }
 
     @Override
     public AdDto updatePicture(Integer id, MultipartFile file) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
         Picture picture;
         try {
             picture = pictureMapper.mapToPicture(file);
         } catch (IOException e) {
-            throw new RuntimeException("Something went wrong wile picture reading", e);
+            throw new CustomIOException("Something went wrong wile picture reading");
         }
         if (ads.getPicture() == null) {
             Picture pictureNew = pictureService.download(picture);

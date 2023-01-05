@@ -82,7 +82,10 @@ public interface AdsApi {
      * @param authorId Author id
      * @return ResponseEntity<ResponseWrapperAds>
      */
-    @Operation(operationId = "getMyAds", summary = "get all ads of me", tags = { "Ads" })
+    @Operation(operationId = "getMyAds",
+            summary = "get all ads of me",
+            tags = { "Ads" },
+            responses = @ApiResponse(responseCode = "401", description = "Unauthorized"))
     @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = { "application/json" })
     ResponseEntity<ResponseWrapperAdsDto> getMyAds();
 

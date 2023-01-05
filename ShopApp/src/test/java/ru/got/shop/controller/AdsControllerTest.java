@@ -123,7 +123,7 @@ class AdsControllerTest {
     }
 
     @Test
-    void addAd_400() throws Exception {
+    void addAd_401() throws Exception {
         AdCreateDto createAdDto = AdsFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(createAdDto);
 
@@ -134,7 +134,7 @@ class AdsControllerTest {
 
         mockMvc.perform(multipart(ADS).file(jsonValue).file("image", AVATAR_FILE()).param("file", "image"))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
