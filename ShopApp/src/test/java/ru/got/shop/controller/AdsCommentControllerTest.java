@@ -190,7 +190,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -202,7 +202,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -214,7 +214,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -240,7 +240,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
