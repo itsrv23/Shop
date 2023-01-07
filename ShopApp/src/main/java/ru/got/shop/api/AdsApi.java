@@ -17,12 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.got.shop.dto.AdCreateDto;
-import ru.got.shop.dto.AdDto;
-import ru.got.shop.dto.FullAdDto;
-import ru.got.shop.dto.ResponseWrapperAdsDto;
+import ru.got.shop.dto.*;
 
 import javax.annotation.Generated;
+import java.util.List;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
@@ -39,7 +37,7 @@ public interface AdsApi {
      * or Unauthorized (status code 401)
      * or Bad Request (status code 400)
      */
-    @Operation(operationId = "addAd", summary = "adding an advertisment", tags = { "Ads" }, responses = {
+    @Operation(operationId = "addAd", summary = "adding an advertisment", tags = {"Ads"}, responses = {
             @ApiResponse(responseCode = "201",
                     description = "Created",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -57,7 +55,7 @@ public interface AdsApi {
 
     @Operation(operationId = "Edit picture",
             summary = "Edit picture by advertisment id",
-            tags = { "Ads" },
+            tags = {"Ads"},
             responses = @ApiResponse(responseCode = "200",
                     description = "OK",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -72,8 +70,8 @@ public interface AdsApi {
      *
      * @return OK (status code 200)
      */
-    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = { "Ads" })
-    @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = { "application/json" })
+    @Operation(operationId = "getAllAds", summary = "geting all ads wrapped into ResponseWrapperAds", tags = {"Ads"})
+    @RequestMapping(method = RequestMethod.GET, value = "/ads", produces = {"application/json"})
     ResponseEntity<ResponseWrapperAdsDto> getAllAds();
 
     /**
@@ -84,9 +82,9 @@ public interface AdsApi {
      */
     @Operation(operationId = "getMyAds",
             summary = "get all ads of me",
-            tags = { "Ads" },
+            tags = {"Ads"},
             responses = @ApiResponse(responseCode = "401", description = "Unauthorized"))
-    @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = { "application/json" })
+    @RequestMapping(method = RequestMethod.GET, value = "/ads/me", produces = {"application/json"})
     ResponseEntity<ResponseWrapperAdsDto> getMyAds();
 
     /**
@@ -97,7 +95,7 @@ public interface AdsApi {
      * or Unauthorized (status code 401)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = { "Ads" })
+    @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = {"Ads"})
     @RequestMapping(method = RequestMethod.GET, value = "/ads/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<FullAdDto> getFullAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
@@ -112,7 +110,7 @@ public interface AdsApi {
      * or Forbidden (status code 403)
      * or Not Found (status code 404)
      */
-    @Operation(operationId = "getImage", summary = "get ad image", tags = { "Ads" })
+    @Operation(operationId = "getImage", summary = "get ad image", tags = {"Ads"})
     @RequestMapping(method = RequestMethod.GET, value = "/ads/image/{uuid}", produces = MediaType.IMAGE_PNG_VALUE)
     ResponseEntity<?> getAdImage(@PathVariable("uuid") String uuid);
 
@@ -126,9 +124,9 @@ public interface AdsApi {
      */
     @Operation(operationId = "removeAd",
             summary = "remove an advertisment",
-            tags = { "Ads" },
+            tags = {"Ads"},
             responses = @ApiResponse(responseCode = "203", description = "No content"))
-    @RequestMapping(method = RequestMethod.DELETE, value = "/ads/{id}", produces = { "application/json" })
+    @RequestMapping(method = RequestMethod.DELETE, value = "/ads/{id}", produces = {"application/json"})
     ResponseEntity<Void> removeAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id);
@@ -142,14 +140,40 @@ public interface AdsApi {
      * or Unauthorized (status code 401)
      * or Forbidden (status code 403)
      */
-    @Operation(operationId = "updateAd", summary = "update an advertisment", tags = { "Ads" })
+    @Operation(operationId = "updateAd", summary = "update an advertisment", tags = {"Ads"})
     @RequestMapping(method = RequestMethod.PATCH,
             value = "/ads/{id}",
-            produces = { "application/json" },
-            consumes = { "application/json" })
+            produces = {"application/json"},
+            consumes = {"application/json"})
     ResponseEntity<AdDto> updateAd(
             @Parameter(name = "id", description = "id", required = true, schema = @Schema(description = ""))
             @PathVariable("id") Integer id,
             @Parameter(name = "ads", description = "ads", required = true, schema = @Schema(description = ""))
             @RequestBody AdCreateDto adCreateDto);
+
+    /**
+     * POST /ads/filter : getAdsByCriteria
+     *
+     * @param adCriteriaDto adCriteriaDto (required)
+     *                      and pageable (required, for example: /ads/filter?page=0&size=5&sort=price)
+     * @param page          page
+     * @param size          size
+     * @param sort          sort
+     * @return OK (status code 200)
+     * or NotFound (status code 404)
+     */
+    @Operation(operationId = "getAdsByCriteria", summary = "get ads by Criteria", tags = {"AdsCriteria"})
+    @RequestMapping(method = RequestMethod.POST,
+            value = "/ads/filter",
+            produces = {"application/json"},
+            consumes = {"application/json"})
+    ResponseEntity<List<AdDto>> getAdsByCriteria(
+            @Parameter(name = "adCriteriaDto", description = "adCriteriaDto", required = true, schema = @Schema(description = ""))
+            @RequestBody AdCriteriaDto adCriteriaDto,
+            @Parameter(name = "page", description = "page", required = false, schema = @Schema(description = ""))
+            @RequestParam("page") Integer page,
+            @Parameter(name = "size", description = "size", required = false, schema = @Schema(description = ""))
+            @RequestParam("size") Integer size,
+            @Parameter(name = "sort", description = "sort", required = false, schema = @Schema(description = ""))
+            @RequestParam("sort") String sort);
 }

@@ -2,19 +2,23 @@ package ru.got.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.got.shop.api.AdsApi;
-import ru.got.shop.dto.AdCreateDto;
-import ru.got.shop.dto.AdDto;
-import ru.got.shop.dto.FullAdDto;
-import ru.got.shop.dto.ResponseWrapperAdsDto;
+import ru.got.shop.dto.*;
 import ru.got.shop.security.PermissionService;
 import ru.got.shop.service.AdsService;
+
+import java.util.List;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
@@ -73,5 +77,14 @@ public class AdsController implements AdsApi {
     public ResponseEntity<AdDto> updateAd(Integer id, AdCreateDto adCreateDto) {
         permissionService.checkAllowedForbidden(id);
         return ResponseEntity.ok(adsService.updateAd(id, adCreateDto));
+    }
+
+    @Override
+    public ResponseEntity<List<AdDto>> getAdsByCriteria(@RequestBody AdCriteriaDto adCriteriaDto,
+                                                        @RequestParam(required = false) Integer page,
+                                                        @RequestParam(required = false) Integer size,
+                                                        @RequestParam(required = false) String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return ResponseEntity.ok(adsService.getAdsByCriteria(adCriteriaDto, pageable));
     }
 }
