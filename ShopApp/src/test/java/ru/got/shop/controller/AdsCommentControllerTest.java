@@ -92,24 +92,6 @@ class AdsCommentControllerTest {
 
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
-    void addComment404TextOfCommentNotFound() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments";
-
-        Mockito.when(adsRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-
-        AdsCommentDto newCommentDto = AdsCommentDto.builder()
-                .text(null)
-                .build();
-
-        mockMvc.perform(post(path)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newCommentDto))
-                ).andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void deleteComment200() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(adsCommentMapper.toDto(getUserCommentEntity()));
@@ -190,7 +172,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -202,7 +184,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -214,7 +196,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -240,7 +222,7 @@ class AdsCommentControllerTest {
 
         mockMvc.perform(get(path))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test

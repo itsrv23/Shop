@@ -34,15 +34,13 @@ public class AdsCommentServiceImpl implements AdsCommentService, AuthenticationF
 
     @Override
     public AdsCommentDto addAdsComment(Integer adId, AdsCommentDto comment) {
-        if (comment.getText() == null) {
-            throw new IllegalArgumentException("Text of comment is empty. ");
-        }
         AdsComment newComment = adsCommentMapper.toEntity(comment);
         newComment.setId(null);
-        newComment.setUserId(userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new ru.got.shop.exception.UserNotFoundException(getLogin())));
+        newComment.setUserId(userRepository.findFirstByEmail(getLogin())
+                .orElseThrow(() -> new UserNotFoundException(getLogin())));
         newComment.setCreatedAt(OffsetDateTime.now());
         newComment.setAdsId(adsRepository.findById(adId)
-                .orElseThrow(() -> new ru.got.shop.exception.AdsNotFoundException(adId)));
+                .orElseThrow(() -> new AdsNotFoundException(adId)));
         return adsCommentMapper.toDto(adsCommentRepository.save(newComment));
     }
 
