@@ -12,10 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.got.shop.dto.AdCreateDto;
-import ru.got.shop.dto.AdDto;
-import ru.got.shop.dto.FullAdDto;
-import ru.got.shop.dto.ResponseWrapperAdsDto;
+import ru.got.shop.dto.*;
+
+import java.util.List;
 
 @Validated
 @Tag(name = "Ads", description = "EndPoints related to Ads")
@@ -63,8 +62,7 @@ public interface AdsApi {
     @Operation(operationId = "getFullAd", summary = "get certain full ad", tags = { "Ads" })
     @GetMapping(value = "/ads/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<FullAdDto> getFullAd(
-            @Parameter(name = "id", description = "id", required = true)
-            @PathVariable("id") Integer id);
+            @Parameter(name = "id", description = "id", required = true) @PathVariable("id") Integer id);
 
     @Operation(operationId = "getImage", summary = "get ad image", tags = { "Ads" })
     @GetMapping(value = "/ads/image/{uuid}", produces = MediaType.IMAGE_PNG_VALUE)
@@ -81,8 +79,15 @@ public interface AdsApi {
     @Operation(operationId = "updateAd", summary = "update an advertisement", tags = { "Ads" })
     @PatchMapping(value = "/ads/{id}", produces = { "application/json" }, consumes = { "application/json" })
     ResponseEntity<AdDto> updateAd(
-            @Parameter(name = "id", description = "id", required = true)
-            @PathVariable("id") Integer id,
-            @Parameter(name = "ads", description = "ads", required = true)
-            @RequestBody AdCreateDto adCreateDto);
+            @Parameter(name = "id", description = "id", required = true) @PathVariable("id") Integer id,
+            @Parameter(name = "ads", description = "ads", required = true) @RequestBody AdCreateDto adCreateDto);
+
+    @Operation(operationId = "getAdsByCriteria", summary = "get ads by Criteria", tags = { "Ads" })
+    @PostMapping(value = "/ads/filter", produces = { "application/json" }, consumes = { "application/json" })
+    ResponseEntity<List<AdDto>> getAdsByCriteria(
+            @Parameter(name = "adCriteriaDto", description = "adCriteriaDto", required = true) @RequestBody
+            AdCriteriaDto adCriteriaDto,
+            @Parameter(name = "page", description = "page") @RequestParam("page") Integer page,
+            @Parameter(name = "size", description = "size") @RequestParam("size") Integer size,
+            @Parameter(name = "sort", description = "sort") @RequestParam("sort") String sort);
 }

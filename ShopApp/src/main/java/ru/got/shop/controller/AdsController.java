@@ -85,6 +85,6 @@ public class AdsController implements AdsApi {
                                                         @RequestParam(required = false) Integer size,
                                                         @RequestParam(required = false) String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return ResponseEntity.ok(adsService.getAdsByCriteria(adCriteriaDto, pageable));
+        return ResponseEntity.ok(adService.getAdsByCriteria(adCriteriaDto, pageable));
     }
 }

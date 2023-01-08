@@ -22,7 +22,7 @@ public class PictureDBServiceImpl implements PictureService {
     }
 
     @Override
-    public void update(UUID uuid, Picture picture) throws PictureNotFoundException {
+    public void update(UUID uuid, Picture picture) {
         Picture picture1 = pictureRepository.findByUuid(uuid).orElseThrow(() -> new PictureNotFoundException(uuid));
         picture.setUuid(picture1.getUuid());
         pictureRepository.save(picture);

@@ -11,7 +11,7 @@ import java.util.List;
 import static ru.got.shop.controller.UserControllerFactory.getAdminEntity;
 import static ru.got.shop.controller.UserControllerFactory.getUserEntity;
 
-public class AdsCommentControllerFactory {
+public class AdCommentControllerFactory {
 
     static final Integer PRICE = 2500;
 

@@ -84,7 +84,7 @@ class AdControllerTest {
 
     @BeforeEach
     void init() throws Exception {
-        ad = AdsCommentControllerFactory.getUserAdsEntity();
+        ad = AdCommentControllerFactory.getUserAdsEntity();
         picture = AdFactory.getPicture();
         ad.setPicture(picture);
         adDto = adsMapper.toDto(ad);
@@ -270,7 +270,6 @@ class AdControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void updateAd_200() throws Exception {
-        String path = "/ads/{id}";
         AdDto adDto = AdFactory.getAdDto();
         AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
@@ -279,7 +278,7 @@ class AdControllerTest {
         when(adRepository.findById(1)).thenReturn(Optional.ofNullable(ad));
         when(service.updateAd(1, adCreateDto)).thenReturn(adDto);
 
-        mockMvc.perform(patch(path, 1).content(createJson)
+        mockMvc.perform(patch(AD_ID, 1).content(createJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk()).andExpect(content().json(
                 AdJson));
@@ -288,24 +287,22 @@ class AdControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void updateAd_404() throws Exception {
-        String path = "/ads/{id}";
         AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
         when(adRepository.findById(1)).thenReturn(Optional.empty());
 
-        mockMvc.perform(patch(path, 1).content(createJson)
+        mockMvc.perform(patch(AD_ID, 1).content(createJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
     void updateAd_4XX() throws Exception {
-        String path = "/ads/{id}";
         AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
-        mockMvc.perform(patch(path, 1).content(createJson)
+        mockMvc.perform(patch(AD_ID, 1).content(createJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().is4xxClientError());
     }
@@ -313,14 +310,13 @@ class AdControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void updateAd_403() throws Exception {
-        String path = "/ads/{id}";
         AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
         when(adRepository.findById(1)).thenReturn(Optional.ofNullable(ad));
         when(permissionService.checkAllowedForbidden(1)).thenThrow(new ForbiddenException());
 
-        mockMvc.perform(patch(path, 1).content(createJson)
+        mockMvc.perform(patch(AD_ID, 1).content(createJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isForbidden());
     }
