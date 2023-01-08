@@ -14,7 +14,6 @@ import ru.got.shop.model.User;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.service.UserService;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -64,6 +63,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findUserByLogin(String login) {
-        return userRepository.findFirstByEmail(login).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findFirstByEmail(login).orElseThrow(() -> new UserNotFoundException(login));
     }
 }

@@ -6,7 +6,7 @@ import ru.got.shop.dto.*;
 
 import java.util.List;
 
-public interface AdsService {
+public interface AdService {
     AdDto addAd(AdCreateDto adCreateDto, MultipartFile file);
 
     ResponseWrapperAdsDto getAllAds();

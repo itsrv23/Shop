@@ -254,7 +254,7 @@ paths:
         "404":
           content: {}
           description: Not Found
-      summary: getAdsComment
+      summary: getAdComment
       tags:
         - Ads
       x-accepts: '*/*'
@@ -630,7 +630,7 @@ components:
           type: string
         text:
           type: string
-      title: AdsComment
+      title: AdComment
       type: object
     CreateAds:
       example:

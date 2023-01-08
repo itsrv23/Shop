@@ -1,36 +1,23 @@
 package ru.got.shop.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import java.io.Serializable;
 
-/**
- * RegReq
- */
-@lombok.AllArgsConstructor
-@lombok.Builder
-@lombok.NoArgsConstructor
+@Builder
 @Data
 @Valid
-public class RegReqDto implements Serializable {
+public class RegReqDto {
 
-  private static final long serialVersionUID = 1L;
-
-  @Email
-  @JsonProperty("username")
-  private String username;
-
-  @Length(min = 8)
-  @JsonProperty("password")
-  private String password;
-
-  private String firstName;
-  private String lastName;
-  private String phone;
-
+    @Email
+    private String username;
+    @Length(min = 8)
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String phone;
 }
 

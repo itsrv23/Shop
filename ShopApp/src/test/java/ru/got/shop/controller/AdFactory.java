@@ -7,7 +7,7 @@ import ru.got.shop.model.Picture;
 import java.util.List;
 import java.util.UUID;
 
-public class AdsFactory {
+public class AdFactory {
     public static AdDto getAdDto() {
         return AdDto.builder().pk(1).author(1).image(List.of("image")).price(100).title("title").build();
     }

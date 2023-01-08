@@ -1,26 +1,19 @@
 package ru.got.shop.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import java.io.Serializable;
+import javax.validation.Valid;
 
-/**
- * NewPassword
- */
 @Builder
 @Data
-public class NewPasswordDto implements Serializable {
+@Valid
+public class NewPasswordDto {
 
-  private static final long serialVersionUID = 1L;
+    private String currentPassword;
 
-  @JsonProperty("currentPassword")
-  private String currentPassword;
-
-  @Length(min = 8)
-  @JsonProperty("newPassword")
-  private String newPassword;
+    @Length(min = 8)
+    private String newPassword;
 }
 

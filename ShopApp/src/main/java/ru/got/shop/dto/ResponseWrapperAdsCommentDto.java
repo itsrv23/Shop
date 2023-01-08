@@ -6,24 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.Valid;
-import java.io.Serializable;
 import java.util.List;
 
-/**
- * ResponseWrapperAdsCommentDto
- */
-
+@AllArgsConstructor
 @Builder
 @Data
 @Valid
-@AllArgsConstructor
-public class ResponseWrapperAdsCommentDto implements Serializable {
+public class ResponseWrapperAdsCommentDto {
 
-  @JsonProperty("count")
-  private Integer count;
+    @JsonProperty("count")
+    private Integer count;
 
-  @JsonProperty("results")
-  @Valid
-  private List<AdsCommentDto> results;
+    @JsonProperty("results")
+    @Valid
+    private List<AdCommentDto> results;
 }
 

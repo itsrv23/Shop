@@ -5,12 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.Valid;
-import java.io.Serializable;
 import java.util.List;
 
 @Builder
 @Data
-public class AdDto implements Serializable {
+public class AdDto {
 
     @JsonProperty("pk")
     private Integer pk;
