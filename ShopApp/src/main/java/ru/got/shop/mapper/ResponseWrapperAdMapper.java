@@ -9,7 +9,7 @@ import ru.got.shop.dto.ResponseWrapperAdsDto;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface ResponseWrapperAdsMapper {
+public interface ResponseWrapperAdMapper {
 
     @Mapping(source = "count", target ="count")
     @Mapping(source = "ads", target ="results")

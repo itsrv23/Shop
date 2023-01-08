@@ -18,9 +18,9 @@ import static org.springframework.http.HttpStatus.*;
 public class ApiExceptionHandler {
 
     @ExceptionHandler({
-            AdsCommentNotFoundException.class,
-            AdsNotFoundException.class,
-            AdsWithCommentNotFoundException.class,
+            AdCommentNotFoundException.class,
+            AdNotFoundException.class,
+            AdWithCommentNotFoundException.class,
             AvatarNotFoundException.class,
             UserNotFoundException.class,
             PictureNotFoundException.class
@@ -34,7 +34,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler({
             CustomIOException.class,
             RegisterException.class,
-            MethodArgumentNotValidException.class
+            MethodArgumentNotValidException.class,
+            IllegalPriceValueException.class
     })
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody

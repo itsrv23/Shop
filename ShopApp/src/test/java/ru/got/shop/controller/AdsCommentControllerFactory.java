@@ -1,7 +1,7 @@
 package ru.got.shop.controller;
 
-import ru.got.shop.model.Ads;
-import ru.got.shop.model.AdsComment;
+import ru.got.shop.model.Ad;
+import ru.got.shop.model.AdComment;
 import ru.got.shop.model.User;
 
 import java.time.OffsetDateTime;
@@ -36,66 +36,66 @@ public class AdsCommentControllerFactory {
     static final String ANOTHER_DESCRIPTION = "1м * 1м * 1м, с дверцей";
 
 
-    public static Ads getAdminAdsEntity() throws Exception {
-        Ads adminAds = new Ads();
-        adminAds.setId(ADMIN_ADS_ID);
-        adminAds.setUserId(getAdminEntity());
-        adminAds.setTitle(VALUE);
-        adminAds.setDescription(DESCRIPTION);
-        adminAds.setPrice(PRICE);
-        adminAds.setAdsComment(List.of(getAdminCommentEntity()));
-        return adminAds;
+    public static Ad getAdminAdsEntity() throws Exception {
+        Ad adminAd = new Ad();
+        adminAd.setId(ADMIN_ADS_ID);
+        adminAd.setUserId(getAdminEntity());
+        adminAd.setTitle(VALUE);
+        adminAd.setDescription(DESCRIPTION);
+        adminAd.setPrice(PRICE);
+        adminAd.setAdComment(List.of(getAdminCommentEntity()));
+        return adminAd;
     }
 
-    public static Ads getUserAdsEntity() throws Exception {
-        Ads userAds = new Ads();
-        userAds.setId(USER_ADS_ID);
-        userAds.setUserId(getUserEntity());
-        userAds.setTitle(VALUE);
-        userAds.setDescription(DESCRIPTION);
-        userAds.setPrice(PRICE);
-        userAds.setAdsComment(List.of(getUserCommentEntity()));
-        return userAds;
+    public static Ad getUserAdsEntity() throws Exception {
+        Ad userAd = new Ad();
+        userAd.setId(USER_ADS_ID);
+        userAd.setUserId(getUserEntity());
+        userAd.setTitle(VALUE);
+        userAd.setDescription(DESCRIPTION);
+        userAd.setPrice(PRICE);
+        userAd.setAdComment(List.of(getUserCommentEntity()));
+        return userAd;
     }
 
-    public static Ads getAnotherUserAdsEntity() throws Exception {
-        Ads userAds = new Ads();
-        userAds.setId(ANOTHER_USER_ADS_ID);
-        userAds.setUserId(getUserEntity());
-        userAds.setTitle(ANOTHER_VALUE);
-        userAds.setDescription(ANOTHER_DESCRIPTION);
-        userAds.setPrice(ANOTHER_PRICE);
-        userAds.setAdsComment(List.of(getUserCommentEntity()));
-        return userAds;
+    public static Ad getAnotherUserAdsEntity() throws Exception {
+        Ad userAd = new Ad();
+        userAd.setId(ANOTHER_USER_ADS_ID);
+        userAd.setUserId(getUserEntity());
+        userAd.setTitle(ANOTHER_VALUE);
+        userAd.setDescription(ANOTHER_DESCRIPTION);
+        userAd.setPrice(ANOTHER_PRICE);
+        userAd.setAdComment(List.of(getUserCommentEntity()));
+        return userAd;
     }
 
-    public static AdsComment getAdminCommentEntity() {
-        AdsComment adminAdsComment = new AdsComment();
-        adminAdsComment.setId(ADMIN_ADS_COMMENT_ID);
+    public static AdComment getAdminCommentEntity() {
+        AdComment adminAdComment = new AdComment();
+        adminAdComment.setId(ADMIN_ADS_COMMENT_ID);
         User user = new User();
         user.setId(2);
-        adminAdsComment.setUserId(user);
-        adminAdsComment.setCreatedAt(OffsetDateTime.of(2022,1,1,0,0,0,0, ZoneOffset.ofHours(0)));
-        Ads adminAds = new Ads();
-        adminAds.setAdsComment(List.of(adminAdsComment));
-        adminAds.setId(ADMIN_ADS_ID);
-        adminAdsComment.setAdsId(adminAds);
-        adminAdsComment.setText(TEXT);
-        return adminAdsComment;
+        adminAdComment.setUserId(user);
+        adminAdComment.setCreatedAt(OffsetDateTime.of(2022,1,1,0,0,0,0, ZoneOffset.ofHours(0)));
+        Ad adminAd = new Ad();
+        adminAd.setAdComment(List.of(adminAdComment));
+        adminAd.setId(ADMIN_ADS_ID);
+        adminAdComment.setAdId(adminAd);
+        adminAdComment.setText(TEXT);
+        return adminAdComment;
     }
 
-    public static AdsComment getUserCommentEntity() {
-        AdsComment userAdsComment = new AdsComment();
-        userAdsComment.setId(USER_ADS_COMMENT_ID);
+    public static AdComment getUserCommentEntity() {
+        AdComment userAdComment = new AdComment();
+        userAdComment.setId(USER_ADS_COMMENT_ID);
         User user = new User();
         user.setId(1);
-        userAdsComment.setUserId(user);
-        userAdsComment.setCreatedAt(OffsetDateTime.of(2022,1,1,0,0,0,0, ZoneOffset.ofHours(0)));
-        Ads userAds = new Ads();
-        userAds.setAdsComment(List.of(userAdsComment));
-        userAds.setId(USER_ADS_ID);
-        userAdsComment.setAdsId(userAds);
-        userAdsComment.setText(TEXT);
-        return userAdsComment;
+        userAdComment.setUserId(user);
+        userAdComment.setCreatedAt(OffsetDateTime.of(2022,1,1,0,0,0,0, ZoneOffset.ofHours(0)));
+        Ad userAd = new Ad();
+        userAd.setAdComment(List.of(userAdComment));
+        userAd.setId(USER_ADS_ID);
+        userAdComment.setAdId(userAd);
+        userAdComment.setText(TEXT);
+        return userAdComment;
     }
 }

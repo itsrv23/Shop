@@ -3,19 +3,19 @@ package ru.got.shop.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.got.shop.dto.UserDto;
-import ru.got.shop.exception.AdsNotFoundException;
+import ru.got.shop.exception.AdNotFoundException;
 import ru.got.shop.exception.ForbiddenException;
 import ru.got.shop.exception.UserNotFoundException;
-import ru.got.shop.model.Ads;
+import ru.got.shop.model.Ad;
 import ru.got.shop.model.User;
-import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.repository.AdRepository;
 import ru.got.shop.repository.UserRepository;
 
 @RequiredArgsConstructor
 @Service
 public class PermissionService implements AuthenticationFacade {
     private final UserRepository userRepository;
-    private final AdsRepository adsRepository;
+    private final AdRepository adRepository;
 
     public boolean checkPermissionForUserController(String login, UserDto userDto) {
         if (isAdminRole(login) || isCurrentUser(login, userDto)) {
@@ -36,11 +36,11 @@ public class PermissionService implements AuthenticationFacade {
     }
 
     public boolean checkAllowedForbidden(Integer id) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
+        Ad ad = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException(id));
         User currentUser = userRepository.findFirstByEmail(getLogin()).orElseThrow(() -> new UserNotFoundException(
                 "Current user not found"));
 
-        if (ads.getUserId().equals(currentUser) || currentUser.getRoleGroup().equals(Role.ROLE_ADMIN)) {
+        if (ad.getUserId().equals(currentUser) || currentUser.getRoleGroup().equals(Role.ROLE_ADMIN)) {
             return true;
         } else {
             throw new ForbiddenException();

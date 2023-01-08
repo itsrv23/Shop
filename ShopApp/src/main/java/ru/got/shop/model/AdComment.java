@@ -15,7 +15,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @Table(name = "ads_comment")
-public class AdsComment {
+public class AdComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class AdsComment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ads_id")
-    private Ads adsId;
+    private Ad adId;
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
@@ -40,7 +40,7 @@ public class AdsComment {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AdsComment that = (AdsComment) o;
+        AdComment that = (AdComment) o;
         return id.equals(that.id);
     }
 

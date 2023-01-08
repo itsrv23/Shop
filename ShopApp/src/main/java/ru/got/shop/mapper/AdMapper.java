@@ -4,25 +4,25 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.got.shop.dto.AdCreateDto;
 import ru.got.shop.dto.AdDto;
-import ru.got.shop.model.Ads;
+import ru.got.shop.model.Ad;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface AdsMapper {
+public interface AdMapper {
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "userId.id")
-    @Mapping(target = "image", expression = "java(getLinkList(ads.getPicture()))")
-    AdDto toDto(Ads ads);
+    @Mapping(target = "image", expression = "java(getLinkList(ad.getPicture()))")
+    AdDto toDto(Ad ad);
 
-    List<AdDto> toDtos(List<Ads> adsList);
+    List<AdDto> toDtos(List<Ad> adList);
 
     @Mapping(target = "title", source = "adCreateDto.title")
     @Mapping(target = "price", source = "adCreateDto.price")
     @Mapping(target = "description", source = "adCreateDto.description")
-    Ads updateAds(AdCreateDto adCreateDto, Ads ads);
+    Ad updateAds(AdCreateDto adCreateDto, Ad ad);
 
     default List<String> getLinkList(Picture picture) {
         String prefix = "/ads/image/";
@@ -36,6 +36,6 @@ public interface AdsMapper {
     @Mapping(target = "description", source = "adCreateDto.description")
     @Mapping(target = "price", source = "adCreateDto.price")
     @Mapping(target = "title", source = "adCreateDto.title")
-    Ads buildAds(User user, AdCreateDto adCreateDto, Picture picture);
+    Ad buildAds(User user, AdCreateDto adCreateDto, Picture picture);
 }
 

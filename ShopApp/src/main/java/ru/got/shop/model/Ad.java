@@ -15,7 +15,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @Table(name = "ads")
-public class Ads {
+public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class Ads {
     private String title;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "adsId")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "adId")
     @ToString.Exclude
-    private List<AdsComment> adsComment;
+    private List<AdComment> adComment;
 }

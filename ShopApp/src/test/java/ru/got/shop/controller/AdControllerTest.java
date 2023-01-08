@@ -20,16 +20,16 @@ import ru.got.shop.dto.AdDto;
 import ru.got.shop.dto.FullAdDto;
 import ru.got.shop.dto.ResponseWrapperAdsDto;
 import ru.got.shop.exception.ForbiddenException;
-import ru.got.shop.mapper.AdsMapperImpl;
-import ru.got.shop.mapper.FullAdsMapperImpl;
-import ru.got.shop.model.Ads;
+import ru.got.shop.mapper.AdMapperImpl;
+import ru.got.shop.mapper.FullAdMapperImpl;
+import ru.got.shop.model.Ad;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
-import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.repository.AdRepository;
 import ru.got.shop.repository.PictureRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.PermissionService;
-import ru.got.shop.service.impl.AdsServiceImpl;
+import ru.got.shop.service.impl.AdServiceImpl;
 import ru.got.shop.service.impl.PictureDiskServiceImpl;
 
 import java.nio.file.Files;
@@ -51,32 +51,32 @@ import static ru.got.shop.controller.UserControllerFactory.USER_LOGIN;
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-class AdsControllerTest {
+class AdControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @SpyBean
-    private AdsMapperImpl adsMapper;
+    private AdMapperImpl adsMapper;
     @SpyBean
-    private FullAdsMapperImpl fullAdsMapper;
+    private FullAdMapperImpl fullAdsMapper;
     @SpyBean
     private ObjectMapper mapper;
     @MockBean
     private PictureRepository pictureRepository;
     @MockBean
-    private AdsRepository adsRepository;
+    private AdRepository adRepository;
     @MockBean
     private UserRepository userRepository;
     @MockBean(name = "pictureDiskServiceImpl")
     private PictureDiskServiceImpl pictureDiskServiceImpl;
     @SpyBean
-    private AdsServiceImpl service;
+    private AdServiceImpl service;
     @MockBean
     private PermissionService permissionService;
 
     private final String AD_ID = "/ads/{id}";
     private final String ADS = "/ads";
     private final String ADS_ME = "/ads/me";
-    private Ads ads;
+    private Ad ad;
     private AdDto adDto;
     private String json;
     private Picture picture;
@@ -84,17 +84,17 @@ class AdsControllerTest {
 
     @BeforeEach
     void init() throws Exception {
-        ads = AdsCommentControllerFactory.getUserAdsEntity();
-        picture = AdsFactory.getPicture();
-        ads.setPicture(picture);
-        adDto = adsMapper.toDto(ads);
+        ad = AdsCommentControllerFactory.getUserAdsEntity();
+        picture = AdFactory.getPicture();
+        ad.setPicture(picture);
+        adDto = adsMapper.toDto(ad);
         user = UserControllerFactory.getUserEntity();
     }
 
     @Test
     void getAllAd_200() throws Exception {
-        json = mapper.writeValueAsString(new ResponseWrapperAdsDto(1, List.of(adDto)));
-        when(adsRepository.findAll()).thenReturn(List.of(ads));
+        json = mapper.writeValueAsString(ResponseWrapperAdsDto.builder().results(List.of(adDto)).count(1).build());
+        when(adRepository.findAll()).thenReturn(List.of(ad));
 
         mockMvc.perform(get(ADS).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -105,7 +105,7 @@ class AdsControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void addAd_201() throws Exception {
-        AdCreateDto createAdDto = AdsFactory.getCreateAdsDto();
+        AdCreateDto createAdDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(createAdDto);
         String adJson = mapper.writeValueAsString(adDto);
 
@@ -124,7 +124,7 @@ class AdsControllerTest {
 
     @Test
     void addAd_401() throws Exception {
-        AdCreateDto createAdDto = AdsFactory.getCreateAdsDto();
+        AdCreateDto createAdDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(createAdDto);
 
         MockMultipartFile jsonValue = new MockMultipartFile("properties",
@@ -150,9 +150,9 @@ class AdsControllerTest {
             return request;
         });
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(adsRepository.save(ads)).thenReturn(ads);
+        when(adRepository.save(ad)).thenReturn(ad);
         when(pictureRepository.save(picture)).thenReturn(picture);
-        when(adsRepository.findById(1)).thenReturn(Optional.of(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.of(ad));
 
         mockMvc.perform(builder.file(file)).andDo(print()).andExpect(status().isOk());
     }
@@ -175,9 +175,9 @@ class AdsControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void getMyAds_200() throws Exception {
-        json = mapper.writeValueAsString(new ResponseWrapperAdsDto(1, List.of(adDto)));
+        json = mapper.writeValueAsString( ResponseWrapperAdsDto.builder().results(List.of(adDto)).count(1).build());
 
-        when(adsRepository.findAllByUserId(user)).thenReturn(List.of(ads));
+        when(adRepository.findAllByUserId(user)).thenReturn(List.of(ad));
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         mockMvc.perform(get(ADS_ME).accept(MediaType.APPLICATION_JSON))
@@ -188,7 +188,7 @@ class AdsControllerTest {
 
     @Test
     void getMyAds_4XX() throws Exception {
-        when(adsRepository.findAllByUserId(user)).thenReturn(List.of(ads));
+        when(adRepository.findAllByUserId(user)).thenReturn(List.of(ad));
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         mockMvc.perform(get(ADS_ME).accept(MediaType.APPLICATION_JSON))
@@ -199,7 +199,7 @@ class AdsControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void getMyAds_404() throws Exception {
-        when(adsRepository.findAllByUserId(user)).thenReturn(Collections.emptyList());
+        when(adRepository.findAllByUserId(user)).thenReturn(Collections.emptyList());
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         mockMvc.perform(get(ADS_ME).accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isNotFound());
@@ -208,11 +208,11 @@ class AdsControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void getFullAd_200() throws Exception {
-        FullAdDto fullAdDto = fullAdsMapper.toDto(user, ads);
+        FullAdDto fullAdDto = fullAdsMapper.toDto(user, ad);
         String json = mapper.writeValueAsString(fullAdDto);
 
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(adsRepository.findById(1)).thenReturn(Optional.of(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.of(ad));
 
         mockMvc.perform(get(AD_ID, 1).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -224,7 +224,7 @@ class AdsControllerTest {
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void getFullAd_404() throws Exception {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
-        when(adsRepository.findById(1)).thenReturn(Optional.empty());
+        when(adRepository.findById(1)).thenReturn(Optional.empty());
 
         mockMvc.perform(get(AD_ID, 11).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -241,7 +241,7 @@ class AdsControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void removeAd_204() throws Exception {
-        when(adsRepository.findById(1)).thenReturn(Optional.ofNullable(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.ofNullable(ad));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(permissionService.checkAllowedForbidden(1)).thenReturn(true);
 
@@ -250,7 +250,7 @@ class AdsControllerTest {
 
     @Test
     void removeAd_4XX() throws Exception {
-        when(adsRepository.findById(1)).thenReturn(Optional.of(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.of(ad));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(permissionService.checkAllowedForbidden(1)).thenReturn(true);
 
@@ -260,7 +260,7 @@ class AdsControllerTest {
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void removeAd_403() throws Exception {
-        when(adsRepository.findById(1)).thenReturn(Optional.ofNullable(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.ofNullable(ad));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(permissionService.checkAllowedForbidden(1)).thenThrow(new ForbiddenException());
 
@@ -271,12 +271,12 @@ class AdsControllerTest {
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void updateAd_200() throws Exception {
         String path = "/ads/{id}";
-        AdDto adDto = AdsFactory.getAdDto();
-        AdCreateDto adCreateDto = AdsFactory.getCreateAdsDto();
+        AdDto adDto = AdFactory.getAdDto();
+        AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
         String AdJson = mapper.writeValueAsString(adDto);
 
-        when(adsRepository.findById(1)).thenReturn(Optional.ofNullable(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.ofNullable(ad));
         when(service.updateAd(1, adCreateDto)).thenReturn(adDto);
 
         mockMvc.perform(patch(path, 1).content(createJson)
@@ -289,10 +289,10 @@ class AdsControllerTest {
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void updateAd_404() throws Exception {
         String path = "/ads/{id}";
-        AdCreateDto adCreateDto = AdsFactory.getCreateAdsDto();
+        AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
-        when(adsRepository.findById(1)).thenReturn(Optional.empty());
+        when(adRepository.findById(1)).thenReturn(Optional.empty());
 
         mockMvc.perform(patch(path, 1).content(createJson)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -302,7 +302,7 @@ class AdsControllerTest {
     @Test
     void updateAd_4XX() throws Exception {
         String path = "/ads/{id}";
-        AdCreateDto adCreateDto = AdsFactory.getCreateAdsDto();
+        AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
         mockMvc.perform(patch(path, 1).content(createJson)
@@ -314,10 +314,10 @@ class AdsControllerTest {
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
     void updateAd_403() throws Exception {
         String path = "/ads/{id}";
-        AdCreateDto adCreateDto = AdsFactory.getCreateAdsDto();
+        AdCreateDto adCreateDto = AdFactory.getCreateAdsDto();
         String createJson = mapper.writeValueAsString(adCreateDto);
 
-        when(adsRepository.findById(1)).thenReturn(Optional.ofNullable(ads));
+        when(adRepository.findById(1)).thenReturn(Optional.ofNullable(ad));
         when(permissionService.checkAllowedForbidden(1)).thenThrow(new ForbiddenException());
 
         mockMvc.perform(patch(path, 1).content(createJson)

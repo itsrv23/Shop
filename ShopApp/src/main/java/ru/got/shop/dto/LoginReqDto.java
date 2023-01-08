@@ -5,20 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
-import java.io.Serializable;
-
 
 @Builder
 @Data
-public class LoginReqDto implements Serializable {
+public class LoginReqDto {
 
-  private static final long serialVersionUID = 1L;
+    @JsonProperty("username")
+    @Email
+    private String username;
 
-  @JsonProperty("username")
-  @Email
-  private String username;
-
-  @JsonProperty("password")
-  private String password;
+    @JsonProperty("password")
+    private String password;
 }
 

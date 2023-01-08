@@ -6,7 +6,7 @@ import ru.got.shop.dto.AdDto;
 import ru.got.shop.dto.FullAdDto;
 import ru.got.shop.dto.ResponseWrapperAdsDto;
 
-public interface AdsService {
+public interface AdService {
     AdDto addAd(AdCreateDto adCreateDto, MultipartFile file);
 
     ResponseWrapperAdsDto getAllAds();

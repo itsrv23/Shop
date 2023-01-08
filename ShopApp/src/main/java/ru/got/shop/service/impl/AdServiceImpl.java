@@ -9,19 +9,19 @@ import ru.got.shop.dto.AdCreateDto;
 import ru.got.shop.dto.AdDto;
 import ru.got.shop.dto.FullAdDto;
 import ru.got.shop.dto.ResponseWrapperAdsDto;
-import ru.got.shop.exception.AdsNotFoundException;
+import ru.got.shop.exception.AdNotFoundException;
 import ru.got.shop.exception.CustomIOException;
 import ru.got.shop.exception.UserNotFoundException;
-import ru.got.shop.mapper.AdsMapper;
-import ru.got.shop.mapper.FullAdsMapper;
+import ru.got.shop.mapper.AdMapper;
+import ru.got.shop.mapper.FullAdMapper;
 import ru.got.shop.mapper.PictureMapper;
-import ru.got.shop.model.Ads;
+import ru.got.shop.model.Ad;
 import ru.got.shop.model.Picture;
 import ru.got.shop.model.User;
-import ru.got.shop.repository.AdsRepository;
+import ru.got.shop.repository.AdRepository;
 import ru.got.shop.repository.UserRepository;
 import ru.got.shop.security.AuthenticationFacade;
-import ru.got.shop.service.AdsService;
+import ru.got.shop.service.AdService;
 import ru.got.shop.service.PictureService;
 
 import java.io.IOException;
@@ -30,11 +30,11 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class AdsServiceImpl implements AdsService, AuthenticationFacade {
+public class AdServiceImpl implements AdService, AuthenticationFacade {
 
-    private final AdsMapper adsMapper;
-    private final FullAdsMapper fullAdsMapper;
-    private final AdsRepository adsRepository;
+    private final AdMapper adMapper;
+    private final FullAdMapper fullAdMapper;
+    private final AdRepository adRepository;
     private final UserRepository userRepository;
     @Qualifier("pictureDiskServiceImpl")
     private final PictureService pictureService;
@@ -46,9 +46,9 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
             User user = getUser();
             Picture picture = pictureMapper.mapToPicture(file);
             picture = pictureService.download(picture);
-            Ads ads = adsMapper.buildAds(user, adCreateDto, picture);
-            Ads ads1 = adsRepository.save(ads);
-            return adsMapper.toDto(ads1);
+            Ad ad = adMapper.buildAds(user, adCreateDto, picture);
+            Ad ad1 = adRepository.save(ad);
+            return adMapper.toDto(ad1);
         } catch (IOException e) {
             throw new CustomIOException("Something went wrong while picture file reading ");
         }
@@ -61,61 +61,61 @@ public class AdsServiceImpl implements AdsService, AuthenticationFacade {
 
     @Override
     public ResponseWrapperAdsDto getAllAds() {
-        List<Ads> ads = adsRepository.findAll();
-        List<AdDto> adDtoList = adsMapper.toDtos(ads);
-        return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
+        List<Ad> ads = adRepository.findAll();
+        List<AdDto> adDtoList = adMapper.toDtos(ads);
+        return ResponseWrapperAdsDto.builder().results(adDtoList).count(adDtoList.size()).build();
     }
 
     @Transactional
     @Override
     public ResponseWrapperAdsDto getMyAds() {
-        List<Ads> adsList = adsRepository.findAllByUserId(getUser());
-        if (adsList.isEmpty()) {
-            throw new AdsNotFoundException("There is an empty myAdsList.");
+        List<Ad> adList = adRepository.findAllByUserId(getUser());
+        if (adList.isEmpty()) {
+            throw new AdNotFoundException("There is an empty myAdsList.");
         }
-        List<AdDto> adDtoList = adsMapper.toDtos(adsList);
-        return new ResponseWrapperAdsDto(adDtoList.size(), adDtoList);
+        List<AdDto> adDtoList = adMapper.toDtos(adList);
+        return ResponseWrapperAdsDto.builder().results(adDtoList).count(adDtoList.size()).build();
     }
 
     @Override
     public FullAdDto getFullAdDto(Integer id) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
-        User user = userRepository.findById(ads.getUserId().getId()).orElseThrow(() -> new UserNotFoundException(id));
-        return fullAdsMapper.toDto(user, ads);
+        Ad ad = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException(id));
+        User user = userRepository.findById(ad.getUserId().getId()).orElseThrow(() -> new UserNotFoundException(id));
+        return fullAdMapper.toDto(user, ad);
     }
 
     @Override
     public void removeAd(Integer id) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
-        adsRepository.delete(ads);
+        Ad ad = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException(id));
+        adRepository.delete(ad);
     }
 
     @Override
     public AdDto updateAd(Integer id, AdCreateDto adCreateDto) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
-        ads = adsMapper.updateAds(adCreateDto, ads);
-        return adsMapper.toDto(adsRepository.save(ads));
+        Ad ad = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException(id));
+        ad = adMapper.updateAds(adCreateDto, ad);
+        return adMapper.toDto(adRepository.save(ad));
     }
 
     @Override
     public AdDto updatePicture(Integer id, MultipartFile file) {
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new AdsNotFoundException(id));
+        Ad ad = adRepository.findById(id).orElseThrow(() -> new AdNotFoundException(id));
         Picture picture;
         try {
             picture = pictureMapper.mapToPicture(file);
         } catch (IOException e) {
             throw new CustomIOException("Something went wrong wile picture reading");
         }
-        if (ads.getPicture() == null) {
+        if (ad.getPicture() == null) {
             Picture pictureNew = pictureService.download(picture);
-            ads.setPicture(pictureNew);
-            adsRepository.save(ads);
+            ad.setPicture(pictureNew);
+            adRepository.save(ad);
         } else {
-            UUID uuid = ads.getPicture().getUuid();
+            UUID uuid = ad.getPicture().getUuid();
             pictureService.update(uuid, picture);
-            adsRepository.save(ads);
+            adRepository.save(ad);
         }
-        return adsMapper.toDto(ads);
+        return adMapper.toDto(ad);
     }
 
     private User getUser() {

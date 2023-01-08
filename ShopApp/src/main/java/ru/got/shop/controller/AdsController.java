@@ -14,7 +14,7 @@ import ru.got.shop.dto.AdDto;
 import ru.got.shop.dto.FullAdDto;
 import ru.got.shop.dto.ResponseWrapperAdsDto;
 import ru.got.shop.security.PermissionService;
-import ru.got.shop.service.AdsService;
+import ru.got.shop.service.AdService;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
@@ -22,49 +22,49 @@ import ru.got.shop.service.AdsService;
 @Slf4j
 public class AdsController implements AdsApi {
 
-    private final AdsService adsService;
+    private final AdService adService;
     private final PermissionService permissionService;
 
     @Override
     public ResponseEntity<ResponseWrapperAdsDto> getAllAds() {
-        return ResponseEntity.ok(adsService.getAllAds());
+        return ResponseEntity.ok(adService.getAllAds());
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<AdDto> addAd(AdCreateDto adCreateDto, MultipartFile file) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(adsService.addAd(adCreateDto, file));
+        return ResponseEntity.status(HttpStatus.CREATED).body(adService.addAd(adCreateDto, file));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<AdDto> editPicture(Integer id, MultipartFile file) {
         permissionService.checkAllowedForbidden(id);
-        return ResponseEntity.ok(adsService.updatePicture(id, file));
+        return ResponseEntity.ok(adService.updatePicture(id, file));
     }
 
     @Override
     public ResponseEntity<byte[]> getAdImage(String uuid) {
-        return ResponseEntity.ok(adsService.getImageById(uuid));
+        return ResponseEntity.ok(adService.getImageById(uuid));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<ResponseWrapperAdsDto> getMyAds() {
-        return ResponseEntity.ok(adsService.getMyAds());
+        return ResponseEntity.ok(adService.getMyAds());
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<FullAdDto> getFullAd(Integer id) {
-        return ResponseEntity.ok(adsService.getFullAdDto(id));
+        return ResponseEntity.ok(adService.getFullAdDto(id));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<Void> removeAd(Integer id) {
         permissionService.checkAllowedForbidden(id);
-        adsService.removeAd(id);
+        adService.removeAd(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -72,6 +72,6 @@ public class AdsController implements AdsApi {
     @PreAuthorize("hasAuthority('ads.crud')")
     public ResponseEntity<AdDto> updateAd(Integer id, AdCreateDto adCreateDto) {
         permissionService.checkAllowedForbidden(id);
-        return ResponseEntity.ok(adsService.updateAd(id, adCreateDto));
+        return ResponseEntity.ok(adService.updateAd(id, adCreateDto));
     }
 }
