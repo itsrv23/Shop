@@ -1,10 +1,10 @@
 package ru.got.shop.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-import ru.got.shop.dto.AdCreateDto;
-import ru.got.shop.dto.AdDto;
-import ru.got.shop.dto.FullAdDto;
-import ru.got.shop.dto.ResponseWrapperAdsDto;
+import ru.got.shop.dto.*;
+
+import java.util.List;
 
 public interface AdService {
     AdDto addAd(AdCreateDto adCreateDto, MultipartFile file);
@@ -22,4 +22,6 @@ public interface AdService {
     AdDto updatePicture(Integer adId, MultipartFile file);
 
     byte[] getImageById(String uuid);
+
+    List<AdDto> getAdsByCriteria(AdCriteriaDto adCriteriaDto, Pageable pageable);
 }

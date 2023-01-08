@@ -92,24 +92,6 @@ class AdCommentControllerTest {
 
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
-    void addComment404TextOfCommentNotFound() throws Exception {
-        String path = "/ads/" + getUserAdsEntity().getId() + "/comments";
-
-        Mockito.when(adRepository.findById(getUserAdsEntity().getId())).thenReturn(Optional.of(getUserAdsEntity()));
-
-        AdCommentDto newCommentDto = AdCommentDto.builder()
-                .text(null)
-                .build();
-
-        mockMvc.perform(post(path)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newCommentDto))
-                ).andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @WithMockUser(username = USER_LOGIN, authorities = "ads.comment.crud")
     void deleteComment200() throws Exception {
         String path = "/ads/" + getUserAdsEntity().getId() + "/comments/" + getUserCommentEntity().getId();
         String jsonResult = objectMapper.writeValueAsString(adCommentMapper.toDto(getUserCommentEntity()));

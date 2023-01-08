@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -34,6 +35,7 @@ public class AdComment {
     private OffsetDateTime createdAt;
 
     @Column(name = "text")
+    @NotNull
     private String text;
 
     @Override
