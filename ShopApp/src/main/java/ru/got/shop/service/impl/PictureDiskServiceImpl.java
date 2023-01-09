@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class PictureDiskServiceImpl implements PictureService {
-    @Value("${picture.dir}")
+    @Value("${picture.storage.directory}")
     private String dir;
     private final PictureRepository pictureRepository;
 

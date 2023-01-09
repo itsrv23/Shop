@@ -198,11 +198,11 @@ class AdControllerTest {
 
     @Test
     @WithMockUser(username = USER_LOGIN, authorities = "ads.crud")
-    void getMyAds_404() throws Exception {
+    void getMyAds_200_EmptyProfile() throws Exception {
         when(adRepository.findAllByUserId(user)).thenReturn(Collections.emptyList());
         when(userRepository.findFirstByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        mockMvc.perform(get(ADS_ME).accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isNotFound());
+        mockMvc.perform(get(ADS_ME).accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
     }
 
     @Test

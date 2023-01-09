@@ -70,9 +70,6 @@ public class AdServiceImpl implements AdService, AuthenticationFacade {
     @Override
     public ResponseWrapperAdsDto getMyAds() {
         List<Ad> adList = adRepository.findAllByUserId(getUser());
-        if (adList.isEmpty()) {
-            throw new AdNotFoundException("There is an empty myAdsList.");
-        }
         List<AdDto> adDtoList = adMapper.toDtos(adList);
         return ResponseWrapperAdsDto.builder().results(adDtoList).count(adDtoList.size()).build();
     }
