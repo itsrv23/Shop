@@ -26,6 +26,6 @@ ___
 ### Запуск через Docker Compose
 - docker load -i "..\fix\adsclientv16.tar"
 - docker load -i "..\skypro-frontend-diploma-image.tar.gz"
-- docker build -t shop:1.0 .\ShopApp\
-- docker build -t shop-admin:1.0 .\ShopAdmin\.
+- docker build -t itsrv23/shop:1.0 .\ShopApp\
+- docker build -t itsrv23/shop-admin:1.0 .\ShopAdmin\.
 - docker compose up
