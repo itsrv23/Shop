@@ -10,7 +10,7 @@ services:
     ports:
       - "54321:5432"
   shop:
-    image: shop:1.0
+    image: itsrv23/shop:1.0
     container_name: shop
     depends_on:
       - psql
@@ -32,7 +32,7 @@ services:
         max-size: "500m"
         max-file: "3"
   shop-admin:
-    image: shop-admin:1.0
+    image: itsrv23/shop-admin:1.0
     container_name: shop-admin
     depends_on:
       - psql
