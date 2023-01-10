@@ -9,3 +9,5 @@ databaseChangeLog:
       file: liquibase/sql/30_user_avatars.sql
   - include:
       file: liquibase/sql/40_ads_pictures.sql
+  - include:
+      file: liquibase/sql/50_presentation_data.sql

@@ -27,7 +27,7 @@ public class PictureDiskServiceImpl implements PictureService {
     @Override
     public Picture download(Picture picture) {
         Path path = Path.of(dir, getFileNane(picture));
-        picture.setFilePath(path.toAbsolutePath().toString());
+        picture.setFilePath(path.toString());
         saveToDisk(path, picture.getData());
         picture.setData(null);
         return pictureRepository.save(picture);
@@ -38,7 +38,7 @@ public class PictureDiskServiceImpl implements PictureService {
         Picture pictureToSave =
                 pictureRepository.findByUuid(uuid).orElseThrow(() -> new PictureNotFoundException(uuid));
         Path path = Path.of(dir, getFileNane(picture));
-        pictureToSave.setFilePath(path.toAbsolutePath().toString());
+        pictureToSave.setFilePath(path.toString());
         saveToDisk(path, picture.getData());
         pictureRepository.save(pictureToSave);
     }
